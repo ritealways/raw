@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OON Cost Forecasting — End-to-End DS Project</title>
+<style>
+  :root{
+    --bg:#0f1420; --card:#171e2e; --card2:#1d2740; --ink:#e8edf7; --mut:#9fb0cc;
+    --acc:#4da3ff; --acc2:#39d98a; --warn:#ffb454; --dan:#ff6b6b; --bd:#26304a;
+    --code:#0b1020;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+  header{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,#122036,#0f1420);border-bottom:1px solid var(--bd);padding:14px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  header h1{font-size:18px;margin:0;color:#fff}
+  header .role{font-size:12px;color:var(--mut)}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px}
+  nav{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;margin:18px auto;max-width:1080px}
+  nav h3{margin:0 0 8px;font-size:13px;color:var(--acc);letter-spacing:.5px;text-transform:uppercase}
+  nav ol{margin:0;padding-left:18px;columns:2;font-size:13.5px}
+  nav a{color:var(--ink);text-decoration:none}
+  nav a:hover{color:var(--acc)}
+  section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px 24px;margin:20px 0;scroll-margin-top:80px}
+  h2{color:var(--acc);border-left:4px solid var(--acc);padding-left:12px;margin-top:0;font-size:21px}
+  h3{color:var(--acc2);font-size:16px;margin-top:22px}
+  h4{color:var(--warn);font-size:14px;margin:16px 0 6px}
+  p,li{font-size:14.5px}
+  .why{background:var(--card2);border-left:4px solid var(--warn);border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13.8px}
+  .why b{color:var(--warn)}
+  .key{background:rgba(57,217,138,.09);border-left:4px solid var(--acc2);border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13.8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left}
+  th{background:var(--card2);color:var(--acc)}
+  tr:nth-child(even){background:rgba(255,255,255,.02)}
+  pre{background:var(--code);border:1px solid var(--bd);border-radius:10px;padding:14px;overflow:auto;font-size:12.8px}
+  code{font-family:'Consolas',monospace;color:#c8e1ff}
+  .chart{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:14px;margin:14px 0}
+  .chart h5{margin:0 0 4px;color:#fff;font-size:14px}
+  .chart .cap{font-size:12px;color:var(--mut);margin-bottom:8px}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--bd);border-radius:20px;padding:3px 11px;font-size:12px;margin:2px;color:var(--acc)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}nav ol{columns:1}}
+  details{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:0 14px;margin:9px 0}
+  summary{cursor:pointer;padding:12px 0;font-weight:600;color:var(--acc)}
+  details[open] summary{border-bottom:1px solid var(--bd);margin-bottom:10px}
+  .q{color:#fff;font-weight:600}
+  .a{color:var(--mut);font-size:13.6px}
+  .metric{display:inline-block;background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:10px 16px;margin:6px;text-align:center}
+  .metric .v{font-size:22px;font-weight:700;color:var(--acc2)}
+  .metric .l{font-size:11px;color:var(--mut)}
+  .btn{background:var(--acc);color:#001832;border:none;border-radius:8px;padding:9px 18px;font-weight:700;cursor:pointer;font-size:13px}
+  .btn:hover{background:#6ab4ff}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+  .flow .node{background:var(--card2);border:1px solid var(--acc);border-radius:8px;padding:8px 12px;font-size:12.5px}
+  .flow .arr{color:var(--acc);font-size:18px}
+  svg text{font-family:'Segoe UI',sans-serif}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🏥 Out-of-Network (OON) Cost Forecasting — End-to-End ML Project</h1>
+    <div class="role">Author role: Sr. Data Scientist (5 yrs exp) · Time Series Forecasting · Tree-Based Final Model</div>
+  </div>
+  <button class="btn" onclick="window.print()">🖨️ Save as PDF</button>
+</header>
+
+<nav>
+  <h3>Project Roadmap</h3>
+  <ol>
+    <li><a href="#s1">Business Objective</a></li>
+    <li><a href="#s2">Why This Approach</a></li>
+    <li><a href="#s3">Dataset &amp; Data Sources</a></li>
+    <li><a href="#s4">Target Definition</a></li>
+    <li><a href="#s5">Data Cleaning</a></li>
+    <li><a href="#s6">Series Preprocessing</a></li>
+    <li><a href="#s7">Decomposition &amp; Stationarity</a></li>
+    <li><a href="#s8">Feature Engineering</a></li>
+    <li><a href="#s9">Feature Selection</a></li>
+    <li><a href="#s10">Hyperparameter Tuning</a></li>
+    <li><a href="#s11">Model Evaluation</a></li>
+    <li><a href="#s12">Forecast Generation</a></li>
+    <li><a href="#s13">Production Steps</a></li>
+    <li><a href="#s14">Where Forecast is Used</a></li>
+    <li><a href="#s15">Architecture</a></li>
+    <li><a href="#s16">Interview Q&amp;A</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+<!-- 1 -->
+<section id="s1">
+  <h2>1. Business Objective &amp; Problem Being Solved</h2>
+  <p><b>Business problem:</b> Health insurance members sometimes visit doctors <b>outside the insurer's network (OON)</b>. Because there's no negotiated discount, the insurer pays more. Rising OON usage in a region also signals a <b>network adequacy gap</b> — not enough in-network doctors of a given specialty.</p>
+  <div class="why"><b>Why it matters:</b> Today the network team learns about OON leakage from a <b>quarterly report</b> — i.e., <i>after</i> the money is already lost. By then a region may have leaked millions and members are frustrated.</div>
+  <h4>Objective (SMART)</h4>
+  <p>Forecast <b>1–6 months ahead</b> the OON cost for each <b>Region × Specialty</b> combination, so the network team can <b>proactively recruit doctors / renegotiate</b> before costs spike.</p>
+  <div class="key">
+    <b>Success metrics (business KPIs):</b>
+    <ul style="margin:6px 0">
+      <li>↓ OON cost leakage by 8–12% in flagged regions within 2 quarters</li>
+      <li>Forecast accuracy: <b>MAPE &lt; 15%</b> at the region-specialty level</li>
+      <li>Lead time: give the team <b>≥ 60 days</b> to act</li>
+      <li>Precision on "rising cost" alerts &gt; 70% (avoid crying wolf)</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2>2. Why This Approach (Forecasting + Tree Models)</h2>
+  <table>
+    <tr><th>Option considered</th><th>Verdict</th><th>Reasoning</th></tr>
+    <tr><td>Classical ARIMA/SARIMA per series</td><td>❌ Baseline only</td><td>We have <b>hundreds of Region×Specialty series</b>. One ARIMA per series = unmaintainable, and it can't use cross-features (network density, referrals).</td></tr>
+    <tr><td>Deep learning (LSTM/N-BEATS)</td><td>❌ Overkill</td><td>Monthly data → short histories (36–60 points). DL overfits, hard to explain to network business team.</td></tr>
+    <tr><td><b>Global tree model (XGBoost / RF)</b></td><td>✅ Chosen</td><td>One model learns across ALL series, handles non-linear effects, mixes lags + business features, robust to outliers, and gives <b>feature importance</b> the business trusts.</td></tr>
+  </table>
+  <div class="why"><b>Why tree-based (final):</b> (1) Handles mixed features (numeric lags + categorical region/specialty), (2) No stationarity requirement, (3) Captures interactions (e.g., "cardiology + rural + low network density"), (4) Fast to retrain monthly, (5) SHAP explainability satisfies regulators/business.</div>
+  <div class="key"><b>Reframing:</b> We turn forecasting into a <b>supervised regression</b> problem — predict next-month OON cost using lagged/rolling features. This is the modern "global forecasting" approach used in industry (M5 competition winners used LightGBM/XGBoost).</div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2>3. Dataset &amp; Data Sources</h2>
+  <p>Data is aggregated <b>monthly</b> at the <b>Region × Specialty</b> grain. Below are the realistic source tables an insurer would have.</p>
+
+  <h4>3.1 Claims table (core source)</h4>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>claim_id</td><td>string</td><td>Unique claim key</td></tr>
+    <tr><td>member_id</td><td>string</td><td>Member identifier</td></tr>
+    <tr><td>service_date</td><td>date</td><td>Date of care</td></tr>
+    <tr><td>provider_id</td><td>string</td><td>Doctor / provider</td></tr>
+    <tr><td>region</td><td>string</td><td>Geographic region (e.g., NE-01)</td></tr>
+    <tr><td>specialty</td><td>string</td><td>Cardiology, Ortho, etc.</td></tr>
+    <tr><td>is_oon</td><td>0/1</td><td><b>Out-of-network flag</b></td></tr>
+    <tr><td>allowed_amount</td><td>float</td><td>$ paid by insurer</td></tr>
+    <tr><td>claim_count</td><td>int</td><td>Visits/procedures</td></tr>
+  </table>
+
+  <h4>3.2 Provider network table (context)</h4>
+  <table>
+    <tr><th>Column</th><th>Description</th></tr>
+    <tr><td>region, specialty</td><td>Grain keys</td></tr>
+    <tr><td>in_network_providers</td><td># active in-network docs (network density)</td></tr>
+    <tr><td>avg_appointment_wait_days</td><td>Access friction proxy</td></tr>
+    <tr><td>terminations_last_month</td><td>Docs who left the network</td></tr>
+  </table>
+
+  <h4>3.3 Membership / external tables</h4>
+  <p><span class="pill">enrollment_count</span> <span class="pill">avg_member_age</span> <span class="pill">holidays / seasonality flags</span> <span class="pill">flu_index (external)</span></p>
+
+  <div class="why"><b>Why these sources:</b> The claims table gives the <b>target</b> (OON $). The network table explains <b>why</b> OON rises (fewer docs → more leakage), giving the tree model powerful causal-flavored features that pure lags can't.</div>
+
+  <h4>3.4 Sample of the modeling table (after aggregation)</h4>
+  <pre><code>month     region  specialty     oon_cost  claims  in_net_providers  wait_days
+2023-01   NE-01   Cardiology     182,400   410     22                14
+2023-02   NE-01   Cardiology     176,900   398     22                15
+2023-03   NE-01   Cardiology     201,050   445     20                19   &lt;-- 2 docs left, wait ↑
+2023-04   NE-01   Cardiology     238,700   470     18                24   &lt;-- OON cost rising
+...</code></pre>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2>4. Target Variable</h2>
+  <div class="key"><b>Target:</b> <code>oon_cost</code> = total monthly out-of-network allowed_amount for each Region×Specialty, forecast for horizons <b>h = 1..6 months</b>.</div>
+  <p>We build a <b>direct multi-horizon</b> setup: separate target columns <code>oon_cost_t+1 ... oon_cost_t+6</code>, one model per horizon (or a single model with horizon as feature). Direct forecasting avoids compounding recursive errors.</p>
+  <h4>Why forecast $ (not the OON rate)?</h4>
+  <p>The network team's budget is in dollars. But we <b>also track OON rate = OON claims / total claims</b> as a secondary signal to distinguish "more members" from "genuine network gap."</p>
+  <div class="why"><b>Log-transform decision:</b> OON cost is right-skewed and multiplicative in nature. We model <code>log1p(oon_cost)</code> to stabilize variance, then <code>expm1()</code> the prediction. This alone often drops MAPE by 2–4%.</div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2>5. Data Cleaning</h2>
+  <table>
+    <tr><th>Issue</th><th>Action</th><th>Why</th></tr>
+    <tr><td>Duplicate claims</td><td>Drop on claim_id</td><td>Double-counting inflates target</td></tr>
+    <tr><td>Negative/zero allowed_amount</td><td>Treat reversals/adjustments separately, cap at 0</td><td>Refunds shouldn't create negative cost noise</td></tr>
+    <tr><td>Missing region/specialty</td><td>Map via provider_id lookup; else "UNKNOWN" bucket</td><td>Preserve rows without polluting real regions</td></tr>
+    <tr><td>Extreme outlier month (e.g., one $2M surgery)</td><td>Winsorize at 99th pct OR add outlier flag feature</td><td>One catastrophic claim ≠ a network trend</td></tr>
+    <tr><td>Missing months in a series</td><td>Reindex to full monthly range, fill gap = 0 cost</td><td>Trees need a continuous calendar to compute lags</td></tr>
+    <tr><td>Sparse series (&lt; 24 months)</td><td>Group into "Region-Group" hierarchy</td><td>Too little history to forecast reliably alone</td></tr>
+  </table>
+  <div class="why"><b>Key decision — leakage guard:</b> All cleaning stats (percentiles, medians for imputation) are computed on <b>train only</b>, then applied to validation/test. Computing them on the full data leaks future info.</div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2>6. Series Preprocessing</h2>
+  <pre><code>import pandas as pd, numpy as np
+
+# 1. Aggregate to monthly Region x Specialty
+df = (claims[claims.is_oon==1]
+      .groupby(['region','specialty',pd.Grouper(key='service_date',freq='MS')])
+      .agg(oon_cost=('allowed_amount','sum'),
+           oon_claims=('claim_id','count'))
+      .reset_index()
+      .rename(columns={'service_date':'month'}))
+
+# 2. Build the full calendar grid (no missing months)
+grid = (df.groupby(['region','specialty'])['month']
+          .agg(['min','max']))
+# reindex each group to monthly frequency, fill missing = 0
+
+# 3. Join network context features
+df = df.merge(network_tbl, on=['region','specialty','month'], how='left')
+
+# 4. Target transform (variance stabilization)
+df['y'] = np.log1p(df['oon_cost'])</code></pre>
+  <div class="why"><b>Why freq='MS' (month-start):</b> Consistent monthly index is mandatory for correct lag alignment. Mixed daily/monthly data would break lag features.</div>
+
+  <div class="chart">
+    <h5>Chart A — Raw OON Cost Series (NE-01 · Cardiology)</h5>
+    <div class="cap">Why: first visual check for trend, seasonality, spikes, and level shifts before any modeling.</div>
+    <svg viewBox="0 0 640 220" width="100%">
+      <line x1="50" y1="180" x2="620" y2="180" stroke="#26304a"/>
+      <line x1="50" y1="20" x2="50" y2="180" stroke="#26304a"/>
+      <text x="10" y="30" fill="#9fb0cc" font-size="10">250k</text>
+      <text x="10" y="180" fill="#9fb0cc" font-size="10">100k</text>
+      <polyline fill="none" stroke="#4da3ff" stroke-width="2.5"
+        points="60,130 100,138 140,118 180,95 220,105 260,80 300,90 340,70 380,60 420,75 460,55 500,50 540,45 580,40"/>
+      <text x="300" y="205" fill="#9fb0cc" font-size="11">Jan-23 ————— time (months) ————— Dec-24 (rising trend)</text>
+    </svg>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2>7. Time Series Decomposition &amp; Stationarity Tests</h2>
+
+  <h3>7.1 Decomposition, Stationarity, ACF/PACF</h3>
+  <pre><code>from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller, kpss
+
+s = series.set_index('month')['oon_cost']
+result = seasonal_decompose(s, model='additive', period=12)
+result.plot()</code></pre>
+
+  <div class="chart">
+    <h5>Chart B — Additive Decomposition (Trend / Seasonal / Residual)</h5>
+    <div class="cap">Why: separates the signal so we know what to model. Clear upward trend + mild yearly seasonality (flu season Q1) confirms forecasting is worthwhile.</div>
+    <svg viewBox="0 0 640 260" width="100%">
+      <text x="55" y="15" fill="#39d98a" font-size="10">Observed</text>
+      <polyline fill="none" stroke="#4da3ff" stroke-width="1.6" points="55,45 95,50 135,38 175,30 215,35 255,25 295,30 335,22 375,18 415,25 455,15 495,13 535,11 575,9"/>
+      <text x="55" y="75" fill="#39d98a" font-size="10">Trend ↑</text>
+      <polyline fill="none" stroke="#39d98a" stroke-width="1.8" points="55,105 575,72"/>
+      <text x="55" y="130" fill="#39d98a" font-size="10">Seasonal (yearly)</text>
+      <polyline fill="none" stroke="#ffb454" stroke-width="1.4" points="55,155 85,148 115,158 145,150 175,140 205,152 235,158 265,150 295,142 325,152 355,158 385,150 415,142 445,152 475,158 505,150 535,142 565,152"/>
+      <text x="55" y="200" fill="#39d98a" font-size="10">Residual (noise)</text>
+      <polyline fill="none" stroke="#ff6b6b" stroke-width="1" points="55,225 90,220 125,228 160,222 195,230 230,219 265,227 300,223 335,228 370,220 405,226 440,224 475,229 510,221 545,227 575,223"/>
+    </svg>
+  </div>
+
+  <h4>Stationarity tests — ADF &amp; KPSS</h4>
+  <table>
+    <tr><th>Test</th><th>H0</th><th>Result on raw series</th><th>Decision</th></tr>
+    <tr><td>ADF (Augmented Dickey-Fuller)</td><td>Series has unit root (non-stationary)</td><td>p = 0.34 → fail to reject → <b>non-stationary</b></td><td>Needs differencing</td></tr>
+    <tr><td>KPSS</td><td>Series is stationary</td><td>p = 0.02 → reject → <b>non-stationary</b></td><td>Confirms trend present</td></tr>
+    <tr><td>ADF after 1st diff</td><td>—</td><td>p = 0.006 → <b>stationary</b></td><td>d = 1 confirmed for ARIMA baseline</td></tr>
+  </table>
+  <div class="why"><b>Why use BOTH ADF and KPSS?</b> They have opposite null hypotheses. Agreement = confident conclusion. ADF alone can be misleading with trend-stationary data; KPSS complements it.</div>
+  <div class="key"><b>Important nuance:</b> Stationarity is <b>required for ARIMA baselines</b> but <b>NOT for tree models</b>. XGBoost/RF handle trend if we give them trend features (lags, time index, rolling means). We still run the tests to (a) justify baseline design and (b) understand the data.</div>
+
+  <div class="grid2">
+    <div class="chart">
+      <h5>Chart C — ACF (Autocorrelation)</h5>
+      <div class="cap">Why: shows how many past months influence today → guides <b>lag feature</b> choice. Strong bars at lag 1 and lag 12.</div>
+      <svg viewBox="0 0 320 180" width="100%">
+        <line x1="30" y1="90" x2="310" y2="90" stroke="#26304a"/>
+        <line x1="30" y1="55" x2="310" y2="55" stroke="#ff6b6b" stroke-dasharray="4"/>
+        <line x1="30" y1="125" x2="310" y2="125" stroke="#ff6b6b" stroke-dasharray="4"/>
+        <rect x="40" y="30" width="8" height="60" fill="#4da3ff"/>
+        <rect x="62" y="45" width="8" height="45" fill="#4da3ff"/>
+        <rect x="84" y="62" width="8" height="28" fill="#4da3ff"/>
+        <rect x="106" y="72" width="8" height="18" fill="#4da3ff"/>
+        <rect x="128" y="80" width="8" height="10" fill="#9fb0cc"/>
+        <rect x="150" y="82" width="8" height="8" fill="#9fb0cc"/>
+        <rect x="260" y="52" width="8" height="38" fill="#39d98a"/>
+        <text x="255" y="150" fill="#39d98a" font-size="9">lag 12↑</text>
+        <text x="35" y="150" fill="#9fb0cc" font-size="9">lag 1</text>
+      </svg>
+    </div>
+    <div class="chart">
+      <h5>Chart D — PACF (Partial Autocorrelation)</h5>
+      <div class="cap">Why: isolates direct effect of each lag → sharp cutoff after lag 1–2 suggests AR order &amp; which lags to keep as features.</div>
+      <svg viewBox="0 0 320 180" width="100%">
+        <line x1="30" y1="90" x2="310" y2="90" stroke="#26304a"/>
+        <line x1="30" y1="55" x2="310" y2="55" stroke="#ff6b6b" stroke-dasharray="4"/>
+        <line x1="30" y1="125" x2="310" y2="125" stroke="#ff6b6b" stroke-dasharray="4"/>
+        <rect x="40" y="28" width="8" height="62" fill="#4da3ff"/>
+        <rect x="62" y="70" width="8" height="20" fill="#4da3ff"/>
+        <rect x="84" y="86" width="8" height="6" fill="#9fb0cc"/>
+        <rect x="106" y="88" width="8" height="4" fill="#9fb0cc"/>
+        <rect x="128" y="87" width="8" height="5" fill="#9fb0cc"/>
+        <text x="35" y="150" fill="#9fb0cc" font-size="9">lag1 dominant, cuts off</text>
+      </svg>
+    </div>
+  </div>
+
+  <h3>7.2 Baselines → Final Tree Models</h3>
+  <table>
+    <tr><th>Model</th><th>Role</th><th>Test MAPE</th><th>Notes</th></tr>
+    <tr><td>Naïve (last month)</td><td>Sanity baseline</td><td>24.1%</td><td>Beat this or project fails</td></tr>
+    <tr><td>Seasonal Naïve (last year same month)</td><td>Baseline</td><td>21.8%</td><td>Captures yearly pattern</td></tr>
+    <tr><td>SARIMA(1,1,1)(1,0,0,12)</td><td>Statistical baseline</td><td>18.5%</td><td>One model per series, slow</td></tr>
+    <tr><td>Random Forest</td><td>Candidate</td><td>14.2%</td><td>Robust, less tuning</td></tr>
+    <tr><td><b>XGBoost</b> ⭐</td><td><b>Final</b></td><td><b>12.6%</b></td><td>Best accuracy + SHAP</td></tr>
+  </table>
+  <div class="key"><b>Why baselines first:</b> A model is only "good" relative to a dumb benchmark. Beating Seasonal Naïve by 9 pts of MAPE proves real value and protects you in the review meeting.</div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2>8. Feature Creation &amp; Feature Engineering</h2>
+  <p>This is where a global tree model wins — we inject time structure via engineered features.</p>
+
+  <h4>8.1 Lag features (memory of the series)</h4>
+  <pre><code>for lag in [1, 2, 3, 6, 12]:
+    df[f'lag_{lag}'] = df.groupby(['region','specialty'])['y'].shift(lag)</code></pre>
+  <div class="why"><b>Why these lags:</b> lag_1/2/3 = short-term momentum; lag_6 = half-year; lag_12 = same month last year (seasonality). Chosen from ACF/PACF spikes at lag 1 and 12.</div>
+
+  <h4>8.2 Rolling window features (trend &amp; volatility)</h4>
+  <pre><code>g = df.groupby(['region','specialty'])['y']
+df['roll_mean_3']  = g.shift(1).rolling(3).mean()
+df['roll_mean_6']  = g.shift(1).rolling(6).mean()
+df['roll_std_3']   = g.shift(1).rolling(3).std()
+df['roll_max_6']   = g.shift(1).rolling(6).max()
+df['mom_change']   = df['lag_1'] - df['lag_2']      # month-over-month momentum
+df['trend_ratio']  = df['roll_mean_3'] / df['roll_mean_6']  # short vs long trend</code></pre>
+  <div class="why"><b>Critical: <code>.shift(1)</code> before rolling</b> so the window uses ONLY past data — prevents <b>data leakage</b>. <code>roll_std_3</code> captures volatility (unstable series = network in flux). <code>trend_ratio &gt; 1</code> flags acceleration = the early-warning signal we want.</div>
+
+  <h4>8.3 Calendar &amp; domain features</h4>
+  <table>
+    <tr><th>Feature</th><th>Why</th></tr>
+    <tr><td>month, quarter</td><td>Seasonality (flu Q1)</td></tr>
+    <tr><td>in_network_providers</td><td>Fewer docs → more OON (core driver)</td></tr>
+    <tr><td>providers_delta_3m</td><td>Recent net doctor loss → future leakage</td></tr>
+    <tr><td>avg_appointment_wait_days</td><td>Long waits push members OON</td></tr>
+    <tr><td>oon_rate_lag1</td><td>Distinguishes volume from network gap</td></tr>
+    <tr><td>region, specialty (encoded)</td><td>Let one global model learn per-segment behavior</td></tr>
+  </table>
+  <div class="why"><b>Categorical encoding:</b> Use <b>target encoding</b> or native categorical support (LightGBM) / one-hot for RF. Target encoding is computed on train folds only to avoid leakage.</div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2>9. Feature Selection</h2>
+  <ol>
+    <li><b>Drop leakage/constant:</b> remove features derived from future, and zero-variance columns.</li>
+    <li><b>Correlation filter:</b> drop one of any pair with |corr| &gt; 0.95 (e.g., roll_mean_3 vs roll_mean_2).</li>
+    <li><b>Model-based importance:</b> train XGBoost, rank by gain.</li>
+    <li><b>Permutation importance</b> on validation → keep only features that actually help unseen data.</li>
+    <li><b>SHAP</b> to confirm business logic (network density &amp; lag_1 should top the list).</li>
+  </ol>
+  <div class="chart">
+    <h5>Chart E — Feature Importance (XGBoost gain)</h5>
+    <div class="cap">Why: proves the model uses sensible drivers → builds business trust and enables the network team to act.</div>
+    <svg viewBox="0 0 560 220" width="100%">
+      <g font-size="11" fill="#e8edf7">
+        <text x="5" y="30">lag_1</text><rect x="120" y="20" width="380" height="14" fill="#4da3ff"/>
+        <text x="5" y="55">roll_mean_3</text><rect x="120" y="45" width="300" height="14" fill="#4da3ff"/>
+        <text x="5" y="80">lag_12</text><rect x="120" y="70" width="230" height="14" fill="#39d98a"/>
+        <text x="5" y="105">in_net_providers</text><rect x="120" y="95" width="205" height="14" fill="#39d98a"/>
+        <text x="5" y="130">trend_ratio</text><rect x="120" y="120" width="160" height="14" fill="#39d98a"/>
+        <text x="5" y="155">wait_days</text><rect x="120" y="145" width="120" height="14" fill="#ffb454"/>
+        <text x="5" y="180">providers_delta_3m</text><rect x="120" y="170" width="95" height="14" fill="#ffb454"/>
+        <text x="5" y="205">month</text><rect x="120" y="195" width="55" height="14" fill="#9fb0cc"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2>10. Hyperparameter Tuning</h2>
+  <div class="why"><b>Why TimeSeriesSplit (not random CV):</b> Random shuffling leaks future into past. We use <b>expanding-window walk-forward validation</b> to mimic real deployment.</div>
+  <div class="chart">
+    <h5>Chart F — Walk-Forward (Expanding Window) CV</h5>
+    <svg viewBox="0 0 620 130" width="100%">
+      <g font-size="10" fill="#9fb0cc">
+        <rect x="30" y="20" width="150" height="16" fill="#4da3ff"/><rect x="180" y="20" width="40" height="16" fill="#ffb454"/><text x="230" y="33">Fold 1</text>
+        <rect x="30" y="45" width="230" height="16" fill="#4da3ff"/><rect x="260" y="45" width="40" height="16" fill="#ffb454"/><text x="310" y="58">Fold 2</text>
+        <rect x="30" y="70" width="310" height="16" fill="#4da3ff"/><rect x="340" y="70" width="40" height="16" fill="#ffb454"/><text x="390" y="83">Fold 3</text>
+        <text x="30" y="110" fill="#4da3ff">■ train</text><text x="110" y="110" fill="#ffb454">■ validation</text>
+      </g>
+    </svg>
+  </div>
+  <pre><code>from sklearn.model_selection import TimeSeriesSplit
+import optuna, xgboost as xgb
+
+tscv = TimeSeriesSplit(n_splits=4)
+def objective(trial):
+    params = dict(
+      n_estimators = trial.suggest_int('n_estimators',300,1200),
+      max_depth    = trial.suggest_int('max_depth',3,8),
+      learning_rate= trial.suggest_float('learning_rate',0.01,0.2,log=True),
+      subsample    = trial.suggest_float('subsample',0.6,1.0),
+      colsample_bytree = trial.suggest_float('colsample_bytree',0.6,1.0),
+      min_child_weight = trial.suggest_int('min_child_weight',1,10),
+      reg_lambda   = trial.suggest_float('reg_lambda',1,10))
+    scores=[]
+    for tr,va in tscv.split(X):
+        m = xgb.XGBRegressor(**params, objective='reg:squarederror')
+        m.fit(X.iloc[tr],y.iloc[tr])
+        scores.append(mape(y.iloc[va], m.predict(X.iloc[va])))
+    return np.mean(scores)
+
+study = optuna.create_study(direction='minimize')
+study.optimize(objective, n_trials=40)</code></pre>
+  <div class="key"><b>Key params &amp; why:</b> shallow <code>max_depth (3–8)</code> prevents overfitting short histories; low <code>learning_rate</code> + more trees = stable; <code>subsample/colsample</code> add regularization; <code>reg_lambda</code> controls complexity.</div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2>11. Model Evaluation</h2>
+  <h4>Metrics used &amp; why</h4>
+  <table>
+    <tr><th>Metric</th><th>Why chosen</th></tr>
+    <tr><td><b>MAPE</b></td><td>Business speaks in % error; comparable across regions of different sizes</td></tr>
+    <tr><td><b>RMSE</b></td><td>Penalizes big misses (a large region spike matters most)</td></tr>
+    <tr><td><b>MAE</b></td><td>Robust, in $ terms for budgeting</td></tr>
+    <tr><td><b>WAPE</b></td><td>Weighted — avoids MAPE blowing up on tiny-cost segments</td></tr>
+    <tr><td>Directional accuracy</td><td>Did we correctly predict "rising"? Core to the alert use-case</td></tr>
+  </table>
+  <div style="text-align:center;margin:16px 0">
+    <div class="metric"><div class="v">12.6%</div><div class="l">Test MAPE</div></div>
+    <div class="metric"><div class="v">$41k</div><div class="l">MAE / segment</div></div>
+    <div class="metric"><div class="v">0.88</div><div class="l">R²</div></div>
+    <div class="metric"><div class="v">83%</div><div class="l">Direction Acc.</div></div>
+  </div>
+  <div class="chart">
+    <h5>Chart G — Actual vs Predicted (hold-out)</h5>
+    <div class="cap">Why: the single most convincing plot — shows the model tracks reality including the recent OON rise.</div>
+    <svg viewBox="0 0 640 220" width="100%">
+      <line x1="50" y1="185" x2="620" y2="185" stroke="#26304a"/>
+      <line x1="50" y1="20" x2="50" y2="185" stroke="#26304a"/>
+      <polyline fill="none" stroke="#4da3ff" stroke-width="2.4" points="60,150 100,155 140,135 180,110 220,120 260,95 300,105 340,82 380,70"/>
+      <polyline fill="none" stroke="#39d98a" stroke-width="2.4" stroke-dasharray="6" points="380,70 420,66 460,58 500,50 540,44 580,38"/>
+      <line x1="380" y1="20" x2="380" y2="185" stroke="#ffb454" stroke-dasharray="3"/>
+      <text x="385" y="35" fill="#ffb454" font-size="10">forecast starts</text>
+      <text x="70" y="205" fill="#4da3ff" font-size="11">■ Actual</text>
+      <text x="160" y="205" fill="#39d98a" font-size="11">■ Predicted / Forecast</text>
+    </svg>
+  </div>
+  <div class="why"><b>Also plot residuals</b> vs time — they should look like white noise (no leftover pattern). Any structure means missing features.</div>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2>12. Forecast Generation</h2>
+  <p>For each Region×Specialty we generate <b>1–6 month ahead</b> forecasts with <b>prediction intervals</b> (via quantile regression: XGBoost with pinball loss at q=0.1 &amp; q=0.9).</p>
+  <div class="chart">
+    <h5>Chart H — Example Forecast Output (NE-01 · Cardiology)</h5>
+    <div class="cap">Why intervals: gives the network team confidence bounds → they act on high-confidence rising alerts.</div>
+    <svg viewBox="0 0 640 230" width="100%">
+      <polygon points="380,110 420,95 460,80 500,66 540,55 580,44 580,92 540,102 500,112 460,124 420,138 380,150" fill="#39d98a" opacity="0.18"/>
+      <polyline fill="none" stroke="#4da3ff" stroke-width="2.4" points="60,160 120,150 180,140 240,120 300,115 380,130"/>
+      <polyline fill="none" stroke="#39d98a" stroke-width="2.6" stroke-dasharray="6" points="380,130 420,116 460,100 500,89 540,75 580,68"/>
+      <line x1="380" y1="20" x2="380" y2="195" stroke="#ffb454" stroke-dasharray="3"/>
+      <text x="60" y="215" fill="#9fb0cc" font-size="10">history</text>
+      <text x="450" y="215" fill="#39d98a" font-size="10">6-month forecast + 80% interval ↑ rising</text>
+    </svg>
+  </div>
+  <h4>Sample forecast table delivered to business</h4>
+  <table>
+    <tr><th>Region</th><th>Specialty</th><th>Next-1m</th><th>Next-3m</th><th>Next-6m</th><th>Trend</th><th>Alert</th></tr>
+    <tr><td>NE-01</td><td>Cardiology</td><td>$252k</td><td>$281k</td><td>$318k</td><td>▲ +26%</td><td style="color:var(--dan)">🔴 HIGH</td></tr>
+    <tr><td>SW-04</td><td>Orthopedics</td><td>$140k</td><td>$149k</td><td>$162k</td><td>▲ +12%</td><td style="color:var(--warn)">🟡 WATCH</td></tr>
+    <tr><td>MW-02</td><td>Dermatology</td><td>$88k</td><td>$85k</td><td>$83k</td><td>▼ -5%</td><td style="color:var(--acc2)">🟢 OK</td></tr>
+  </table>
+  <div class="key"><b>Alert logic:</b> If forecast_6m / current &gt; threshold (e.g., +20%) AND lower-bound also rises → 🔴 HIGH priority for network recruitment.</div>
+</section>
+
+<!-- 13 -->
+<section id="s13">
+  <h2>13. Production Steps (MLOps)</h2>
+  <ol>
+    <li><b>Data pipeline:</b> Airflow DAG runs monthly → pulls claims, aggregates, builds features (same code as training via shared module → no train/serve skew).</li>
+    <li><b>Feature store:</b> lag/rolling features cached (Feast) for reuse &amp; consistency.</li>
+    <li><b>Model registry:</b> MLflow logs params, metrics, artifacts; versioned models.</li>
+    <li><b>Retraining:</b> automated monthly retrain; auto-promote only if new MAPE ≤ old + tolerance (champion/challenger).</li>
+    <li><b>Batch inference:</b> generate all Region×Specialty forecasts, write to a warehouse table.</li>
+    <li><b>Serving:</b> results piped to a <b>Power BI / Tableau dashboard</b> for the network team.</li>
+    <li><b>Monitoring:</b> track live MAPE vs forecast, <b>data drift</b> (PSI on feature distributions), and volume anomalies → alert on Slack.</li>
+    <li><b>Fallback:</b> if model fails, serve Seasonal Naïve so business never gets a blank report.</li>
+  </ol>
+  <div class="flow">
+    <span class="node">Claims DB</span><span class="arr">→</span>
+    <span class="node">Airflow ETL</span><span class="arr">→</span>
+    <span class="node">Feature Store</span><span class="arr">→</span>
+    <span class="node">XGBoost (MLflow)</span><span class="arr">→</span>
+    <span class="node">Forecast Table</span><span class="arr">→</span>
+    <span class="node">Dashboard + Alerts</span>
+  </div>
+</section>
+
+<!-- 14 -->
+<section id="s14">
+  <h2>14. Where &amp; How the Forecast Is Used</h2>
+  <table>
+    <tr><th>Consumer</th><th>How they use the forecast</th></tr>
+    <tr><td><b>Network team</b></td><td>See 🔴 regions 6 months early → recruit in-network doctors / renegotiate contracts in that specialty</td></tr>
+    <tr><td><b>Finance</b></td><td>Budget reserves for expected OON spend by region</td></tr>
+    <tr><td><b>Provider contracting</b></td><td>Prioritize which specialties to add where waits are long</td></tr>
+    <tr><td><b>Member experience</b></td><td>Proactively guide members to nearby in-network options</td></tr>
+    <tr><td><b>Leadership</b></td><td>Quarterly narrative shifts from "we lost $X" → "we prevented $X"</td></tr>
+  </table>
+  <div class="key"><b>Business impact loop:</b> Forecast → Alert → Recruit doctor → In-network options grow → members stay in-network → OON cost drops. The model measures its own success via the falling actual OON in flagged regions.</div>
+</section>
+
+<!-- 15 architecture -->
+<section id="s15">
+  <h2>15. Full Architecture (Final: Tree-Based)</h2>
+  <svg viewBox="0 0 640 380" width="100%">
+    <g font-size="11" fill="#e8edf7">
+      <rect x="20" y="20" width="180" height="42" rx="8" fill="#1d2740" stroke="#4da3ff"/><text x="40" y="46">Sources: Claims · Network · Members</text>
+      <rect x="20" y="90" width="180" height="42" rx="8" fill="#1d2740" stroke="#4da3ff"/><text x="45" y="116">Airflow ETL + Cleaning</text>
+      <rect x="20" y="160" width="180" height="42" rx="8" fill="#1d2740" stroke="#39d98a"/><text x="35" y="186">Aggregate → Region×Specialty</text>
+      <rect x="20" y="230" width="180" height="42" rx="8" fill="#1d2740" stroke="#39d98a"/><text x="30" y="256">Feature Eng (lags/rolling/domain)</text>
+
+      <rect x="250" y="90" width="170" height="42" rx="8" fill="#1d2740" stroke="#ffb454"/><text x="270" y="116">Baselines (Naïve/SARIMA)</text>
+      <rect x="250" y="160" width="170" height="42" rx="8" fill="#1d2740" stroke="#ffb454"/><text x="270" y="186">Walk-Forward CV + Optuna</text>
+      <rect x="250" y="230" width="170" height="52" rx="8" fill="#1d2740" stroke="#ff6b6b"/><text x="285" y="252">⭐ XGBoost (final)</text><text x="290" y="270" font-size="10" fill="#9fb0cc">RF as fallback</text>
+
+      <rect x="460" y="90" width="160" height="42" rx="8" fill="#1d2740" stroke="#4da3ff"/><text x="480" y="116">MLflow Registry</text>
+      <rect x="460" y="160" width="160" height="42" rx="8" fill="#1d2740" stroke="#4da3ff"/><text x="475" y="186">Batch Forecast Table</text>
+      <rect x="460" y="230" width="160" height="42" rx="8" fill="#1d2740" stroke="#39d98a"/><text x="480" y="256">Dashboard + Alerts</text>
+      <rect x="250" y="310" width="370" height="42" rx="8" fill="#1d2740" stroke="#4da3ff"/><text x="290" y="336">Monitoring: MAPE · Drift(PSI) · Retrain</text>
+
+      <line x1="110" y1="62" x2="110" y2="90" stroke="#4da3ff"/>
+      <line x1="110" y1="132" x2="110" y2="160" stroke="#4da3ff"/>
+      <line x1="110" y1="202" x2="110" y2="230" stroke="#4da3ff"/>
+      <line x1="200" y1="251" x2="250" y2="200" stroke="#39d98a"/>
+      <line x1="335" y1="202" x2="335" y2="230" stroke="#ffb454"/>
+      <line x1="420" y1="256" x2="460" y2="186" stroke="#4da3ff"/>
+      <line x1="540" y1="132" x2="540" y2="160" stroke="#4da3ff"/>
+      <line x1="540" y1="202" x2="540" y2="230" stroke="#4da3ff"/>
+      <line x1="435" y1="272" x2="435" y2="310" stroke="#4da3ff"/>
+    </g>
+  </svg>
+</section>
+
+<!-- 16 interview -->
+<section id="s16">
+  <h2>16. Interview Questions &amp; Answers</h2>
+
+  <details><summary>Q1. Why did you use tree models instead of ARIMA/LSTM for time series?</summary>
+  <p class="a">We have hundreds of short monthly series. ARIMA needs one model per series (unscalable) and can't ingest business features like network density. LSTM overfits short histories and lacks explainability. A <b>global XGBoost</b> learns across all series, uses lags + domain features, handles non-linearity, and gives SHAP explanations the network team trusts. It also won the M5 forecasting competition benchmark.</p></details>
+
+  <details><summary>Q2. Trees can't extrapolate a trend — how did you handle rising OON cost?</summary>
+  <p class="a">True — a tree can't predict a value higher than any it saw. I mitigate this by (1) modeling <code>log1p</code> and using <b>lag/rolling-mean features</b> so the model predicts on the recent level, (2) adding <b>momentum features</b> (mom_change, trend_ratio) so it captures acceleration, and (3) optionally modeling the <b>difference/growth rate</b> instead of raw level so extrapolation happens outside the tree.</p></details>
+
+  <details><summary>Q3. How did you prevent data leakage?</summary>
+  <p class="a">Four guards: (1) <b>.shift(1)</b> before every rolling window so features use only past data; (2) all imputation/percentile stats fit on train only; (3) <b>TimeSeriesSplit</b> walk-forward CV, never random shuffle; (4) target encoding computed inside CV folds.</p></details>
+
+  <details><summary>Q4. Why both ADF and KPSS tests?</summary>
+  <p class="a">They have opposite null hypotheses (ADF H0 = non-stationary; KPSS H0 = stationary). Using both gives a robust conclusion. If ADF says non-stationary AND KPSS rejects stationary, we're confident it's non-stationary and needs differencing for the ARIMA baseline.</p></details>
+
+  <details><summary>Q5. If trees don't need stationarity, why test it at all?</summary>
+  <p class="a">Stationarity isn't required for trees, but the tests inform (a) the design of ARIMA baselines and (b) my understanding of trend/seasonality, which drives which lag features to engineer (e.g., lag_12 from the seasonal signal).</p></details>
+
+  <details><summary>Q6. How did you choose your lag features?</summary>
+  <p class="a">From ACF/PACF: PACF cut off after lag 1–2 (short memory) and ACF showed a spike at lag 12 (yearly seasonality). So I used lags 1,2,3,6,12 — short momentum plus seasonal.</p></details>
+
+  <details><summary>Q7. Why MAPE, and what's its weakness?</summary>
+  <p class="a">MAPE is % based so it's comparable across differently-sized regions and business-friendly. Weakness: it explodes when actuals are near zero and penalizes over-forecasts asymmetrically. So I also report <b>WAPE</b> (weighted) and <b>RMSE</b> for large-miss sensitivity.</p></details>
+
+  <details><summary>Q8. Direct vs recursive multi-step forecasting — which and why?</summary>
+  <p class="a">I used <b>direct</b> (separate target per horizon or horizon as a feature). Direct avoids compounding errors of recursive forecasting where predicted values feed back as inputs. Trade-off: more models, but at monthly grain that's cheap.</p></details>
+
+  <details><summary>Q9. How do you generate prediction intervals with XGBoost?</summary>
+  <p class="a">Train quantile models with the <b>pinball (quantile) loss</b> at q=0.1 and q=0.9 to get an 80% interval. This gives the network team confidence bounds so they act only on high-certainty rising alerts.</p></details>
+
+  <details><summary>Q10. How would you handle a brand-new Region×Specialty with no history (cold start)?</summary>
+  <p class="a">Fall back to the hierarchy: use the parent region's or specialty's average behavior, or a similar segment's model, until enough history accrues. The global model already generalizes across segments, which helps cold start more than per-series ARIMA would.</p></details>
+
+  <details><summary>Q11. How do you know the model is actually creating business value?</summary>
+  <p class="a">A/B / before-after: track actual OON cost in flagged regions where the network team acted vs a control group. Success = lower realized OON growth + high directional-alert precision. We report "$ prevented," not just MAPE.</p></details>
+
+  <details><summary>Q12. How do you monitor the model in production?</summary>
+  <p class="a">Monthly: compute realized MAPE vs forecast, run <b>PSI drift checks</b> on feature distributions, alert if drift &gt; 0.2 or MAPE degrades beyond tolerance. Champion/challenger auto-retrain and only promote if the new model wins. Seasonal-Naïve fallback if pipeline fails.</p></details>
+
+  <details><summary>Q13. Why log-transform the target?</summary>
+  <p class="a">OON cost is right-skewed and multiplicative. <code>log1p</code> stabilizes variance so the model isn't dominated by huge segments, and it makes errors proportional — appropriate for cost data. I inverse with <code>expm1</code> and apply a small bias correction.</p></details>
+
+  <details><summary>Q14. RF vs XGBoost — why XGBoost as final?</summary>
+  <p class="a">RF is robust with little tuning (good fallback), but XGBoost's boosting captured the momentum/trend interactions better, giving ~1.6 pts lower MAPE. XGBoost also supports quantile loss for intervals and has efficient handling of our features. I kept RF as a stable fallback.</p></details>
+
+  <details><summary>Q15. What are the biggest risks/limitations of this project?</summary>
+  <p class="a">(1) Trend extrapolation limits of trees; (2) regulatory/policy shocks (e.g., a new law) that no historical feature captures; (3) sparse segments; (4) feedback effect — once the team acts on alerts, the target changes, so we must retrain and evaluate carefully to attribute impact.</p></details>
+
+</section>
+
+<section>
+  <h2>✅ Summary</h2>
+  <div class="key">We reframed OON cost forecasting as a <b>global supervised regression</b> using engineered <b>lag + rolling + domain features</b>, benchmarked against Naïve/SARIMA baselines, and finalized <b>XGBoost</b> (RF fallback) with walk-forward CV and Optuna tuning. It forecasts 1–6 months ahead per Region×Specialty with prediction intervals, feeding an <b>early-warning dashboard</b> so the network team recruits doctors <i>before</i> costs spike — shifting the business from reactive quarterly reports to proactive network management.</div>
+</section>
+
+<footer style="text-align:center;color:var(--mut);padding:30px;font-size:12px">
+  End-to-end OON Cost Forecasting · Sr. Data Scientist Portfolio · Click "Save as PDF" to download
+</footer>
+</div>
+</body>
+</html>
