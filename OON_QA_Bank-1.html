@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OON Forecasting — Interview Q&amp;A Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f1e4; --paper2:#ede4cf; --card:#fffdf7;
+    --ink:#20281f; --ink-mut:#5f6b5c;
+    --navy:#1c3b52; --navy2:#28516e;
+    --red:#b1392a; --green:#2f6f4a; --amber:#b3821f;
+    --line:#d9cca7; --line2:#c9baa0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6}
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px 60px}
+  header.hero{padding:40px 22px 16px;max-width:980px;margin:0 auto}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy2);border-bottom:1px dashed var(--line2);display:inline-block;padding-bottom:4px}
+  h1.title{font-family:'Zilla Slab',serif;font-weight:700;font-size:clamp(26px,3.8vw,38px);margin:10px 0 6px;color:var(--navy)}
+  .subtitle{color:var(--ink-mut);font-size:14.5px;max-width:680px}
+  .counts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .cpill{background:var(--paper2);border:1px solid var(--line2);border-radius:20px;padding:5px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--navy)}
+
+  .tabbar{display:flex;gap:5px;max-width:980px;margin:26px auto 0;padding:0 22px;flex-wrap:wrap;position:relative}
+  .tabbtn{
+    font-family:'Zilla Slab',serif;font-weight:600;font-size:13.5px;
+    background:var(--paper2);color:var(--ink-mut);border:1px solid var(--line);border-bottom:none;
+    padding:10px 16px 12px;border-radius:8px 8px 0 0;cursor:pointer;position:relative;top:1px;
+  }
+  .tabbtn.active{background:var(--card);color:var(--navy);border-color:var(--line2)}
+
+  .panel{background:var(--card);border:1px solid var(--line2);border-radius:0 10px 10px 10px;padding:26px 30px;max-width:980px;margin:0 auto;display:none}
+  .panel.active{display:block}
+
+  .searchrow{display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+  .searchrow input{flex:1;min-width:200px;padding:9px 12px;border:1px solid var(--line2);border-radius:6px;background:var(--paper2);font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink)}
+  .searchrow .count{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-mut)}
+
+  h2.grp{font-family:'Zilla Slab',serif;color:var(--navy2);font-size:16px;margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  h2.grp:first-child{margin-top:2px}
+
+  details{background:var(--paper2);border:1px solid var(--line2);border-radius:8px;padding:0 15px;margin:8px 0}
+  summary{cursor:pointer;padding:11px 0;font-weight:600;color:var(--navy);font-family:'Zilla Slab',serif;font-size:14.5px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--red)}
+  details[open] summary::before{content:"▾ "}
+  details[open] summary{border-bottom:1px solid var(--line2);margin-bottom:10px}
+  .a{color:var(--ink);font-size:13.6px;padding-bottom:12px}
+  .a b{color:var(--navy2)}
+
+  .tiplist{list-style:none;padding:0;margin:0}
+  .tiplist li{background:var(--paper2);border-left:4px solid var(--amber);border-radius:6px;padding:10px 15px;margin:9px 0;font-size:13.8px}
+  .tiplist li b{color:var(--amber)}
+
+  table{width:100%;border-collapse:collapse;margin:6px 0 18px;font-size:13px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--paper2);color:var(--navy);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;text-transform:uppercase}
+  tr:nth-child(even) td{background:#faf6ec}
+  code{font-family:'IBM Plex Mono',monospace;background:#f0ead8;padding:1px 5px;border-radius:4px;font-size:12.4px}
+
+  footer{text-align:center;color:var(--ink-mut);padding:34px;font-size:12px;font-family:'IBM Plex Mono',monospace}
+  @media(max-width:640px){.panel{padding:20px 16px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="kicker">Interview Prep · OON Cost Forecasting Project</span>
+  <h1 class="title">Interview Q&amp;A Bank</h1>
+  <p class="subtitle">Built for a 5+ years data scientist interview level. Plain-language answers, with reasoning and tips baked in — organized so you can drill by category or cram from the cheat sheet the night before.</p>
+  <div class="counts">
+    <span class="cpill">50 Technical</span>
+    <span class="cpill">20 Business</span>
+    <span class="cpill">20 Scenario-based</span>
+    <span class="cpill">20 Cross-questions</span>
+    <span class="cpill">Interview tips</span>
+    <span class="cpill">Cheat sheet</span>
+  </div>
+</header>
+
+<div class="tabbar" id="tabbar"></div>
+<div class="wrap">
+<div id="panels"></div>
+</div>
+
+<footer>OON Cost Forecasting · Interview Q&amp;A Bank · Company-Wide Series, No Region/Specialty Split</footer>
+
+<script>
+const DATA = {
+technical: {
+  label: "Technical (50)",
+  groups: [
+    { name: "Time series fundamentals", items: [
+      ["What is stationarity, and why does it matter?","A stationary series has a constant mean, variance, and autocorrelation over time. It matters because many models (like ARIMA) assume it — without stationarity their estimates become unreliable and forecasts drift."],
+      ["What is the difference between the ADF and KPSS tests?","ADF's null hypothesis is that the series is non-stationary, so a low p-value means it IS stationary. KPSS flips it: its null is that the series is stationary, so a low p-value means it is NOT. Running both avoids relying on one test's assumptions alone."],
+      ["What does the ACF plot tell you?","It shows how correlated the series is with its own past at each lag, including indirect effects passed through in-between lags. It helps spot seasonality and overall memory in the series."],
+      ["What does the PACF plot tell you?","It shows the direct correlation between the series and one specific lag, after removing the influence of shorter lags. This is what actually tells you which lags to use as features."],
+      ["What is STL decomposition and what are its parts?","STL splits a series into trend, seasonal, and residual components, so you can inspect each separately — for example, confirming a real upward trend versus just seasonal swings."],
+      ["What's the difference between trend and seasonality?","Trend is the long-term direction (steadily rising cost); seasonality is a repeating pattern tied to a fixed period (higher cost every flu season). Confusing the two makes you chase a spike that is actually a normal yearly pattern."],
+      ["What is a random walk, and why is it relevant here?","Each value equals the previous value plus random noise, with no real predictable pattern beyond that. The naive baseline (predict last month) is basically a random walk — any real model must beat it to prove value."],
+      ["What is differencing, and when do you use it?","Subtracting each value from the previous one to remove trend so the series becomes stationary. Mainly needed for classical models like ARIMA; tree models like XGBoost don't require it."],
+      ["Why does autocorrelation break standard ML assumptions?","Most ML models assume independent observations, but time series values are correlated with nearby points. That's exactly why you can't shuffle data randomly for validation."],
+      ["How do you decide the seasonal period (like 12 for monthly data)?","From domain knowledge (yearly billing/flu cycles), confirmed by a spike in the ACF plot at that lag — a strong spike at lag 12 is evidence of a yearly cycle."]
+    ]},
+    { name: "Feature engineering & selection", items: [
+      ["What are lag features, and why are they useful?","Past values of the target used as inputs, like last month's cost predicting this month's. They let a non-time-series model like XGBoost 'see' recent history and mimic short-term momentum."],
+      ["Why use rolling mean/std instead of only raw lag values?","A single lag can be noisy; a rolling mean smooths recent history into a stable signal, and rolling std captures recent volatility — together they represent the trend, not just one data point."],
+      ["What is data leakage in time series, with an example here?","When the model sees info it wouldn't actually have at prediction time — e.g. calculating a rolling average without shifting it first, so the feature for month X literally includes month X's own value."],
+      ["Why use a log1p transform on the target?","Monthly OON cost is right-skewed with occasional very high-cost months. Log transforming pulls in extremes so the model isn't pulled around by a few outlier months; expm1() converts predictions back to real dollars."],
+      ["How do you handle multicollinearity among engineered features?","Less harmful for trees than linear regression, but I still drop one of any pair with correlation above 0.95 to keep the feature set simple and easier to explain with SHAP."],
+      ["Difference between gain-based importance and permutation importance?","Gain measures how much a feature reduced error whenever the model split on it during training. Permutation importance shuffles a feature and measures how much validation error worsens — testing real usefulness on unseen data."],
+      ["Why check correlation if trees are already robust to it?","Trees handle correlated features fine, but redundant ones still add noise to feature importance and SHAP explanations, making the story harder to communicate to stakeholders."],
+      ["What calendar features did you add, and why?","Month number, quarter, and a flu-season flag — these directly encode seasonal patterns seen in ACF/STL, giving the model an explicit signal instead of relying only on lag_12."],
+      ["How do you handle missing months in the series?","Reindex to a continuous monthly calendar and flag or fill the gap. Skipping this breaks lag and rolling features, which assume an unbroken timeline."],
+      ["Why don't you need to scale features for XGBoost?","Tree models split on thresholds, not distances, so feature scale doesn't affect how splits are chosen. Scaling matters for distance-based or gradient-descent linear models, not trees."]
+    ]},
+    { name: "Modeling & algorithms", items: [
+      ["Why XGBoost over Random Forest?","Both are tree ensembles, but XGBoost builds trees sequentially, each correcting prior errors, which usually gives better accuracy on tabular data, plus stronger built-in regularization for a small dataset."],
+      ["How does gradient boosting work at a high level?","Trees are built one at a time; each new tree predicts the errors (residuals) of the combined trees so far, and predictions are summed with a learning rate controlling each tree's contribution."],
+      ["Role of learning_rate, and how it interacts with n_estimators?","learning_rate shrinks each tree's contribution so no single tree dominates. A smaller rate needs more trees to reach the same accuracy — trading training time for a smoother, less overfit model."],
+      ["What is regularization in XGBoost, and why is it needed here?","Parameters like max_depth, min_child_weight, subsample, colsample_bytree plus L1/L2 penalties limit tree complexity. With only 40-60 monthly points, regularization is essential to stop memorizing noise."],
+      ["Why can't trees extrapolate a trend, and how did you compensate?","A tree's prediction can't exceed the highest value seen in training. I compensated with lag/rolling-mean features so the model predicts off the current level, plus momentum features to signal acceleration."],
+      ["What is quantile regression, and why use it for the interval?","Instead of predicting the average, it predicts a specific percentile (like the 10th or 90th) using pinball loss. Training at q=0.1 and q=0.9 gives a realistic 80% confidence band."],
+      ["Direct vs recursive multi-step forecasting — which did you use?","Recursive predicts one step, feeds it back in, and repeats — errors compound. Direct trains a separate model per horizon (1, 2, 3 months), avoiding compounding error — that's what I used."],
+      ["Why not use an LSTM or other deep learning model?","With only a few dozen monthly points, a deep net would overfit badly and be hard to explain to stakeholders. A gradient-boosted tree fits small, tabular, feature-rich data much better."],
+      ["Why keep SARIMA as a baseline if XGBoost wins?","It's a well-understood statistical benchmark proving the XGBoost improvement is real, not luck — and it doubles as an explainable fallback if the more complex model misbehaves."],
+      ["What is the bias-variance trade-off, and how does max_depth affect it?","Bias is error from being too simple; variance is error from being too sensitive to training data. Shallow trees = high bias/low variance; deep trees = low bias but can memorize noise (high variance)."]
+    ]},
+    { name: "Validation & evaluation", items: [
+      ["Why can't you use random K-fold cross-validation on time series?","Random shuffling lets the model train on future months and test on earlier ones — leaking information it wouldn't have in real deployment and inflating reported accuracy."],
+      ["What is walk-forward validation (TimeSeriesSplit)?","Trains on an expanding window of past data and always validates on the next chunk of time, moving forward step by step — mirroring exactly how the model is used in production."],
+      ["Why track MAPE, RMSE, and WAPE instead of just one?","Each has a blind spot: MAPE can blow up near zero, RMSE is sensitive to big misses, WAPE is more stable in aggregate. Looking at all three avoids being misled by any single metric."],
+      ["What is WAPE, and when is it better than MAPE?","Total absolute error divided by total actual value across the period, instead of averaging percentage errors month by month. Better when some months have very small actuals, which destabilizes MAPE."],
+      ["How do you know an improvement over baseline is meaningful?","Compare against multiple baselines across several validation folds, not one test period, and check the improvement holds consistently rather than being driven by one lucky fold."],
+      ["What is residual analysis, and what do you look for?","Plotting errors (actual minus predicted) over time to check they look like random noise, not a pattern. A visible pattern (errors always positive in December) means the model is missing something."],
+      ["How did you check forecast intervals were reasonably calibrated?","Checked that roughly 80% of actual values fell inside the predicted 80% interval across validation history — far off coverage means the bounds need recalibrating."],
+      ["What's the risk of only evaluating a 1-month-ahead forecast?","The business needs multi-month lead time, and error typically grows further out. Evaluating only 1-month-ahead hides how much less reliable the 2 and 3-month forecasts are."],
+      ["How do you detect overfitting with only 40-60 data points?","Watch for a big gap between training and validation error, and check the model isn't memorizing exact training values. Keeping the model simple (limited depth, regularization) is the main defense."],
+      ["What would falling test performance after deployment indicate?","Likely concept drift — the relationship between features and target has changed (new regulation, network overhaul) — or a data pipeline issue feeding in stale features."]
+    ]},
+    { name: "Explainability, deployment & MLOps", items: [
+      ["How does SHAP work at a conceptual level?","It assigns each feature a contribution value showing how much it pushed a specific prediction up or down versus the average prediction, based on game-theory ideas about fairly splitting credit among features."],
+      ["Difference between global and local SHAP explanations?","Global SHAP averages contributions across all predictions to show which features matter most overall. Local SHAP explains one specific prediction, like why this month's forecast came out at $2.1M."],
+      ["Why is explainability important in a Finance-facing tool?","Finance and network teams won't act on a number they don't trust. Saying 'cost is rising because provider count is down and wait times are up' turns an abstract number into something actionable and credible."],
+      ["How do you monitor a production forecasting model for drift?","Track live prediction error each month, compare current feature distributions to training distributions (PSI), and watch for a steady climb in error signaling the model no longer matches reality."],
+      ["What is PSI, and how is it used?","Population Stability Index measures how much a feature's distribution has shifted between two periods. A high PSI flags recent data looking meaningfully different from training data — a retraining trigger."],
+      ["What is a champion/challenger setup, and why use it?","The production model (champion) is compared against a newly retrained candidate (challenger) on the same validation window; the challenger only replaces it if it performs better — avoiding blind redeploys."],
+      ["Why need a fallback model like Seasonal Naive in production?","If the pipeline or main model fails, the business still needs a forecast that month. A dependable fallback guarantees the report is never blank."],
+      ["How often should this model retrain, and why monthly?","Monthly, matching how often new claims data arrives and how often Finance needs an updated number. Retraining more often wouldn't add much since the data doesn't change that fast."],
+      ["How would you version and reproduce a model run months later?","Log the exact training data snapshot, feature code version, and hyperparameters for every run (e.g. via MLflow), so any past forecast can be recreated exactly if questioned."],
+      ["What's a key production risk specific to this pipeline?","A feedback loop — once the business acts on an alert (recruiting doctors, negotiating contracts), the trend that caused it may shift, so training data increasingly reflects a business already reacting to the model."]
+    ]}
+  ]
+},
+business: {
+  label: "Business (20)",
+  groups: [
+    { name: "Business-level questions & explanations", items: [
+      ["What business problem does this project solve?","It gives Finance and the network team advance warning when out-of-network costs are about to rise, instead of finding out from a quarterly report after the money is already spent."],
+      ["Why does OON cost matter to an insurance company?","Out-of-network claims pay without a negotiated discount, so they cost more per claim, and rising OON spend usually signals a network gap or access problem worth fixing."],
+      ["Who are the stakeholders, and what does each need?","Finance needs an accurate monthly number to budget against. The network team needs an early signal and a reason to act. Leadership needs a simple trend and a business impact story."],
+      ["Why forecast 1-3 months ahead instead of just reporting history?","A historical report only tells you what already happened. A forecast gives about 60 days of lead time for Finance to adjust budgets and the network team to actually act before costs peak."],
+      ["What is the ROI of this project in business terms?","It targets roughly 8-12% lower OON cost growth by giving the business lead time to act, while also improving budget accuracy so Finance isn't caught off guard."],
+      ["Why keep this project at company-wide level, not region/specialty?","To keep v1 simple, fast to build, and easy to validate and trust before adding complexity — a simpler model also delivers business value sooner."],
+      ["How do you define success in business terms, not just MAPE?","Success means the business acted on alerts and realized OON cost grew less than it would have without intervention — measured as dollars prevented, alongside forecast accuracy."],
+      ["How do you explain the forecast interval to a non-technical stakeholder?","'We expect next month's cost to most likely land between these two numbers, and we're fairly confident — about 80% sure — the real number falls in that range,' rather than one exact figure."],
+      ["What is the alert threshold logic, and why does it matter?","An alert fires when the 3-month forecast rises more than about 12% and the lower bound also rises, so the increase isn't just one edge case. Too sensitive causes alert fatigue; too loose misses real risk."],
+      ["How does this change Finance's budgeting process?","Instead of budgeting off last quarter's actuals, Finance sets aside reserves based on the forecast range, reducing the chance of an unexpected shortfall."],
+      ["How does this help the network/provider relations team specifically?","It gives them lead time and a reason — like falling provider counts or rising wait times — to prioritize recruiting doctors or renegotiating contracts before costs worsen."],
+      ["What would you tell leadership if the confidence interval is very wide one month?","That wide intervals usually mean unusual recent volatility (like an outlier claim), so the business should treat that month's forecast with more caution, not act on the point estimate alone."],
+      ["How do you justify model complexity to a non-ML stakeholder?","Frame it around outcome: a simple average missed real patterns and lagged the business by a quarter, while this model catches trends early enough to act on, and every number can be explained."],
+      ["What's the business risk of a false positive alert?","Alert fatigue — if acted-on alerts don't pan out often enough, the team starts ignoring future alerts, even real ones, so alert precision has to stay high."],
+      ["What's the business risk of a false negative (missed alert)?","The business gets blindsided by rising cost with no lead time to react — exactly the original problem this project was built to solve."],
+      ["Pitch this project's impact in 30 seconds.","'I built a monthly forecasting model that gave Finance and the network team a 60-day early warning on rising out-of-network costs, replacing a reactive quarterly surprise with a proactive, explainable monthly signal.'"],
+      ["Why does SHAP explainability build stakeholder trust?","It turns 'the model says $2.1M' into 'the model says $2.1M because provider count is down and wait times are up,' giving stakeholders a concrete reason to believe the number and a lever to act on."],
+      ["How would this change if leadership wanted weekly instead of monthly forecasts?","I'd check if claims data actually refreshes weekly and if weekly decisions are even possible — recruiting doctors doesn't happen weekly, so more frequent forecasts could just add noise, not value."],
+      ["How do you communicate a model can't be 100% accurate?","Frame the forecast as a range with a most-likely value, not a guarantee — like a weather forecast, useful for planning even though it isn't perfect every time."],
+      ["What's the roadmap after this v1 model?","Adding region or specialty-level forecasts once the aggregate model is trusted, incorporating more business drivers, and tightening alert logic based on real outcomes from acted-on alerts."]
+    ]}
+  ]
+},
+scenario: {
+  label: "Scenario-based (20)",
+  groups: [
+    { name: "Scenario-based questions", items: [
+      ["The model badly under-forecasts one month, and cost triples unexpectedly. What do you do?","First check if it's a data issue or a real shock (regulation change, catastrophic claim). Investigate residuals and SHAP for that month, communicate the miss honestly, and consider a manual override until root cause is confirmed."],
+      ["A new regulation changes claims processing overnight. How does this affect your model?","The historical feature-to-cost relationship may no longer hold. I'd treat it as a structural break, retrain sooner than scheduled, and closely monitor early predictions rather than trust the existing model blindly."],
+      ["Leadership asks to add region-level forecasting next quarter. How do you approach it?","Check if enough data exists per region, then either train separate simple models per region or add region as a feature, validating per-region error isn't worse than the current aggregate before rollout."],
+      ["You only have 12 months of data for a new product line. How do you forecast for it?","Lean on simpler models (seasonal naive, exponential smoothing), borrow patterns from a similar existing product line if one exists, and be upfront that uncertainty is higher until more data accumulates."],
+      ["The pipeline fails to run one month. What happens to the alert?","The fallback model (Seasonal Naive) serves a forecast so the business isn't left with nothing, while an internal alert notifies the data team to fix the pipeline before the next cycle."],
+      ["SARIMA and XGBoost disagree significantly on next month. How do you decide what to report?","Look at recent validation performance for each, check if anything unusual happened recently that only one model captures, and report the stronger performer with a note on the disagreement, not hidden."],
+      ["The network team recruited 50 new doctors last month. How should this show in your forecast?","in_network_providers should increase, and since SHAP shows a negative relationship with OON cost, the forecast should show lower expected cost — I'd confirm that actually happens in the next run."],
+      ["A stakeholder says 'the model missed COVID, so I don't trust it.' How do you respond?","I'd agree no model trained on history can predict a true black-swan event, and explain the real value is catching gradual, learnable patterns like network shrinkage — big shocks still need human judgment."],
+      ["Monitoring shows error creeping up steadily over 4 months. What do you check first?","Data quality issues in input features first, then PSI for feature drift, then a real external change (competitor entering, policy change) — cheapest checks first."],
+      ["Finance wants a single point number, not a range. What are the trade-offs?","Easier to plan with but hides real uncertainty, risking overconfidence in a shaky month. I'd offer a point estimate as the headline with the range available for risk-sensitive planning."],
+      ["You find a data quality bug in a feature for the last 6 months of training data. What do you do?","Fix the data source first, retrain only after the fix, and check whether any already-delivered forecasts need correcting or flagging to stakeholders."],
+      ["A catastrophic $5M claim lands in one month. How does this affect your forecast, and how did you plan for it?","I winsorize extreme claims during training, and STL's robust option down-weights it too, so the forecast shouldn't overreact — though I'd still flag the actual outlier separately to stakeholders."],
+      ["The business wants to know 'why' before acting. Walk through your answer using the model.","Pull the SHAP explanation for that forecast, translate the top 2-3 drivers into plain language, and connect each to a concrete action the business could take."],
+      ["Leadership wants same-day, not monthly, refresh. Is that feasible here?","Not really useful — claims data doesn't fully settle daily, and the business can't act daily anyway (hiring/contracts are monthly-scale decisions), so I'd push back and explain why monthly is right."],
+      ["You're handing this project to another data scientist. What do you document?","The business problem and KPIs, data sources and quirks, feature engineering logic with leakage guards, model choice and validation approach, current benchmarks, and the retraining/monitoring setup."],
+      ["SHAP flags in_network_providers as the top driver, but the network team says nothing changed. What do you check?","The raw data feed for that feature first (a stale or broken source is a common cause), then a definition mismatch (their internal count vs the feed's count), before assuming the model or business is wrong."],
+      ["A stakeholder wants to add 'member satisfaction score' as a feature. How do you evaluate it?","Check if it's available with enough history, test whether it actually improves validation performance and survives the correlation/importance filters, and be honest if it doesn't add value despite intuitive appeal."],
+      ["Your forecast says OON cost rises 15%, but a policy change next month should reduce it. How do you factor that in?","The model can't know about a change with no historical precedent, so I'd present the model's number alongside a manual adjustment note, rather than silently trusting either the model or gut feeling alone."],
+      ["Present this to a non-technical audience in 5 minutes. How do you structure it?","Business problem in one sentence, the process flow at a glance, the headline impact number, one SHAP-driven 'why' example, and what changed for the business — skip model internals unless asked."],
+      ["A new CFO asks why trust a model over the finance team's judgment. How do you respond?","It's not a replacement for judgment — it's a tool that catches patterns across dozens of variables faster and more consistently than manual review, while budgeting decisions stay with the finance team."]
+    ]}
+  ]
+},
+cross: {
+  label: "Cross-questions (20)",
+  groups: [
+    { name: "Follow-up / probing questions", items: [
+      ["You said trees can't extrapolate — so why is XGBoost credible on a clearly trending series at all?","Fair pushback. It works because I feed it recent-level features (lags, rolling means) so it predicts off the current level rather than inventing new highs, plus momentum features signaling acceleration — a workaround, not a true fix, which I'd flag if trend direction ever reversed sharply."],
+      ["If ADF confirmed non-stationarity, why not just use SARIMA, which explicitly models that, instead of XGBoost?","SARIMA is kept exactly for that reason, as a transparent baseline, but it can't ingest business drivers like provider counts or wait times — where the real explanatory and predictive power came from."],
+      ["Your XGBoost beat baselines by 9 MAPE points on test — how do you know that's not overfitting to the test period?","Because the comparison used consistent walk-forward validation across multiple folds, not a single split, and the improvement held across those folds rather than one lucky window."],
+      ["If SHAP shows clear driver importance, why not just use interpretable linear regression instead?","Linear regression assumes additive, linear relationships, but drivers here interact non-linearly (wait times may only matter once provider count drops below some level) — XGBoost captures that, and SHAP gives back the interpretability."],
+      ["Only 4 splits in TimeSeriesSplit for years of monthly data — is that enough validation?","A real constraint — I balanced enough validation folds against leaving enough training history in the earliest fold to actually learn from. More splits would each have less training data, its own risk."],
+      ["You used training-fold importance and validation-fold permutation importance — isn't the validation fold now 'used up'?","Fair concern — I treat that as a soft feature-selection step and hold out a final untouched test period for reported performance, so the numbers used for selection are separate from the ones reported."],
+      ["Log-transforming the target for skew — doesn't that compress the very cost spikes you care about detecting?","It compresses scale for training stability, but direction and relative size of a spike survive the transform, and predictions convert back to real dollars with expm1() before anyone sees them."],
+      ["Alert threshold is a fixed +12% — isn't that arbitrary?","It started as a reasonable judgment call, but I'd tune it over time against how often it fires and whether acted-on alerts actually prevented cost — meant to evolve, not stay fixed forever."],
+      ["Momentum/trend_ratio features — couldn't they fail the first time the trend reverses direction?","Yes, they lag a true reversal by design since they're built from recent history — a genuine blind spot, which is why residual monitoring after deployment matters, to catch that kind of miss quickly."],
+      ["Keeping this at company-wide level — doesn't that risk masking a real regional problem inside an average?","Yes, that's the explicit trade-off of a simpler v1 — a bad region could hide behind good performance elsewhere. I'd flag that limitation directly and treat regional breakdown as the natural next iteration."],
+      ["Permutation importance can mislead with correlated features — how did you guard against that?","I ran the correlation filter first to remove near-duplicate features before computing permutation importance, so remaining features are less likely to 'share' importance misleadingly."],
+      ["Winsorizing outlier claims at the 99th percentile — doesn't that underestimate real catastrophic-cost risk?","For the trend/forecast model, yes, intentionally — I don't want one huge claim distorting the trend line. Catastrophic claims are tracked and reported separately, not ignored."],
+      ["You claim '$ prevented' as impact — how do you isolate that from a counterfactual you can never observe?","Honestly, it's an estimate — I compare realized cost after an alert to what the pre-alert trend projection would have produced, the best available proxy, always caveated as an estimate, not a certainty."],
+      ["Model retrains monthly — what happens to reproducibility if the champion changes every month?","Every training run — data snapshot, code version, hyperparameters — is logged (e.g. MLflow), so any specific month's forecast can still be traced back and reproduced exactly."],
+      ["STL's robust option down-weights outliers — what if the outlier is a real structural shift, not noise?","A real risk — I'd pair STL with a broader trend check over a longer window so a genuine shift shows up over time even if one month's spike gets down-weighted."],
+      ["Direct multi-horizon means 3 separate models — doesn't that triple maintenance for a small gain?","Real added overhead, yes, but it avoids compounding recursive error, which matters more the further out you forecast — worth it for a business-critical 3-month number, though I'd revisit if maintenance became a bottleneck."],
+      ["How do you know your 80% interval is actually well-calibrated, not just a training data quirk?","I check historical coverage — did roughly 80% of past actuals fall inside the band — on validation folds, though with limited data this calibration check itself has some uncertainty."],
+      ["If your top SHAP driver is lag_1, isn't the model basically a fancy moving average?","There's truth to that — recent history is the strongest predictor, common in short-term forecasting. The real value XGBoost adds is blending that momentum with business drivers a plain moving average can't use."],
+      ["ADF confirmed stationarity after differencing — did you check for structural breaks that ADF alone wouldn't catch?","A gap in relying on ADF alone — I'd supplement it with a visual trend check and, if I suspected a break, a formal structural break test rather than assume ADF covers every kind of instability."],
+      ["Enrollment is used as a normalizer, but membership mix (age, risk) changes too — doesn't that confound the signal?","Yes, potentially — a shift in membership risk mix could look like an OON cost change even without a behavior shift. A known limitation; risk-adjusted enrollment would be a good v2 improvement."]
+    ]}
+  ]
+}
+};
+
+const TIPS = [
+  "Always have a 30-second version and a 3-minute version of this project ready — interviewers will ask for one or the other.",
+  "Lead with the business problem, not the model — interviewers remember \"reduced OON leakage\" far more than \"used XGBoost.\"",
+  "Know your baseline numbers cold (naive, seasonal naive) — a model is only impressive relative to what it beat.",
+  "Never claim more certainty than you have — saying \"roughly 80% coverage\" is more credible than a suspiciously precise number.",
+  "Pick one technical topic (like ACF/PACF or SHAP) to go genuinely deep on — depth in one area beats shallow answers everywhere.",
+  "Be upfront about limitations before the interviewer finds them — it builds trust faster than being caught off guard.",
+  "Always bring it back to a business number (dollars, lead time, percentage) even in a technical answer.",
+  "Practice explaining SHAP in one plain sentence — if you can't, you don't understand it well enough yet.",
+  "Draw the pipeline from memory (data → features → model → forecast → alert → action) before the interview.",
+  "Don't over-engineer your answer to a simple question — answer directly first, then add depth if asked.",
+  "If you don't know something, say so and reason through what you'd check, rather than guessing confidently.",
+  "Prepare for \"why not X\" on every major decision (why not deep learning, why not linear regression, why not region-level) — these come up constantly.",
+  "Use STAR (Situation, Task, Action, Result) for scenario questions to keep answers organized under pressure.",
+  "Rehearse saying your numbers out loud (MAPE, MAE, lead time) so they come out naturally instead of sounding memorized."
+];
+
+const CHEAT = [
+  ["Stationarity","Mean, variance, and autocorrelation stay constant over time"],
+  ["ADF test","Null: non-stationary — low p-value means stationary"],
+  ["KPSS test","Null: stationary — low p-value means non-stationary"],
+  ["ACF","Total correlation with past lags (includes indirect effects)"],
+  ["PACF","Direct correlation with one specific lag only"],
+  ["STL","Decomposes series into trend + seasonal + residual"],
+  ["Differencing","Subtract previous value to remove trend"],
+  ["Lag feature","Past value of the target used as an input"],
+  ["Rolling mean/std","Smoothed recent average / recent volatility"],
+  ["Leakage","Model sees info it wouldn't have at prediction time"],
+  ["log1p / expm1","Compress skew for training, then invert back to real units"],
+  ["Gain importance","How much a feature reduced training error"],
+  ["Permutation importance","Validation error increase when a feature is shuffled"],
+  ["Gradient boosting","Trees built sequentially, each fixing prior errors"],
+  ["Learning rate","How much each new tree contributes to the prediction"],
+  ["Regularization","Constraints that stop the model overfitting"],
+  ["Bias-variance trade-off","Underfitting vs overfitting balance"],
+  ["Quantile regression","Predicts a percentile instead of the average"],
+  ["Direct multi-horizon","Separate model trained per forecast horizon"],
+  ["Recursive forecasting","Feeds prediction back in as next input — compounds error"],
+  ["Walk-forward validation","Train on past, validate on next chunk, repeat forward"],
+  ["MAPE","Mean absolute percentage error"],
+  ["WAPE","Total absolute error ÷ total actual — stable at low values"],
+  ["RMSE","Root mean squared error — penalizes big misses"],
+  ["SHAP","Per-prediction feature contribution, based on game theory"],
+  ["PSI","Population Stability Index — measures feature distribution drift"],
+  ["Champion/challenger","New model must beat current one to replace it"],
+  ["Concept drift","The relationship between features and target changes over time"],
+  ["Winsorizing","Capping extreme values at a percentile to limit outlier impact"],
+  ["Structural break","A lasting shift in the series' behavior, not just noise"]
+];
+
+const tabbar = document.getElementById('tabbar');
+const panels = document.getElementById('panels');
+const tabs = [
+  {id:'technical', label: DATA.technical.label},
+  {id:'business', label: DATA.business.label},
+  {id:'scenario', label: DATA.scenario.label},
+  {id:'cross', label: DATA.cross.label},
+  {id:'tips', label:'Interview tips'},
+  {id:'cheat', label:'Cheat sheet'}
+];
+
+tabs.forEach((t,i)=>{
+  const b=document.createElement('button');
+  b.className='tabbtn'+(i===0?' active':'');
+  b.textContent=t.label;
+  b.dataset.tab=t.id;
+  b.addEventListener('click',()=>selectTab(t.id));
+  tabbar.appendChild(b);
+});
+
+function renderQAPanel(key){
+  const d = DATA[key];
+  let html = '<div class="searchrow"><input type="text" placeholder="Search these questions..." data-search="'+key+'"><span class="count" data-count="'+key+'"></span></div>';
+  d.groups.forEach((g,gi)=>{
+    html += '<h2 class="grp" data-group="'+key+'-'+gi+'">'+g.name+'</h2>';
+    g.items.forEach((item,ii)=>{
+      html += '<details data-item="'+key+'-'+gi+'-'+ii+'" data-q="'+item[0].toLowerCase().replace(/"/g,'&quot;')+'"><summary>'+item[0]+'</summary><p class="a">'+item[1]+'</p></details>';
+    });
+  });
+  return html;
+}
+
+function renderTipsPanel(){
+  let html = '<ul class="tiplist">';
+  TIPS.forEach((t,i)=>{ html += '<li><b>Tip '+(i+1)+':</b> '+t+'</li>'; });
+  html += '</ul>';
+  return html;
+}
+
+function renderCheatPanel(){
+  let html = '<table><tr><th>Term</th><th>Quick definition</th></tr>';
+  CHEAT.forEach(row=>{ html += '<tr><td><code>'+row[0]+'</code></td><td>'+row[1]+'</td></tr>'; });
+  html += '</table>';
+  return html;
+}
+
+const panelEls = {};
+tabs.forEach((t,i)=>{
+  const p = document.createElement('section');
+  p.className='panel'+(i===0?' active':'');
+  p.id='panel-'+t.id;
+  if(t.id==='tips'){ p.innerHTML = renderTipsPanel(); }
+  else if(t.id==='cheat'){ p.innerHTML = renderCheatPanel(); }
+  else { p.innerHTML = renderQAPanel(t.id); }
+  panels.appendChild(p);
+  panelEls[t.id]=p;
+});
+
+function selectTab(id){
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+  Object.keys(panelEls).forEach(k=>panelEls[k].classList.toggle('active', k===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+['technical','business','scenario','cross'].forEach(key=>{
+  const input = panelEls[key].querySelector('[data-search="'+key+'"]');
+  const countEl = panelEls[key].querySelector('[data-count="'+key+'"]');
+  const items = Array.from(panelEls[key].querySelectorAll('details'));
+  const groups = Array.from(panelEls[key].querySelectorAll('h2.grp'));
+  function updateCount(){
+    const visible = items.filter(el=>el.style.display!=='none').length;
+    countEl.textContent = visible + ' / ' + items.length + ' shown';
+  }
+  input.addEventListener('input', ()=>{
+    const q = input.value.toLowerCase();
+    items.forEach(el=>{
+      const match = el.dataset.q.includes(q);
+      el.style.display = match ? '' : 'none';
+    });
+    groups.forEach(g=>{
+      const gi = g.dataset.group;
+      const groupItems = items.filter(el=>el.dataset.item.startsWith(gi+'-'));
+      const anyVisible = groupItems.some(el=>el.style.display!=='none');
+      g.style.display = anyVisible ? '' : 'none';
+    });
+    updateCount();
+  });
+  updateCount();
+});
+</script>
+</body>
+</html>
