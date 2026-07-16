@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P&C Insurance — DS/ML Interview Masterclass</title>
+<style>
+:root{
+  --bg:#0b0f14;
+  --bg-panel:#11161d;
+  --bg-panel-2:#161c25;
+  --ink:#e8edf3;
+  --ink-dim:#9aa7b8;
+  --ink-faint:#5f6c7d;
+  --line:#232b36;
+  --amber:#d4a24e;
+  --teal:#3fc9c0;
+  --purple:#a78bfa;
+  --blue:#5b9bd5;
+  --orange:#f0883e;
+  --green:#4ade80;
+  --rose:#f472b6;
+  --red:#fb7185;
+  --gold:#e8c468;
+  --mono: 'JetBrains Mono','Consolas',monospace;
+  --serif: 'Georgia','Iowan Old Style',serif;
+  --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 1200px 600px at 15% -5%, rgba(212,162,78,0.06), transparent),
+    radial-gradient(ellipse 1000px 700px at 100% 20%, rgba(63,201,192,0.05), transparent),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.6;
+}
+::selection{background:rgba(212,162,78,0.3);}
+
+/* ---- Header / Hero ---- */
+.hero{
+  padding:64px 40px 40px;
+  border-bottom:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px);
+  pointer-events:none;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:14px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:clamp(32px,5vw,54px);
+  font-weight:400;
+  margin:0 0 14px;
+  letter-spacing:-0.5px;
+  max-width:820px;
+}
+.hero h1 em{color:var(--teal); font-style:normal;}
+.hero p.sub{
+  color:var(--ink-dim);
+  max-width:640px;
+  font-size:15.5px;
+  margin:0 0 22px;
+}
+.hero .ledger{
+  display:flex;
+  gap:28px;
+  flex-wrap:wrap;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink-faint);
+  border-top:1px dashed var(--line);
+  padding-top:16px;
+  margin-top:20px;
+}
+.hero .ledger b{color:var(--ink-dim); font-weight:600;}
+
+/* ---- Sticky nav ---- */
+.navbar{
+  position:sticky; top:0; z-index:100;
+  background:rgba(11,15,20,0.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:0 40px;
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:thin;
+}
+.navbar::-webkit-scrollbar{height:4px;}
+.navbar::-webkit-scrollbar-thumb{background:var(--line);}
+.navbar a{
+  flex:0 0 auto;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--ink-faint);
+  text-decoration:none;
+  padding:14px 12px;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:color .15s, border-color .15s;
+}
+.navbar a:hover{color:var(--ink);}
+.navbar a.active{color:var(--sec-color,var(--amber)); border-bottom-color:var(--sec-color,var(--amber));}
+
+.wrap{max-width:980px; margin:0 auto; padding:0 40px;}
+
+/* ---- Sections ---- */
+section.sec{
+  padding:56px 0 20px;
+  border-bottom:1px solid var(--line);
+  scroll-margin-top:52px;
+}
+section.sec .tag{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--mono); font-size:11px; letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--c);
+  margin-bottom:10px;
+}
+section.sec .tag::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--c);}
+section.sec h2{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:28px;
+  margin:0 0 18px;
+  color:var(--ink);
+  border-left:3px solid var(--c);
+  padding-left:14px;
+}
+section.sec h3{
+  font-size:15px; font-weight:600; color:var(--c);
+  margin:28px 0 8px;
+  text-transform:uppercase; letter-spacing:0.5px; font-family:var(--mono); font-size:11.5px;
+}
+section.sec p{color:var(--ink-dim); font-size:14.5px; margin:8px 0;}
+section.sec p strong{color:var(--ink);}
+section.sec ul{color:var(--ink-dim); font-size:14.5px; padding-left:20px;}
+section.sec li{margin:4px 0;}
+section.sec li strong{color:var(--ink);}
+
+/* callouts */
+.callout{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-left:3px solid var(--c);
+  border-radius:6px;
+  padding:14px 16px;
+  margin:14px 0;
+  font-size:13.8px;
+  color:var(--ink-dim);
+}
+.callout .label{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--c); display:block; margin-bottom:6px;
+}
+.callout.why{--c-local:var(--gold);}
+
+/* formula box */
+.formula{
+  font-family:var(--mono);
+  background:var(--bg-panel-2);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:12px 16px;
+  margin:12px 0;
+  font-size:14px;
+  color:var(--gold);
+  overflow-x:auto;
+  white-space:pre;
+}
+
+/* code */
+pre.code{
+  background:#0d1218;
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:14px 16px;
+  overflow-x:auto;
+  font-family:var(--mono);
+  font-size:12.5px;
+  line-height:1.55;
+  margin:10px 0;
+  color:#c9d4e0;
+}
+pre.code .k{color:#c586c0;}
+pre.code .s{color:#ce9178;}
+pre.code .c{color:#6a9955;}
+pre.code .f{color:#dcdcaa;}
+.codelabel{font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-faint); margin:14px 0 -4px;}
+
+/* KPI table */
+table.kpi{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+table.kpi th{
+  text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase;
+  color:var(--c); border-bottom:1px solid var(--line); padding:8px 10px;
+}
+table.kpi td{padding:9px 10px; border-bottom:1px solid var(--line); color:var(--ink-dim); vertical-align:top;}
+table.kpi tr:hover td{background:rgba(255,255,255,0.02);}
+table.kpi td strong{color:var(--ink);}
+
+/* Q&A details */
+details.qa{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:6px;
+  margin:16px 0;
+}
+details.qa summary{
+  cursor:pointer; padding:12px 16px; font-family:var(--mono); font-size:12px;
+  color:var(--c); list-style:none; display:flex; justify-content:space-between; align-items:center;
+}
+details.qa summary::-webkit-details-marker{display:none;}
+details.qa summary::after{content:"+"; color:var(--ink-faint); font-size:16px;}
+details.qa[open] summary::after{content:"–";}
+details.qa .qa-body{padding:0 16px 16px; border-top:1px solid var(--line);}
+.qitem{margin:14px 0;}
+.qitem .q{color:var(--ink); font-size:14px; font-weight:600; margin-bottom:4px;}
+.qitem .q::before{content:"Q. "; color:var(--c);}
+.qitem .a{color:var(--ink-dim); font-size:13.8px;}
+.qitem .a::before{content:"A. "; color:var(--ink-faint);}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:720px){.grid2{grid-template-columns:1fr;} .navbar{padding:0 16px;} .hero{padding:48px 16px 30px;} .wrap{padding:0 16px;}}
+
+.chip{
+  display:inline-block; font-family:var(--mono); font-size:10.5px; padding:2px 8px;
+  border:1px solid var(--c); color:var(--c); border-radius:20px; margin-right:6px; margin-bottom:8px;
+}
+
+/* footer */
+footer{padding:50px 40px 80px; text-align:center;}
+footer p{color:var(--ink-faint); font-size:12.5px; font-family:var(--mono);}
+
+/* cheat sheet */
+.cheat-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+@media(max-width:900px){.cheat-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.cheat-grid{grid-template-columns:1fr;}}
+.cheat-card{
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:8px; padding:14px 16px;
+}
+.cheat-card h4{margin:0 0 8px; font-family:var(--mono); font-size:11px; color:var(--gold); letter-spacing:1px; text-transform:uppercase;}
+.cheat-card div{font-size:12.5px; color:var(--ink-dim); margin:4px 0;}
+.cheat-card div b{color:var(--ink);}
+
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--line); border-radius:6px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">FIELD MANUAL · P&amp;C INSURANCE FOR DATA SCIENTISTS</div>
+  <h1>From claims ledgers to <em>forecasting models</em> — insurance domain, taught for interview-ready fluency.</h1>
+  <p class="sub">Written the way a Senior Principal DS at Liberty Mutual / EXL / Travelers would onboard a strong DS hire who has never touched insurance. Every KPI carries its business "why," its ML "how," and its interview angle.</p>
+  <div class="ledger">
+    <span><b>15</b> sections</span>
+    <span><b>Policy → Premium → Claim</b> lifecycle</span>
+    <span><b>ARIMA → TFT</b> model coverage</span>
+    <span><b>SQL + Python</b> on every KPI</span>
+    <span>Click <b>+</b> to expand interview Q&amp;A banks</span>
+  </div>
+</div>
+
+<div class="navbar" id="navbar">
+  <a href="#s1" data-c="var(--amber)">01 · P&amp;C Basics</a>
+  <a href="#s2" data-c="var(--teal)">02 · Forecasting</a>
+  <a href="#s3" data-c="var(--purple)">03 · Demand/Supply</a>
+  <a href="#s4" data-c="var(--blue)">04 · Call Volume</a>
+  <a href="#s5" data-c="var(--orange)">05 · Shrinkage</a>
+  <a href="#s6" data-c="var(--green)">06 · SLA</a>
+  <a href="#s7" data-c="var(--rose)">07 · AHT</a>
+  <a href="#s8" data-c="var(--amber)">08 · Business Vars</a>
+  <a href="#s9" data-c="var(--teal)">09 · PIF</a>
+  <a href="#s10" data-c="var(--purple)">10 · Enforcement</a>
+  <a href="#s11" data-c="var(--blue)">11 · Underwriting</a>
+  <a href="#s12" data-c="var(--red)">12 · Actuarial</a>
+  <a href="#s13" data-c="var(--green)">13 · Feature Eng.</a>
+  <a href="#s14" data-c="var(--gold)">14 · Capstone</a>
+  <a href="#s15" data-c="var(--amber)">15 · Interview Prep</a>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 1 -->
+<section class="sec" id="s1" style="--c:var(--amber)">
+  <div class="tag">Section 01</div>
+  <h2>Property &amp; Casualty Insurance — the foundation</h2>
+
+  <p><strong>What insurance actually is:</strong> a pool of money. Thousands of policyholders each pay a small, certain amount (premium) so that the few who suffer a large, uncertain loss (a car crash, a house fire) get made whole from the shared pool. P&amp;C insurance covers <strong>property</strong> (home, auto, commercial buildings) and <strong>casualty/liability</strong> (you injure someone or damage their property) — as opposed to <strong>Life</strong> insurance, which pays out on a single, near-certain, distant event (death).</p>
+
+  <div class="callout"><span class="label">Why this distinction matters for a DS</span>Life actuarial models are long-horizon, low-frequency mortality curves. P&amp;C is short-tail (auto, most property) or long-tail (liability, workers' comp) and driven by high-frequency, volatile events — weather, driving behavior, litigation trends. That's why P&amp;C leans much harder on <strong>forecasting and time series ML</strong> than Life does.</div>
+
+  <h3>The lifecycle, stakeholder by stakeholder</h3>
+  <table class="kpi">
+    <tr><th>Role</th><th>What they do</th><th>What a DS gives them</th></tr>
+    <tr><td><strong>Agent / Broker</strong></td><td>Sells policies; agent repping one carrier (e.g., a Liberty Mutual agent), broker shopping across carriers for the client.</td><td>Lead scoring, quote-to-bind propensity, agent productivity forecasts.</td></tr>
+    <tr><td><strong>Underwriter</strong></td><td>Decides whether to accept a risk and at what price/terms.</td><td>Risk scoring models, automated underwriting rules, submission-triage models.</td></tr>
+    <tr><td><strong>Claims Team</strong></td><td>Handles the loss once it happens — investigates, adjusts, pays.</td><td>Claim severity/frequency prediction, fraud flags, claims-volume forecasting.</td></tr>
+    <tr><td><strong>Actuary</strong></td><td>Prices risk mathematically and sets reserves for future claim payouts.</td><td>DS models often feed actuarial pricing factors; actuaries validate DS models against loss triangles.</td></tr>
+    <tr><td><strong>Pricing Team</strong></td><td>Turns actuarial indications into the rate a customer actually sees.</td><td>Elasticity models, competitive pricing, rate optimization.</td></tr>
+    <tr><td><strong>Fraud Team</strong></td><td>Investigates suspicious claims.</td><td>Anomaly detection, network/graph fraud models, SIU (Special Investigation Unit) triage scores.</td></tr>
+    <tr><td><strong>Contact Center</strong></td><td>Answers policy, billing, and claims calls.</td><td>Call volume forecasting, AHT prediction, workforce scheduling models.</td></tr>
+  </table>
+
+  <h3>Core vocabulary — memorize these cold</h3>
+  <table class="kpi">
+    <tr><th>Term</th><th>Plain-English meaning</th><th>Liberty Mutual style example</th></tr>
+    <tr><td><strong>Policy</strong></td><td>The contract itself.</td><td>A 6-month auto policy for a Honda Civic.</td></tr>
+    <tr><td><strong>Coverage</strong></td><td>What perils/losses are actually insured under that policy.</td><td>Collision, comprehensive, liability, uninsured motorist.</td></tr>
+    <tr><td><strong>Premium</strong></td><td>The price the customer pays for the coverage.</td><td>$1,200/year auto premium.</td></tr>
+    <tr><td><strong>Deductible</strong></td><td>What the customer pays out-of-pocket before insurance kicks in.</td><td>$500 deductible on a windshield claim.</td></tr>
+    <tr><td><strong>Risk</strong></td><td>The probability + magnitude of a future loss.</td><td>A teenage driver is higher risk than a 45-year-old with a clean record.</td></tr>
+    <tr><td><strong>Exposure</strong></td><td>The measurable unit of risk being insured (car-years, home-years, payroll dollars).</td><td>1 car insured for 1 full year = 1 car-year of exposure.</td></tr>
+    <tr><td><strong>Peril</strong></td><td>The specific cause of loss.</td><td>Fire, hail, theft, collision.</td></tr>
+    <tr><td><strong>Loss</strong></td><td>The dollar cost of a covered event.</td><td>$8,000 in vehicle repair.</td></tr>
+    <tr><td><strong>Claim</strong></td><td>The formal request for the insurer to pay for a loss.</td><td>Policyholder files a claim after a hailstorm.</td></tr>
+  </table>
+
+  <h3>Why P&amp;C companies live and die by forecasting</h3>
+  <p>An insurer collects premium <em>now</em> for a promise to pay claims <em>later</em> — sometimes decades later for liability. Get the forecast of claims, policy growth, or call volume wrong, and you mis-price risk, under-staff the contact center during a hurricane, or under-reserve capital and threaten solvency. Forecasting isn't a nice-to-have here — it's the core of the business model.</p>
+
+  <h3>Typical DS/ML use cases in P&amp;C</h3>
+  <p>
+    <span class="chip">Demand Forecasting</span>
+    <span class="chip">Claim Forecasting</span>
+    <span class="chip">Policy/PIF Forecasting</span>
+    <span class="chip">Premium Forecasting</span>
+    <span class="chip">Fraud Detection</span>
+    <span class="chip">Retention/Churn</span>
+    <span class="chip">Pricing/Elasticity</span>
+    <span class="chip">CLV</span>
+    <span class="chip">Call Volume Forecasting</span>
+    <span class="chip">Workforce Forecasting</span>
+  </p>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — P&amp;C Fundamentals (8 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why is P&amp;C forecasting harder than Life insurance forecasting?</div><div class="a">P&amp;C losses are high-frequency and volatile (weather, driving, litigation) vs. Life's low-frequency, well-studied mortality curves; P&amp;C also has short reporting-to-settlement lags for some lines and very long ones (10+ years) for liability, so the same company juggles both short-tail and long-tail forecasting problems.</div></div>
+      <div class="qitem"><div class="q">What's the difference between risk and exposure?</div><div class="a">Risk is the likelihood and severity of a bad outcome; exposure is the measurable unit you multiply a rate by — e.g., car-years, payroll-dollars, home-years. Actuaries price per unit of exposure, not per policy.</div></div>
+      <div class="qitem"><div class="q">A stakeholder asks you to explain "why we need a data scientist when we have actuaries." How do you answer?</div><div class="a">Actuaries are the domain authority on loss cost and reserving using traditional (often GLM-based) statistical methods validated against regulation. DS complements this with higher-frequency operational forecasting (call volume, staffing, PIF), non-traditional data (text, image, behavioral), and modern ML for tasks actuarial methods weren't built for — fraud graphs, NLP on claim notes, real-time scoring.</div></div>
+      <div class="qitem"><div class="q">Explain peril vs. loss vs. claim in one sentence each.</div><div class="a">Peril is the cause (hail); loss is the dollar cost of the damage it caused ($8,000); claim is the formal request to the insurer to pay that loss.</div></div>
+      <div class="qitem"><div class="q">Why does a deductible matter for a forecasting model?</div><div class="a">Deductible level changes claim frequency (small losses under the deductible never become claims) — so two policies with identical risk but different deductibles will show very different observed claim frequency in your training data. You must control for it as a feature or your frequency model will be biased.</div></div>
+      <div class="qitem"><div class="q">What is the fundamental business model tension a DS model should help manage?</div><div class="a">Premium is collected today for a promise to pay later — the insurer is pricing an uncertain future liability today. Every forecasting model (claims, reserves, staffing) exists to reduce that uncertainty.</div></div>
+      <div class="qitem"><div class="q">Give one ML use case each for underwriting, claims, and the contact center.</div><div class="a">Underwriting: automated risk scoring for straight-through-processing. Claims: severity prediction to route high-cost claims to senior adjusters early. Contact center: call volume forecasting to build the staffing schedule.</div></div>
+      <div class="qitem"><div class="q">Why might a broker's data look different from an agent's for modeling purposes?</div><div class="a">An agent's book is single-carrier so its mix reflects that carrier's underwriting appetite; a broker's submissions are multi-carrier and pre-filtered by what the broker thinks will bind, introducing selection bias you need to account for in submission-level models.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 2 -->
+<section class="sec" id="s2" style="--c:var(--teal)">
+  <div class="tag">Section 02</div>
+  <h2>Insurance Forecasting — what gets forecast, and with what</h2>
+
+  <p>Almost every operational and financial number in an insurer is forecast: <strong>policies, premium, claims, revenue, renewals, customer calls, workload, adjuster demand, underwriting demand.</strong> The reason is capacity planning — capital, headcount, and reinsurance all have to be arranged in advance of the risk actually materializing.</p>
+
+  <h3>Anatomy of a forecasting problem</h3>
+  <table class="kpi">
+    <tr><th>Element</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td><strong>Input variables</strong></td><td>Predictors — historical target, calendar, weather, marketing, macro.</td><td>Lagged call volume, day-of-week, storm alerts, open-enrollment flag.</td></tr>
+    <tr><td><strong>Target variable</strong></td><td>What you're predicting.</td><td>Daily inbound call count; monthly new business premium.</td></tr>
+    <tr><td><strong>Forecast horizon</strong></td><td>How far ahead.</td><td>1 day (staffing) vs. 12 months (capital planning).</td></tr>
+    <tr><td><strong>Granularity</strong></td><td>The time bucket of the forecast.</td><td>Daily, weekly, monthly, quarterly, yearly.</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">Why granularity is a design decision, not a detail</span>Contact-center staffing needs 15/30-minute intraday granularity because agents are scheduled in shifts; a CFO's premium forecast is fine at monthly/quarterly. Picking the wrong granularity either drowns the model in noise (too fine for the decision) or hides the pattern the decision actually needs (too coarse).</div>
+
+  <h3>Model selection cheat table</h3>
+  <table class="kpi">
+    <tr><th>Model</th><th>Best for</th><th>Watch out for</th></tr>
+    <tr><td><strong>ARIMA / SARIMA</strong></td><td>Single series, clear trend + seasonality, limited exogenous drivers, need interpretable coefficients for actuarial sign-off.</td><td>Doesn't scale to many exogenous regressors or hundreds of series.</td></tr>
+    <tr><td><strong>SARIMAX</strong></td><td>Same as SARIMA plus a handful of known drivers (marketing spend, weather index).</td><td>Still one series at a time; manual order selection.</td></tr>
+    <tr><td><strong>Prophet</strong></td><td>Business series with strong holiday/event effects, fast to stand up, easy for non-DS stakeholders to trust (decomposable trend/seasonality/holiday plot).</td><td>Weaker than gradient boosting when you have many rich features.</td></tr>
+    <tr><td><strong>LightGBM / XGBoost / CatBoost</strong></td><td>Many series at once (region × LOB × product), rich tabular features (lags, weather, macro, categorical), short-to-medium horizon.</td><td>Needs manual lag/rolling feature engineering; extrapolates trend poorly beyond training range.</td></tr>
+    <tr><td><strong>LSTM</strong></td><td>Long sequences, complex non-linear temporal dependencies, enough data to train a deep net.</td><td>Data-hungry, less interpretable — hard sell to actuarial/regulatory reviewers.</td></tr>
+    <tr><td><strong>Temporal Fusion Transformer</strong></td><td>Many related series (multi-region call centers) with both static and time-varying covariates, need attention-based interpretability.</td><td>Heavy to build/maintain; usually only justified at large scale.</td></tr>
+  </table>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Forecasting Fundamentals (7 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">You're asked to forecast daily claim counts by region. Why might LightGBM beat SARIMA here?</div><div class="a">You have hundreds of region series sharing structure (pool them into one model with region as a categorical feature) plus rich exogenous drivers (weather, catastrophe alerts, PIF growth) — a tree model handles cross-series learning and non-linear feature interactions that SARIMA (one series, mostly linear) can't.</div></div>
+      <div class="qitem"><div class="q">Why is forecast granularity a business decision, not just a technical one?</div><div class="a">Granularity has to match the decision cadence downstream — intraday for shift scheduling, monthly for capital and reinsurance planning. Too fine wastes effort and adds noise where decisions are coarse; too coarse hides the signal the decision-maker actually needs.</div></div>
+      <div class="qitem"><div class="q">When would you still choose ARIMA/SARIMAX over gradient boosting in a modern insurance DS team?</div><div class="a">When you need a small number of interpretable coefficients for actuarial/regulatory review, have one important series, and a handful of known exogenous drivers — the transparency and statistical rigor outweighs the accuracy gain from trees.</div></div>
+      <div class="qitem"><div class="q">What's the risk of extrapolating a tree-based model (LightGBM) far beyond its training horizon?</div><div class="a">Trees predict by averaging training-set leaf values, so they can't extrapolate a trend outside the range seen in training — a growing book of business will get systematically under-forecast unless you explicitly detrend or add a trend feature.</div></div>
+      <div class="qitem"><div class="q">How would you decide the forecast horizon for adjuster staffing after a hurricane forecast?</div><div class="a">Tie it to the operational lead time needed to mobilize adjusters (often 3-14 days) — the horizon should match how far in advance the decision (contracting catastrophe adjusters, moving staff) actually needs to be made, not an arbitrary "30 days."</div></div>
+      <div class="qitem"><div class="q">What's the trade-off Prophet makes vs. LightGBM for a business stakeholder?</div><div class="a">Prophet gives an intuitive decomposition (trend/seasonality/holiday) stakeholders can visually sanity-check and trust quickly, at some cost in raw accuracy versus a well-tuned gradient boosting model with rich features.</div></div>
+      <div class="qitem"><div class="q">Why do TFTs matter for a large multi-region contact center network?</div><div class="a">TFTs natively model many related series with shared static covariates (region size, LOB mix) and time-varying ones (weather, staffing) while providing attention weights that show which past periods and features drove a given forecast — useful when you must explain "why" to ops leadership.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 3 -->
+<section class="sec" id="s3" style="--c:var(--purple)">
+  <div class="tag">Section 03</div>
+  <h2>Demand-Supply Forecasting</h2>
+
+  <p><strong>Demand</strong> = the work arriving (calls, claims, quote submissions). <strong>Supply</strong> = the people/capacity available to handle it (agents, adjusters, CSRs, underwriters). Insurance forecasts both sides because a mismatch is expensive on either edge: too little supply → SLA breach, angry customers, lost renewals; too much supply → wasted payroll.</p>
+
+  <h3>What moves demand</h3>
+  <ul>
+    <li><strong>Catastrophe/weather events</strong> — a hailstorm can 10x claims calls in a region overnight.</li>
+    <li><strong>Renewal season / open enrollment</strong> — predictable annual spikes.</li>
+    <li><strong>Marketing campaigns</strong> — new-business quote volume surges.</li>
+    <li><strong>Macro/seasonal patterns</strong> — e.g., auto claims rise in icy months.</li>
+  </ul>
+
+  <h3>What constitutes supply</h3>
+  <ul><li><strong>Agents</strong> (sales), <strong>Underwriters</strong> (risk decisions), <strong>Adjusters</strong> (claims handling), <strong>CSRs</strong> (contact center).</li></ul>
+
+  <div class="callout"><span class="label">Why the mismatch is costly, both directions</span>Under-supply during a catastrophe means adjusters take weeks to reach policyholders — driving up loss adjustment expense, litigation risk, and churn. Over-supply in a quiet quarter is pure payroll waste sitting on the expense ratio. Workforce planning exists to minimize the sum of both costs, not just avoid one.</div>
+
+  <h3>Workforce planning → scheduling → queue management → backlog prediction</h3>
+  <p>These form a pipeline: a <strong>long-range workforce plan</strong> (how many FTEs to hire/contract this quarter) is built from a demand forecast; a <strong>short-range schedule</strong> (who works which shift this week) is built from an intraday forecast; a live <strong>queue management</strong> system reacts in real time when actuals diverge from forecast; and a <strong>backlog model</strong> predicts how a temporary supply shortfall (e.g., a catastrophe surge) will clear over the following days/weeks, which itself becomes an input to whether to bring in catastrophe adjusters (temporary contract staff).</p>
+
+  <div class="codelabel">Python — simple demand-supply gap signal</div>
+  <pre class="code"><span class="k">import</span> pandas <span class="k">as</span> pd
+
+<span class="c"># forecasted_calls, aht_seconds, sla_target, shrinkage all forecast/known upstream</span>
+<span class="k">def</span> <span class="f">required_agents</span>(forecasted_calls, aht_seconds, interval_seconds<span class="o">=</span><span class="s">1800</span>, shrinkage<span class="o">=</span><span class="s">0.30</span>, occupancy_target<span class="o">=</span><span class="s">0.85</span>):
+    workload_seconds <span class="o">=</span> forecasted_calls <span class="o">*</span> aht_seconds
+    raw_agents <span class="o">=</span> workload_seconds <span class="o">/</span> (interval_seconds <span class="o">*</span> occupancy_target)
+    <span class="k">return</span> raw_agents <span class="o">/</span> (<span class="s">1</span> <span class="o">-</span> shrinkage)   <span class="c"># inflate for shrinkage</span>
+
+gap <span class="o">=</span> required_agents(forecasted_calls<span class="o">=</span><span class="s">420</span>, aht_seconds<span class="o">=</span><span class="s">300</span>) <span class="o">-</span> scheduled_agents</pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Demand-Supply (6 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">A hailstorm hits a region. Walk me through the demand-supply response chain.</div><div class="a">Catastrophe (CAT) modeling flags the event and estimated exposure → short-horizon claims-call forecast spikes → workforce plan triggers temporary CAT adjusters/CSRs → intraday scheduling reallocates shifts → queue management reroutes overflow calls to other regions → backlog model tracks how fast the surge clears to decide when to release temp staff.</div></div>
+      <div class="qitem"><div class="q">Why can't you just always overstaff to avoid SLA risk?</div><div class="a">Payroll is a direct hit to the expense ratio (a key profitability metric); permanent overstaffing to cover rare surges is far more expensive than a flexible/CAT-staffing model built on a good demand forecast.</div></div>
+      <div class="qitem"><div class="q">What's the difference between workforce planning and scheduling?</div><div class="a">Workforce planning is the longer-range headcount/budget decision (how many FTEs this quarter) from a coarse-grained forecast; scheduling is the short-range, fine-grained (intraday/shift-level) assignment of the people you already have.</div></div>
+      <div class="qitem"><div class="q">How would you forecast backlog after a temporary supply shortage?</div><div class="a">Model backlog as a queueing process: backlog(t) = backlog(t-1) + arrivals(t) − service_capacity(t); forecast arrivals and capacity separately, then simulate the backlog trajectory forward to estimate days-to-clear.</div></div>
+      <div class="qitem"><div class="q">Give two non-obvious demand drivers you'd feature-engineer for underwriting submission volume.</div><div class="a">Competitor rate-filing changes (a competitor raising rates nearby can push submissions to your carrier) and macro housing-market activity (new mortgages often require new home-insurance submissions).</div></div>
+      <div class="qitem"><div class="q">Why does queue management need to exist even with a good forecast?</div><div class="a">No forecast is perfect at short horizons — queue management is the real-time feedback loop that reacts when actual arrivals diverge from the forecast within the day, which a static forecast/schedule alone can't handle.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 4 -->
+<section class="sec" id="s4" style="--c:var(--blue)">
+  <div class="tag">Section 04</div>
+  <h2>Contact Center Call Volume Forecasting</h2>
+
+  <p>Forecasting call volume badly cascades directly into cost and customer experience — it's one of the most concrete, metrics-heavy forecasting problems in insurance, and a favorite interview topic because it forces you to connect a time series forecast to an operational outcome.</p>
+
+  <h3>The core metric family</h3>
+  <table class="kpi">
+    <tr><th>Metric</th><th>Definition</th></tr>
+    <tr><td><strong>Incoming / Outgoing Calls</strong></td><td>Calls arriving to / placed by the center.</td></tr>
+    <tr><td><strong>Answered Calls</strong></td><td>Calls actually connected to an agent.</td></tr>
+    <tr><td><strong>Abandonment Rate</strong></td><td>% of calls the customer hangs up before being answered.</td></tr>
+    <tr><td><strong>Average Speed of Answer (ASA)</strong></td><td>Average wait time before an agent picks up.</td></tr>
+    <tr><td><strong>Occupancy</strong></td><td>% of logged-in time an agent spends actively handling contacts.</td></tr>
+    <tr><td><strong>Service Level</strong></td><td>% of calls answered within a target time (e.g., 80% in 20 seconds).</td></tr>
+    <tr><td><strong>Shrinkage</strong></td><td>% of paid time an agent is scheduled but not available to take calls.</td></tr>
+    <tr><td><strong>AHT / ACW / Talk Time</strong></td><td>Average Handle Time = Talk Time + Hold + After Call Work (ACW, the wrap-up admin after the call ends).</td></tr>
+  </table>
+
+  <h3>What shapes the pattern</h3>
+  <p>Day-of-week and hour-of-day seasonality, holidays, weather, renewal-season spikes, catastrophe events, and marketing-driven quote calls all stack on top of each other — which is exactly why exogenous-feature-friendly models (gradient boosting, Prophet with regressors, TFT) tend to outperform pure ARIMA here.</p>
+
+  <div class="codelabel">SQL — building a daily call-volume feature table</div>
+  <pre class="code"><span class="k">SELECT</span>
+  call_date,
+  <span class="k">COUNT</span>(*) <span class="k">AS</span> total_calls,
+  <span class="k">SUM</span>(<span class="k">CASE WHEN</span> answered_flag <span class="o">=</span> <span class="s">1</span> <span class="k">THEN</span> <span class="s">1</span> <span class="k">ELSE</span> <span class="s">0</span> <span class="k">END</span>) <span class="k">AS</span> answered_calls,
+  <span class="k">AVG</span>(handle_time_seconds) <span class="k">AS</span> avg_aht,
+  EXTRACT(DOW <span class="k">FROM</span> call_date) <span class="k">AS</span> day_of_week,
+  <span class="k">LAG</span>(<span class="k">COUNT</span>(*), <span class="s">7</span>) <span class="k">OVER</span> (<span class="k">ORDER BY</span> call_date) <span class="k">AS</span> calls_same_day_last_week
+<span class="k">FROM</span> contact_center.call_log
+<span class="k">WHERE</span> call_date <span class="k">BETWEEN</span> <span class="s">'2024-01-01'</span> <span class="k">AND</span> <span class="s">'2026-01-01'</span>
+<span class="k">GROUP BY</span> call_date
+<span class="k">ORDER BY</span> call_date;</pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Call Volume Forecasting (7 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why do you need both daily and intraday (30-min) call volume models rather than one?</div><div class="a">Daily forecasts drive weekly staffing/headcount decisions; intraday forecasts drive shift-level scheduling. The shape of intraday seasonality (lunch dips, morning spikes) is a different pattern than day-of-week/month seasonality, so a single model conflates two decisions with different granularity needs.</div></div>
+      <div class="qitem"><div class="q">A storm is forecast for tomorrow. How do you adjust your call volume model?</div><div class="a">Add a weather/catastrophe-severity exogenous feature (or an event flag with expected magnitude from CAT models) rather than relying on the historical seasonal pattern alone — pure time series extrapolation can't anticipate an out-of-pattern shock.</div></div>
+      <div class="qitem"><div class="q">Your forecast underestimated calls by 20% today. What's the operational consequence and how do you trace the error?</div><div class="a">Service level drops and abandonment rises because scheduled staffing was built on the low forecast; to trace it, check whether the miss was a level shift (systematic under-forecast, e.g., missed a marketing campaign) or a one-off shock (an unflagged local event) — that determines whether you fix the model or just flag it as noise.</div></div>
+      <div class="qitem"><div class="q">Why is call-volume forecast accuracy usually measured with a metric like WAPE or MAPE rather than plain RMSE?</div><div class="a">Business stakeholders think in percentage terms ("we were off by 8%") and call volumes vary a lot in scale across days/regions, so a percentage-based, scale-independent metric communicates and compares error more meaningfully than a raw RMSE dominated by high-volume days.</div></div>
+      <div class="qitem"><div class="q">What features would you engineer for a renewal-season call spike?</div><div class="a">Days-to-policy-expiration distribution in the book (how many policies are up for renewal this week), historical renewal-season lift ratios by product line, and a renewal-reminder-mailer send-date flag, since mailers are a known trigger for inbound calls.</div></div>
+      <div class="qitem"><div class="q">How would you handle a holiday that shifts (e.g., Thanksgiving) in your feature engineering?</div><div class="a">Use a holiday calendar feature keyed to the actual date each year (not day-of-month) plus "days to/from holiday" features, since call patterns often shift in the days surrounding a holiday, not just on the day itself.</div></div>
+      <div class="qitem"><div class="q">Why might you build separate models per call type (claims vs. billing vs. new business) instead of one total-volume model?</div><div class="a">Each call type has a different driver set (claims driven by weather/CAT events, billing by due-date cycles, new business by marketing) — a single aggregate model averages away these distinct signals and is harder for ops to act on since staffing is often skill-based/queue-specific.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 5 -->
+<section class="sec" id="s5" style="--c:var(--orange)">
+  <div class="tag">Section 05</div>
+  <h2>Shrinkage</h2>
+
+  <p><strong>Shrinkage</strong> is the % of an agent's paid time that is <em>not</em> available for handling contacts. It's the gap between "agents on payroll" and "agents actually answering the phone."</p>
+
+  <div class="formula">Shrinkage % = (Paid time − Time available to handle contacts) / Paid time × 100</div>
+
+  <table class="kpi">
+    <tr><th>Type</th><th>Examples</th></tr>
+    <tr><td><strong>Planned shrinkage</strong></td><td>Lunch, breaks, scheduled training, scheduled meetings, vacation.</td></tr>
+    <tr><td><strong>Unplanned shrinkage</strong></td><td>Sick leave, unscheduled meetings, system outages, last-minute coaching.</td></tr>
+    <tr><td><strong>Paid shrinkage</strong></td><td>Time the agent is paid but unavailable (most of the above).</td></tr>
+    <tr><td><strong>Unpaid shrinkage</strong></td><td>Unpaid leave, unpaid absence.</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">Why shrinkage changes staffing math</span>If you need 100 agents actually on the phone and shrinkage runs at 30%, you must schedule ~143 agents (100 / (1-0.30)) to cover it. Underestimate shrinkage and you under-staff even with a perfectly accurate call forecast — this is the #1 place a good forecast gets undermined by a bad shrinkage assumption.</div>
+
+  <div class="codelabel">Python — shrinkage-adjusted staffing feature</div>
+  <pre class="code">df[<span class="s">'required_scheduled_agents'</span>] <span class="o">=</span> df[<span class="s">'required_handling_agents'</span>] <span class="o">/</span> (<span class="s">1</span> <span class="o">-</span> df[<span class="s">'shrinkage_pct'</span>])
+<span class="c"># rolling shrinkage as a leading feature for next week's schedule</span>
+df[<span class="s">'shrinkage_pct_28d_avg'</span>] <span class="o">=</span> df.groupby(<span class="s">'site_id'</span>)[<span class="s">'shrinkage_pct'</span>].transform(<span class="k">lambda</span> s: s.rolling(<span class="s">28</span>).mean())</pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Shrinkage (5 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Give the shrinkage formula and explain each term.</div><div class="a">Shrinkage % = (Paid time − time available to handle contacts) / Paid time. Paid time is everything the agent is compensated for during the shift; available time is the subset actually on-queue for contacts.</div></div>
+      <div class="qitem"><div class="q">Why does forecasting unplanned shrinkage matter as much as planned shrinkage?</div><div class="a">Planned shrinkage (lunch, scheduled training) is predictable and can be built directly into the schedule; unplanned shrinkage (sick calls, outages) is the residual uncertainty that erodes service level even when the schedule looks correct on paper — it needs its own forecast/buffer.</div></div>
+      <div class="qitem"><div class="q">A site's shrinkage jumped from 25% to 35% this month. What would you check first?</div><div class="a">Whether it's planned (a new mandatory training rollout, a policy change increasing meeting time) or unplanned (a flu season spike in sick leave) — the fix is completely different: adjust the staffing formula for planned shrinkage, or investigate/mitigate the unplanned driver.</div></div>
+      <div class="qitem"><div class="q">How would you feature-engineer shrinkage for a staffing model?</div><div class="a">Rolling average shrinkage by site/team, day-of-week shrinkage seasonality (Mondays often show higher unplanned absence), and calendar-known planned shrinkage events (scheduled training weeks) as explicit flags.</div></div>
+      <div class="qitem"><div class="q">Why is shrinkage forecasting itself sometimes a full time-series model rather than a fixed assumption?</div><div class="a">Shrinkage has its own seasonality and trend (rising during flu season, spiking around holidays) — treating it as a static 30% assumption ignores predictable variation that a lightweight model could capture and feed into the staffing calculation.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 6 -->
+<section class="sec" id="s6" style="--c:var(--green)">
+  <div class="tag">Section 06</div>
+  <h2>Service Level Agreement (SLA)</h2>
+
+  <p><strong>SLA</strong> is the contact center's headline promise: what fraction of calls get answered within a target time.</p>
+  <div class="formula">SLA (X/Y) = % of calls answered within Y seconds ≥ X%
+e.g. "80/20" = 80% of calls answered within 20 seconds</div>
+
+  <table class="kpi">
+    <tr><th>Common SLA</th><th>Meaning</th></tr>
+    <tr><td><strong>80/20</strong></td><td>80% of calls answered within 20 seconds — the industry-classic benchmark.</td></tr>
+    <tr><td><strong>90/30</strong></td><td>A tighter, more customer-experience-focused target.</td></tr>
+    <tr><td><strong>95/60</strong></td><td>Looser per-second bar but a very high answer ceiling, common for lower-urgency queues.</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">How a bad call forecast breaks SLA</span>If the forecast under-predicts volume, the schedule under-staffs → ASA rises → SLA falls below target → abandonment rises → customer satisfaction and renewal likelihood drop. SLA is the visible symptom; the forecast (and the shrinkage assumption behind it) is usually the root cause.</div>
+
+  <h3>SLA's downstream business effects</h3>
+  <ul>
+    <li><strong>Customer satisfaction</strong> — long waits are one of the top drivers of complaint and churn in insurance servicing.</li>
+    <li><strong>Retention/renewal</strong> — a bad claims-call experience during a loss event is one of the strongest churn triggers in P&amp;C.</li>
+    <li><strong>Revenue</strong> — new-business queues with poor SLA lose quote-to-bind conversion to competitors who answer faster.</li>
+  </ul>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — SLA (5 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Explain 80/20 SLA to a non-technical stakeholder.</div><div class="a">Out of every 100 calls, at least 80 must be picked up by an agent within 20 seconds of the customer's call connecting.</div></div>
+      <div class="qitem"><div class="q">If your call forecast is 15% too low for tomorrow, trace the chain to SLA.</div><div class="a">Under-forecast → schedule builds too few agents → real arrivals exceed staffed capacity → average wait time rises → fewer calls are answered inside the SLA window → SLA % falls below target, and abandonment rises as customers hang up.</div></div>
+      <div class="qitem"><div class="q">Why might a claims queue and a billing queue have different SLA targets?</div><div class="a">Claims calls, especially after a loss, are higher-urgency and more tied to customer emotion and retention risk, justifying a tighter SLA (e.g., 90/30) versus a routine billing question queue that can tolerate a looser one (95/60).</div></div>
+      <div class="qitem"><div class="q">How does SLA connect to retention modeling?</div><div class="a">Poor SLA experienced during a claim is a strong churn predictor, so contact-center SLA metrics (or a customer's realized wait time) are often engineered as a feature in retention/churn models, not just tracked as an ops KPI in isolation.</div></div>
+      <div class="qitem"><div class="q">Why can't you just staff for the worst-case forecast every day to guarantee SLA?</div><div class="a">That maximizes cost (idle agent time on non-peak days) — SLA management is a cost/service trade-off, and the point of a good forecast plus shrinkage-adjusted staffing formula is to hit the target at the lowest possible payroll, not to over-provision.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 7 -->
+<section class="sec" id="s7" style="--c:var(--rose)">
+  <div class="tag">Section 07</div>
+  <h2>Average Handle Time (AHT)</h2>
+
+  <div class="formula">AHT = Talk Time + Hold Time + After Call Work (ACW)</div>
+
+  <p>AHT is the average time an agent spends per contact, start to finish, including the wrap-up admin work after the customer hangs up.</p>
+
+  <h3>What moves AHT</h3>
+  <table class="kpi">
+    <tr><th>Increases AHT</th><th>Decreases AHT</th></tr>
+    <tr><td>Complex claims requiring multi-system lookups; new/undertrained agents; unclear policy documentation forcing hold time.</td><td>Better knowledge-base tools, agent tenure/experience, self-service deflection of simple questions, streamlined ACW via automation (auto-generated case notes).</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">Why AHT is a staffing lever, not just an ops metric</span>Required agents scale directly with AHT (see Section 3 formula). A 10% AHT reduction from better tooling can free up capacity equivalent to hiring several FTEs — which is why AHT reduction initiatives are a recurring cost-savings project for a DS team to quantify and validate.</div>
+
+  <div class="codelabel">Python — AHT feature engineering example</div>
+  <pre class="code">df[<span class="s">'aht_7d_avg'</span>] <span class="o">=</span> df.groupby(<span class="s">'queue'</span>)[<span class="s">'aht_seconds'</span>].transform(<span class="k">lambda</span> s: s.rolling(<span class="s">7</span>).mean())
+df[<span class="s">'agent_tenure_months'</span>] <span class="o">=</span> (pd.Timestamp.now() <span class="o">-</span> df[<span class="s">'agent_hire_date'</span>]).dt.days <span class="o">/</span> <span class="s">30</span>
+df[<span class="s">'is_new_agent'</span>] <span class="o">=</span> (df[<span class="s">'agent_tenure_months'</span>] <span class="o">&lt;</span> <span class="s">3</span>).astype(<span class="k">int</span>)  <span class="c"># AHT predictor</span></pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — AHT (5 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Break down AHT into its components and give one lever for each.</div><div class="a">Talk time (lever: agent training/scripting), hold time (lever: faster back-end system lookups), ACW (lever: automated note summarization or pre-filled case fields).</div></div>
+      <div class="qitem"><div class="q">How does an AHT reduction translate into headcount savings? Show the mechanism.</div><div class="a">Required agents = (forecast calls × AHT) / (interval × occupancy target), then inflated for shrinkage — AHT sits directly in the numerator, so a proportional AHT cut produces a roughly proportional cut in required agents, holding call volume fixed.</div></div>
+      <div class="qitem"><div class="q">A new IVR/self-service tool is launched. What's the risk to your AHT model if you don't account for it?</div><div class="a">Self-service deflects simple, short calls out of the human queue, so the remaining calls are systematically more complex — average AHT for human-handled calls can actually rise even though total workload/cost falls; a naive AHT trend model would misread this as a service-quality regression.</div></div>
+      <div class="qitem"><div class="q">Why would you segment AHT models by call type rather than build one global AHT average?</div><div class="a">Claims, billing, and new-business calls have structurally different handle-time distributions and drivers, so a global average hides the mix-shift effect (more claims calls this week naturally raises blended AHT even if nothing got less efficient).</div></div>
+      <div class="qitem"><div class="q">How would you validate that a training program actually reduced AHT, not just correlate with it?</div><div class="a">Use a controlled comparison — a cohort/A-B design comparing trained vs. untrained (or pre/post) agents on the same call-type mix and tenure band, since raw before/after AHT comparisons confound training with seasonality, call-mix shifts, and agent tenure growth.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 8 -->
+<section class="sec" id="s8" style="--c:var(--amber)">
+  <div class="tag">Section 08</div>
+  <h2>Common Business Variables</h2>
+
+  <p>These are the KPIs that show up in almost every insurance DS interview. Each row: what it is, why it's tracked, and the one-line ML angle.</p>
+
+  <table class="kpi">
+    <tr><th>Variable</th><th>Definition</th><th>ML angle</th></tr>
+    <tr><td><strong>New Policies</strong></td><td>Policies newly sold/bound in a period.</td><td>Growth forecasting target; feeds marketing ROI models.</td></tr>
+    <tr><td><strong>Renewal Policies</strong></td><td>Existing policies that renew at term end.</td><td>Retention/churn model output feeds this forecast directly.</td></tr>
+    <tr><td><strong>Expired Policies</strong></td><td>Policies that reached term end without renewing.</td><td>Churn label.</td></tr>
+    <tr><td><strong>Cancelled Policies</strong></td><td>Policies terminated mid-term (non-payment, customer request).</td><td>Early-churn / cancellation risk model.</td></tr>
+    <tr><td><strong>Reinstated Policies</strong></td><td>Cancelled policies brought back active.</td><td>Win-back propensity model.</td></tr>
+    <tr><td><strong>Endorsements</strong></td><td>Mid-term changes to a policy (add a driver, change an address).</td><td>Operational workload forecasting; a leading indicator of risk change.</td></tr>
+    <tr><td><strong>Written Premium</strong></td><td>Total premium on policies sold in a period, regardless of when it's "earned."</td><td>Top-line sales forecasting target.</td></tr>
+    <tr><td><strong>Earned Premium</strong></td><td>The portion of written premium "used up" so far as coverage time passes.</td><td>Used in Loss Ratio denominator — the real profitability metric base.</td></tr>
+    <tr><td><strong>PIF (Policies In Force)</strong></td><td>Count of active policies at a point in time.</td><td>Core growth/retention KPI — Section 9.</td></tr>
+    <tr><td><strong>Retention Rate</strong></td><td>% of eligible policies that renew.</td><td>Churn model complement; direct forecasting target.</td></tr>
+    <tr><td><strong>Quote Conversion (Hit Ratio)</strong></td><td>% of quotes that convert into bound policies.</td><td>Sales funnel / pricing-competitiveness model.</td></tr>
+    <tr><td><strong>Cancellation Rate</strong></td><td>% of PIF cancelled in a period.</td><td>Early-warning risk/quality-of-book signal.</td></tr>
+    <tr><td><strong>Loss Ratio</strong></td><td>Incurred losses ÷ Earned premium.</td><td>Core profitability metric; pricing-adequacy model target.</td></tr>
+    <tr><td><strong>Combined Ratio</strong></td><td>(Losses + Expenses) ÷ Earned premium.</td><td>&lt;100% = underwriting profit; &gt;100% = underwriting loss.</td></tr>
+    <tr><td><strong>Claim Frequency</strong></td><td>Claims count ÷ exposure units.</td><td>Poisson-style frequency model (Section 12).</td></tr>
+    <tr><td><strong>Claim Severity</strong></td><td>Average $ per claim.</td><td>Gamma/log-normal severity model.</td></tr>
+    <tr><td><strong>Exposure Units</strong></td><td>Standardized risk unit (car-year, home-year).</td><td>Denominator for nearly every rate/frequency calc.</td></tr>
+  </table>
+
+  <div class="formula">Loss Ratio = Incurred Losses / Earned Premium
+Combined Ratio = (Incurred Losses + Underwriting Expenses) / Earned Premium
+Claim Frequency = Number of Claims / Exposure Units
+Claim Severity = Total Incurred Losses / Number of Claims</div>
+
+  <div class="codelabel">SQL — Loss Ratio and Combined Ratio by product line</div>
+  <pre class="code"><span class="k">SELECT</span>
+  product_line,
+  <span class="k">SUM</span>(incurred_losses) <span class="k">AS</span> total_losses,
+  <span class="k">SUM</span>(underwriting_expenses) <span class="k">AS</span> total_expenses,
+  <span class="k">SUM</span>(earned_premium) <span class="k">AS</span> total_earned_premium,
+  <span class="k">ROUND</span>(<span class="k">SUM</span>(incurred_losses) <span class="o">/</span> <span class="k">NULLIF</span>(<span class="k">SUM</span>(earned_premium),<span class="s">0</span>), <span class="s">4</span>) <span class="k">AS</span> loss_ratio,
+  <span class="k">ROUND</span>((<span class="k">SUM</span>(incurred_losses) <span class="o">+</span> <span class="k">SUM</span>(underwriting_expenses)) <span class="o">/</span> <span class="k">NULLIF</span>(<span class="k">SUM</span>(earned_premium),<span class="s">0</span>), <span class="s">4</span>) <span class="k">AS</span> combined_ratio
+<span class="k">FROM</span> finance.policy_period_summary
+<span class="k">GROUP BY</span> product_line;</pre>
+
+  <div class="codelabel">Python — quick feature block from raw policy transactions</div>
+  <pre class="code">df[<span class="s">'loss_ratio'</span>] <span class="o">=</span> df[<span class="s">'incurred_losses'</span>] <span class="o">/</span> df[<span class="s">'earned_premium'</span>].replace(<span class="s">0</span>, np.nan)
+df[<span class="s">'claim_frequency'</span>] <span class="o">=</span> df[<span class="s">'claim_count'</span>] <span class="o">/</span> df[<span class="s">'exposure_units'</span>]
+df[<span class="s">'claim_severity'</span>] <span class="o">=</span> df[<span class="s">'incurred_losses'</span>] <span class="o">/</span> df[<span class="s">'claim_count'</span>].replace(<span class="s">0</span>, np.nan)
+df[<span class="s">'retention_rate'</span>] <span class="o">=</span> df[<span class="s">'renewed_policies'</span>] <span class="o">/</span> df[<span class="s">'eligible_for_renewal'</span>]</pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Business Variables (7 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why do actuaries use Earned Premium, not Written Premium, as the Loss Ratio denominator?</div><div class="a">Losses being measured have only accrued against the portion of coverage time that has actually passed — Earned Premium matches the "premium consumed so far" to the losses incurred so far; Written Premium includes future coverage periods that haven't had a chance to generate claims yet, which would understate the ratio.</div></div>
+      <div class="qitem"><div class="q">A book of business shows Combined Ratio of 108%. What does that mean and what levers fix it?</div><div class="a">The insurer is losing money on underwriting for every dollar of earned premium (108 cents spent for every 100 earned) — levers are raising rates (pricing), tightening underwriting appetite (fewer/better risks), reducing claims leakage (fraud/subrogation), or cutting expense ratio.</div></div>
+      <div class="qitem"><div class="q">Distinguish claim frequency and claim severity, and why you'd model them separately.</div><div class="a">Frequency (how often claims happen) and severity (how big each one is) are driven by different factors and have different distributions (Poisson-like counts vs. skewed continuous cost) — actuaries multiply separately-modeled frequency × severity to get expected loss cost (Pure Premium), which is more accurate than modeling total loss directly.</div></div>
+      <div class="qitem"><div class="q">Why is "hit ratio" (quote conversion) important beyond a pure sales metric?</div><div class="a">A sudden hit-ratio drop can signal your pricing became uncompetitive versus the market, so it's often the first internal alarm bell for a pricing team even before loss-ratio data confirms an underwriting issue.</div></div>
+      <div class="qitem"><div class="q">What's the difference between cancellation and non-renewal, and why does it matter for churn modeling?</div><div class="a">Cancellation happens mid-term (often non-payment or a life event); non-renewal happens at the natural term boundary — they have different root causes and lead times, so a churn model conflating them will mix a fast-onset payment-risk signal with a slower satisfaction/price-shopping signal.</div></div>
+      <div class="qitem"><div class="q">An endorsement (mid-term policy change) spikes for a segment. What might that indicate to a DS?</div><div class="a">It can be a leading indicator of risk change (e.g., adding a teen driver, or address moves into a higher-risk zip) — some teams engineer "endorsement volume/type" as a feature in updated risk scores rather than waiting for the next renewal underwriting cycle.</div></div>
+      <div class="qitem"><div class="q">Why guard against divide-by-zero on exposure units or premium in these ratio calculations?</div><div class="a">New products, very small segments, or data pipeline gaps can produce zero exposure/premium rows; an un-guarded ratio produces inf/NaN that silently breaks downstream aggregation or model training — always NULLIF/replace-with-NaN before dividing.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 9 -->
+<section class="sec" id="s9" style="--c:var(--teal)">
+  <div class="tag">Section 09</div>
+  <h2>Policies In Force (PIF)</h2>
+
+  <p><strong>PIF</strong> is the count of policies that are currently active on a given date — the single most-watched growth/retention KPI in P&amp;C, because it's the real-time pulse of "how big is our book of business right now."</p>
+
+  <table class="kpi">
+    <tr><th>State</th><th>Meaning</th></tr>
+    <tr><td><strong>Policy Quote</strong></td><td>Price offered, not yet purchased.</td></tr>
+    <tr><td><strong>Policy Bound</strong></td><td>Customer has agreed and coverage is contractually committed.</td></tr>
+    <tr><td><strong>Policy Issued</strong></td><td>Formal policy documents generated.</td></tr>
+    <tr><td><strong>Policy Effective</strong></td><td>The date coverage actually starts.</td></tr>
+    <tr><td><strong>Policy In Force / Enforced / Active</strong></td><td>Coverage is currently live — this is what gets counted in "PIF."</td></tr>
+    <tr><td><strong>Policy Lapse / Expired</strong></td><td>Coverage ended, term completed without renewal (or non-payment lapse).</td></tr>
+    <tr><td><strong>Policy Cancelled</strong></td><td>Coverage terminated before natural term end.</td></tr>
+    <tr><td><strong>Renewed Policy</strong></td><td>An expiring policy continued into a new term.</td></tr>
+  </table>
+
+  <div class="formula">PIF(t) = PIF(t-1) + New Policies(t) + Reinstatements(t) − Cancellations(t) − Non-Renewals/Lapses(t)
+Average PIF (period) = mean of daily PIF snapshots across the period</div>
+
+  <div class="callout"><span class="label">Why PIF is one of the most important KPIs in the whole company</span>PIF is the top-line "size of the business" number every other metric normalizes against — premium per PIF, loss ratio trend at constant PIF, staffing needs per PIF. A DS asked to forecast "the business" is very often really being asked to forecast PIF.</div>
+
+  <h3>Forecasting PIF</h3>
+  <p>PIF forecasting is a classic <strong>flow model</strong>: forecast the inflow (new business + reinstatements) and the outflow (cancellations + non-renewals) separately, then roll them forward — usually more accurate than forecasting the PIF level directly, because inflow and outflow have different drivers (marketing/pricing for inflow, retention/pricing/claims-experience for outflow) and different seasonality (renewal-season heavy outflow, campaign-driven inflow).</p>
+
+  <div class="codelabel">Python — PIF roll-forward from flow forecasts</div>
+  <pre class="code">df[<span class="s">'pif'</span>] <span class="o">=</span> (
+    df[<span class="s">'pif_start'</span>]
+    <span class="o">+</span> df[<span class="s">'new_policies'</span>] <span class="o">+</span> df[<span class="s">'reinstatements'</span>]
+    <span class="o">-</span> df[<span class="s">'cancellations'</span>] <span class="o">-</span> df[<span class="s">'non_renewals'</span>]
+).cumsum() <span class="o">+</span> starting_pif</pre>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — PIF (6 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why forecast PIF as inflow minus outflow rather than the level directly?</div><div class="a">Inflow (new business, reinstatements) and outflow (cancellations, non-renewals) have different drivers and seasonality — decomposing lets you use the right features/models for each and gives ops actionable levers (e.g., a retention campaign targets outflow specifically), versus a black-box level forecast.</div></div>
+      <div class="qitem"><div class="q">What's the difference between Policy Bound and Policy In Force?</div><div class="a">Bound means the customer has committed to the contract; In Force means coverage is currently live and active on the effective date — a bound policy becomes in-force once its effective date arrives, and a policy remains bound but not-yet-in-force if the effective date is in the future.</div></div>
+      <div class="qitem"><div class="q">PIF grew 5% this quarter but revenue only grew 2%. What would you investigate?</div><div class="a">A mix shift toward lower-premium products/segments, increased discounting to win volume, or growth concentrated in a shorter-term/lower-limit product — PIF is a count, not a dollar figure, so PIF and premium growth can diverge if the average policy value changed.</div></div>
+      <div class="qitem"><div class="q">Why is "Average PIF" used instead of end-of-period PIF in some financial calculations?</div><div class="a">It smooths out timing effects (a big batch renewal on the last day of the month would distort an end-of-period snapshot) and better represents the exposure the company actually carried across the whole period, which matters for premium and loss accrual calculations.</div></div>
+      <div class="qitem"><div class="q">What seasonality would you expect in PIF outflow, and why?</div><div class="a">Spikes around renewal-heavy months (many insurers cluster policy terms, e.g., 6-month auto terms create twice-yearly renewal waves) and around known rate-increase implementation dates, since customers are most price-sensitive right at renewal.</div></div>
+      <div class="qitem"><div class="q">How would a data pipeline bug that double-counts reinstatements bias a PIF forecast model trained on that data?</div><div class="a">It would inflate the historical inflow signal, causing the model to systematically overforecast future PIF growth — always reconcile flow components (new + reinstated − cancelled − lapsed) against the independently-tracked PIF snapshot to catch this kind of leakage before training.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 10 -->
+<section class="sec" id="s10" style="--c:var(--purple)">
+  <div class="tag">Section 10</div>
+  <h2>Policy Enforcement</h2>
+
+  <p>"Enforcement" describes the workflow moving a policy from a signed contract to actually-active coverage — the operational plumbing behind the PIF number in Section 9.</p>
+
+  <table class="kpi">
+    <tr><th>Step</th><th>What happens</th></tr>
+    <tr><td><strong>Policy Issued</strong></td><td>System generates the formal contract documents.</td></tr>
+    <tr><td><strong>Policy Effective</strong></td><td>The contractual start date of coverage is set/reached.</td></tr>
+    <tr><td><strong>Policy Enforced / Activated</strong></td><td>Coverage becomes operationally live in claims/billing systems — the policy will now respond to a claim.</td></tr>
+    <tr><td><strong>Policy In Force</strong></td><td>The steady state — active and counted in PIF — until cancellation, lapse, or expiration.</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">Why this workflow distinction matters</span>A policy can be "issued" and have a future "effective date" while not yet being enforced — if a claim happens in that gap due to a data error, it's a real financial/legal exposure. Forecasting and monitoring the issued→enforced lag is an operational risk-control use case, not just a vanity KPI.</div>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Policy Enforcement (4 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">What's the practical risk of a long issued-to-enforced lag?</div><div class="a">A gap between when documents are issued and when the policy is operationally active in claims/billing systems creates a window where a legitimate claim could be denied or mishandled due to system state, and it can also delay premium billing/cashflow.</div></div>
+      <div class="qitem"><div class="q">How would you monitor this lag with a simple model or metric?</div><div class="a">Track the distribution of (enforced_date − issued_date) by channel/region and alert when the tail (e.g., 95th percentile) exceeds an operational threshold — a classification/anomaly model can flag policies stuck mid-workflow for manual follow-up.</div></div>
+      <div class="qitem"><div class="q">Why does this topic matter for a forecasting-focused DS role, not just an ops role?</div><div class="a">Enforcement lag volume forecasting feeds workforce planning for the policy-processing/operations team, similar to how call volume forecasting feeds contact-center staffing — same forecasting skillset, different queue.</div></div>
+      <div class="qitem"><div class="q">Give one business example (Liberty Mutual style) where enforcement timing mattered.</div><div class="a">A customer bundles home and auto with an effective date next week, pays online today; if the enforcement job that activates the policy in the claims system lags the effective date, an accident on day one of coverage could initially fail claims validation until support intervenes.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 11 -->
+<section class="sec" id="s11" style="--c:var(--blue)">
+  <div class="tag">Section 11</div>
+  <h2>Underwriting KPIs</h2>
+
+  <table class="kpi">
+    <tr><th>KPI</th><th>Definition</th><th>Forecasting note</th></tr>
+    <tr><td><strong>Submission Volume</strong></td><td>New risks submitted for underwriting review.</td><td>Top-of-funnel demand forecast; drives underwriter staffing.</td></tr>
+    <tr><td><strong>Quote Rate</strong></td><td>% of submissions the underwriter is willing to quote.</td><td>A leading indicator of underwriting appetite tightening/loosening.</td></tr>
+    <tr><td><strong>Bind Rate</strong></td><td>% of quotes that convert to bound policies.</td><td>Tracks pricing competitiveness alongside quote rate.</td></tr>
+    <tr><td><strong>Hit Ratio</strong></td><td>Overall submission-to-bind conversion (often = Quote Rate × Bind Rate).</td><td>The funnel health metric leadership watches most.</td></tr>
+    <tr><td><strong>Turnaround Time (TAT)</strong></td><td>Time from submission to underwriting decision.</td><td>Direct forecasting target for underwriting workforce planning.</td></tr>
+    <tr><td><strong>Approval / Decline Rate</strong></td><td>% of submissions accepted vs. rejected.</td><td>Risk-appetite drift monitor; feeds automated underwriting model calibration.</td></tr>
+  </table>
+
+  <div class="callout"><span class="label">Why forecasting TAT matters as much as forecasting volume</span>Submission volume alone doesn't tell you if underwriters are keeping up — TAT is the queue-health signal, exactly analogous to SLA in the contact center. A DS building underwriting workforce models needs both the arrival forecast and the service-time (TAT) forecast, same structure as Sections 3–7.</div>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Underwriting KPIs (5 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Decompose Hit Ratio into its two components and explain why you'd model them separately.</div><div class="a">Hit Ratio ≈ Quote Rate × Bind Rate — quote rate reflects underwriting appetite/risk selection, bind rate reflects pricing competitiveness and customer choice; separating them tells you whether a falling hit ratio is an underwriting-appetite problem or a pricing problem, which need different fixes.</div></div>
+      <div class="qitem"><div class="q">Submission volume is up 20% but bind rate fell. What forecasting/monitoring signal would you build to catch this early?</div><div class="a">A funnel-stage conversion dashboard tracked over time by segment, with automated alerts on rate-of-change (not just level) in quote rate and bind rate — volume growth alone can mask a quality/conversion problem if you only watch the top-line submission number.</div></div>
+      <div class="qitem"><div class="q">Why would rising Turnaround Time itself hurt Bind Rate?</div><div class="a">Slower underwriting decisions give the customer/broker time to shop and bind elsewhere — TAT isn't just an internal efficiency metric, it's a competitive-loss risk factor that should be a feature in bind-propensity models.</div></div>
+      <div class="qitem"><div class="q">How would you forecast underwriter staffing needs?</div><div class="a">Same demand-supply structure as the contact center: forecast submission volume (demand) and average underwriting handling time (like AHT), then compute required underwriter FTEs adjusted for shrinkage/PTO, same formula pattern as Section 3/5.</div></div>
+      <div class="qitem"><div class="q">What's a risk of using Decline Rate alone as an underwriting-quality metric?</div><div class="a">A high decline rate could mean disciplined risk selection (good) or an overly conservative/miscalibrated appetite losing profitable business to competitors (bad) — it needs to be paired with loss ratio outcomes on the business that was accepted to actually judge underwriting quality.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 12 -->
+<section class="sec" id="s12" style="--c:var(--red)">
+  <div class="tag">Section 12</div>
+  <h2>Actuarial KPIs</h2>
+
+  <table class="kpi">
+    <tr><th>KPI</th><th>Definition</th></tr>
+    <tr><td><strong>Claim Frequency</strong></td><td>Claims ÷ exposure — how often losses happen.</td></tr>
+    <tr><td><strong>Claim Severity</strong></td><td>Average dollar cost per claim.</td></tr>
+    <tr><td><strong>Pure Premium</strong></td><td>Frequency × Severity — the expected loss cost per exposure unit, before expenses/profit load.</td></tr>
+    <tr><td><strong>Ultimate Loss</strong></td><td>The final, fully-developed cost of a claim/accident year once all payments settle.</td></tr>
+    <tr><td><strong>IBNR</strong> (Incurred But Not Reported)</td><td>Estimated liability for losses that happened but haven't been reported/fully valued yet.</td></tr>
+    <tr><td><strong>Reserve</strong></td><td>Money set aside today to pay for claims already incurred (reported + IBNR).</td></tr>
+    <tr><td><strong>Loss Development Factor (LDF)</strong></td><td>Multiplier applied to current reported losses to estimate how much they'll grow ("develop") to their ultimate value.</td></tr>
+    <tr><td><strong>Trend / Loss Cost Trend</strong></td><td>The annual rate at which claim severity/frequency is rising (inflation, medical costs, litigation).</td></tr>
+  </table>
+
+  <div class="formula">Pure Premium = Claim Frequency × Claim Severity
+Ultimate Loss ≈ Reported Losses × Loss Development Factor
+IBNR = Ultimate Loss − Reported/Paid Losses to date</div>
+
+  <div class="callout"><span class="label">Why IBNR is one of the hardest, highest-stakes numbers in insurance</span>For long-tail lines like liability or workers' comp, a claim can take years to fully develop — the company must reserve capital today for losses it doesn't even know about yet. Get IBNR wrong and either you're insolvent-adjacent (under-reserved) or you're sitting on capital you should have deployed (over-reserved). This is where DS-built loss-development / triangle models increasingly complement traditional actuarial chain-ladder methods.</div>
+
+  <h3>How forecasting connects to actuarial KPIs</h3>
+  <p>Frequency and severity are each forecast as their own time series (often by segment), then multiplied into Pure Premium, which becomes a key input to the rate-making process. DS teams often build the frequency/severity forecasting layer while actuaries own the regulatory-facing pricing indication built on top of it.</p>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Actuarial KPIs (6 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Explain IBNR in one sentence a non-actuary would understand.</div><div class="a">It's the money the company sets aside for losses that have already happened but that the company doesn't fully know the cost of yet, either because they haven't been reported or haven't finished developing.</div></div>
+      <div class="qitem"><div class="q">Why model frequency and severity separately instead of predicting total loss cost directly?</div><div class="a">They have different distributions (frequency ≈ Poisson/count data, severity ≈ skewed continuous cost) and different drivers, so specialized models (e.g., Poisson GLM for frequency, Gamma GLM for severity) fit each far better than one model forced to learn both patterns at once — then you multiply the two predictions for Pure Premium.</div></div>
+      <div class="qitem"><div class="q">What's a Loss Development Factor, intuitively?</div><div class="a">A multiplier that says "losses reported so far for this accident year will typically grow by this much more before they're fully paid out" — derived from historical loss triangles showing how past accident years developed over time.</div></div>
+      <div class="qitem"><div class="q">How could a modern ML model complement the traditional chain-ladder reserving method?</div><div class="a">ML (e.g., gradient boosting on claim-level features) can model loss development at the individual-claim level using richer features (claim type, injury severity, litigation flag) rather than the chain-ladder's aggregate accident-year assumption, improving reserve accuracy for heterogeneous books — though it still needs to reconcile with the actuarial triangle for regulatory sign-off.</div></div>
+      <div class="qitem"><div class="q">Why is trend (loss cost trend) such a critical, hard-to-estimate number?</div><div class="a">Rates being filed today must be adequate for losses that will occur over the next 1-2+ years, so the pricing team must forecast how much medical/repair costs and litigation severity will inflate by then — underestimating trend is a classic cause of chronic underpricing and rising loss ratios.</div></div>
+      <div class="qitem"><div class="q">A DS builds a claim severity model with R² of 0.6 on individual claims. Is that good or bad, and why?</div><div class="a">That's actually reasonable for individual claim severity — severity is inherently noisy at the individual level (a fender-bender vs. total loss on the same "car accident" category), so actuarial value comes from aggregate calibration across many claims (Pure Premium at the segment level) rather than pinpoint individual-claim accuracy.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 13 -->
+<section class="sec" id="s13" style="--c:var(--green)">
+  <div class="tag">Section 13</div>
+  <h2>ML Feature Engineering — the insurance feature store</h2>
+
+  <p>Almost every business variable above becomes a feature through the same small set of transformations. Master this pattern and you can feature-engineer any new KPI you're handed in an interview.</p>
+
+  <table class="kpi">
+    <tr><th>Technique</th><th>What it captures</th><th>Example</th></tr>
+    <tr><td><strong>Lag features</strong></td><td>Same-metric value N periods ago.</td><td>calls_lag_7, PIF_lag_1_month.</td></tr>
+    <tr><td><strong>Rolling mean/median</strong></td><td>Smoothed recent level, dampens noise.</td><td>AHT_rolling_28d_mean.</td></tr>
+    <tr><td><strong>Year-over-Year / Month-over-Month</strong></td><td>Growth rate, deseasonalized comparison.</td><td>premium_YoY_growth.</td></tr>
+    <tr><td><strong>Holiday / calendar features</strong></td><td>Known fixed-date demand shifts.</td><td>is_holiday, days_to_holiday.</td></tr>
+    <tr><td><strong>Weather / catastrophe features</strong></td><td>Exogenous shock drivers of claims/calls.</td><td>hail_severity_index, storm_alert_flag.</td></tr>
+    <tr><td><strong>Marketing features</strong></td><td>Demand-side campaign effects.</td><td>campaign_spend_lag_3d.</td></tr>
+    <tr><td><strong>Economic/macro features</strong></td><td>Slow-moving structural drivers.</td><td>unemployment_rate, cpi_auto_repair_index.</td></tr>
+    <tr><td><strong>Policy lifecycle features</strong></td><td>Where a policy sits in its life.</td><td>days_since_bound, days_to_renewal, tenure_years.</td></tr>
+  </table>
+
+  <div class="codelabel">Python — a reusable feature engineering block</div>
+  <pre class="code"><span class="k">import</span> pandas <span class="k">as</span> pd
+
+<span class="k">def</span> <span class="f">build_ts_features</span>(df, target_col, group_col<span class="o">=</span><span class="s">'segment'</span>, date_col<span class="o">=</span><span class="s">'date'</span>):
+    df <span class="o">=</span> df.sort_values([group_col, date_col]).copy()
+    g <span class="o">=</span> df.groupby(group_col)[target_col]
+
+    <span class="c"># lags</span>
+    <span class="k">for</span> lag <span class="k">in</span> [<span class="s">1</span>, <span class="s">7</span>, <span class="s">28</span>, <span class="s">365</span>]:
+        df[<span class="f">f</span><span class="s">'{target_col}_lag_{lag}'</span>] <span class="o">=</span> g.shift(lag)
+
+    <span class="c"># rolling stats (shifted to avoid leakage)</span>
+    <span class="k">for</span> window <span class="k">in</span> [<span class="s">7</span>, <span class="s">28</span>]:
+        df[<span class="f">f</span><span class="s">'{target_col}_roll{window}_mean'</span>] <span class="o">=</span> g.shift(<span class="s">1</span>).rolling(window).mean()
+        df[<span class="f">f</span><span class="s">'{target_col}_roll{window}_std'</span>]  <span class="o">=</span> g.shift(<span class="s">1</span>).rolling(window).std()
+
+    <span class="c"># YoY growth</span>
+    df[<span class="f">f</span><span class="s">'{target_col}_yoy_growth'</span>] <span class="o">=</span> (df[target_col] <span class="o">/</span> g.shift(<span class="s">365</span>)) <span class="o">-</span> <span class="s">1</span>
+
+    <span class="c"># calendar</span>
+    df[<span class="s">'dow'</span>] <span class="o">=</span> pd.to_datetime(df[date_col]).dt.dayofweek
+    df[<span class="s">'month'</span>] <span class="o">=</span> pd.to_datetime(df[date_col]).dt.month
+    df[<span class="s">'is_month_end'</span>] <span class="o">=</span> pd.to_datetime(df[date_col]).dt.is_month_end.astype(<span class="k">int</span>)
+
+    <span class="k">return</span> df</pre>
+
+  <div class="callout"><span class="label">Why "shift before rolling" is the single most common insurance-forecasting bug</span>If you compute a rolling mean without shifting first, the window for day t includes day t itself — meaning your "feature" contains the answer you're trying to predict. This kind of target leakage is a top interview trap and a top real-world production bug.</div>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Feature Engineering (5 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why did the code example shift(1) before computing the rolling mean?</div><div class="a">To prevent target leakage — without the shift, the rolling window for a given row would include that row's own future/current value, which won't be known at prediction time in production.</div></div>
+      <div class="qitem"><div class="q">When would you use a 7-day vs. 28-day vs. 365-day lag feature together, rather than picking one?</div><div class="a">Each captures a different periodicity — 7-day for weekly seasonality (same weekday last week), 28-day for a smoothed recent baseline, 365-day for year-over-year seasonal comparison — a tree model can combine all three to triangulate the current expected level far better than any single lag.</div></div>
+      <div class="qitem"><div class="q">How would you feature-engineer "renewal season" without hard-coding specific calendar dates?</div><div class="a">Use days_to_renewal computed per-policy from its own effective/expiration date rather than a fixed calendar window — this generalizes across products with different term lengths and renewal cycles instead of a brittle hard-coded date range.</div></div>
+      <div class="qitem"><div class="q">A catastrophe/weather feature massively improves your backtest accuracy. What would you double check before trusting it?</div><div class="a">That the weather data was actually available (not retroactively finalized/corrected) at the time you'd need to make the forecast in production — many weather/CAT datasets get revised after the fact, and using the revised version in backtesting silently leaks future information.</div></div>
+      <div class="qitem"><div class="q">Why might economic/macro features have a longer, smoother effect than marketing or weather features?</div><div class="a">Macro drivers like unemployment or repair-cost inflation move slowly and affect the whole book gradually (structural trend), while marketing and weather cause sharp, short-lived spikes (shock/event) — so they typically enter the model differently: macro as a slow trend regressor, weather/marketing as sharp, often-lagged event flags.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 14 -->
+<section class="sec" id="s14" style="--c:var(--gold)">
+  <div class="tag">Section 14</div>
+  <h2>Capstone — an EXL/Liberty Mutual style end-to-end project</h2>
+
+  <p><strong>Business problem:</strong> "Forecast weekly claims-call volume by region and claim type, 8 weeks ahead, to drive contact-center hiring and CAT-staffing decisions."</p>
+
+  <div class="grid2">
+    <div class="callout"><span class="label">Dataset</span>3 years of call logs (call_date, region, claim_type, call_count, AHT), joined to a PIF snapshot table, a NOAA-style weather/CAT event feed, and a marketing calendar.</div>
+    <div class="callout"><span class="label">Target</span>weekly_call_count per (region × claim_type), with a secondary AHT forecast feeding the staffing formula.</div>
+  </div>
+
+  <h3>Feature engineering</h3>
+  <p>Lags (1/4/13/52 weeks), rolling means/stds, YoY growth, holiday/renewal-season flags, weather severity index by region, PIF trend by region (more policies → structurally higher baseline claim volume), and a CAT-event binary flag with a decaying "weeks-since-event" feature (surge effects don't vanish instantly).</p>
+
+  <h3>Validation</h3>
+  <p><strong>Walk-forward (expanding window) validation</strong> — never a random train/test split on time series. Train on weeks 1–N, validate on N+1..N+8, roll forward. Report <strong>WAPE</strong> (weighted absolute percentage error) as the headline metric because it's interpretable to ops leadership and robust to low-volume region/claim-type combinations that would blow up a plain MAPE.</p>
+
+  <h3>Models compared</h3>
+  <table class="kpi">
+    <tr><th>Model</th><th>Role in this project</th></tr>
+    <tr><td>SARIMA/Prophet baseline</td><td>Sanity-check baseline per top-level series; also gives an interpretable trend/seasonality decomposition for stakeholders.</td></tr>
+    <tr><td>LightGBM (global, pooled across region × claim_type)</td><td>Primary production model — leverages shared patterns and rich exogenous features across all series at once.</td></tr>
+    <tr><td>Naive seasonal (same week last year)</td><td>Floor benchmark — the model must beat this by a meaningful margin to justify complexity.</td></tr>
+  </table>
+
+  <h3>Deployment &amp; monitoring</h3>
+  <p>Weekly batch retrain/score in Databricks, logged via MLflow (params, WAPE per fold, feature importance). Forecast pushed to the workforce-management tool via a scheduled job. Monitoring: track realized WAPE weekly, alert if it breaches a threshold for 2+ consecutive weeks (signals regime change — e.g., a new self-service tool deflecting calls), and a drift check on input feature distributions (PSI) to catch upstream data pipeline issues before they corrupt the forecast.</p>
+
+  <h3>Business impact framing (how to state it in an interview)</h3>
+  <p><em>"The model reduced forecast WAPE from 22% (naive seasonal baseline) to 9%, which let workforce management cut CAT-staffing buffer by roughly a third while holding SLA steady, and gave the contact-center director an 8-week lead time to plan hiring instead of reacting week-to-week."</em> — always land on a number ops leadership cares about (SLA, cost, lead time), not just model accuracy.</p>
+
+  <details class="qa"><summary>Interview Q&amp;A bank — Capstone / Project Storytelling (6 questions)</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Why walk-forward validation instead of a random k-fold split for this project?</div><div class="a">A random split would let the model train on weeks that come after the weeks it's being tested on, leaking future information and producing an unrealistically good — and production-invalid — accuracy estimate; walk-forward respects the fact that in production you only ever have the past to predict the future.</div></div>
+      <div class="qitem"><div class="q">Why WAPE over MAPE for this metric?</div><div class="a">MAPE blows up or becomes undefined on low-volume series (small denominators), which is common across many region × claim_type combinations; WAPE aggregates absolute errors over absolute actuals across the whole set, giving a stable, volume-weighted single number that's harder to game and easier for ops to trust.</div></div>
+      <div class="qitem"><div class="q">Why include a naive seasonal baseline at all if you know LightGBM will likely win?</div><div class="a">It's the burden-of-proof benchmark — if your sophisticated model can't beat "same week last year" by a clear margin, the added complexity, maintenance cost, and interpretability loss aren't justified; it's also the fastest sanity check that something isn't badly broken.</div></div>
+      <div class="qitem"><div class="q">How would you explain PSI-based drift monitoring to a non-technical stakeholder?</div><div class="a">It's a health check that compares this week's input data "shape" (e.g., typical weather severity, typical PIF by region) against what the model was trained on — if the shape has drifted too far, the forecast is flagged as less trustworthy before it silently produces a bad number that reaches staffing decisions.</div></div>
+      <div class="qitem"><div class="q">The model's WAPE jumps for two straight weeks. Walk through your triage.</div><div class="a">First check for a data pipeline issue (missing/late feed) before questioning the model; then check whether it's a genuine regime shift (a new competitor self-service tool, a policy change) versus a one-off shock (an unflagged local event) — regime shifts need a retrain or new feature, shocks may just need a manual override for that week rather than model rework.</div></div>
+      <div class="qitem"><div class="q">How do you decide the story you lead with when presenting this project in an interview?</div><div class="a">Lead with the business decision it changed (staffing buffer reduced, SLA held) rather than the model architecture — interviewers at the senior level are testing whether you connect technical choices to business outcomes, not whether you can list algorithms.</div></div>
+    </div>
+  </details>
+</section>
+
+<!-- SECTION 15 -->
+<section class="sec" id="s15" style="--c:var(--amber)">
+  <div class="tag">Section 15</div>
+  <h2>Interview Prep — cheat sheet &amp; scenario bank</h2>
+
+  <p>The question banks embedded in every section above already give you a curated, high-signal set across domain, forecasting, business, and scenario framing — that's intentionally the highest-value subset rather than a rote 300-question dump. Below is the compact reference sheet to review the morning of the interview, plus a short leadership-question set specific to a senior DS role.</p>
+
+  <h3>One-page cheat sheet</h3>
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>Core Ratios</h4>
+      <div><b>Loss Ratio</b> = Losses / Earned Premium</div>
+      <div><b>Combined Ratio</b> = (Losses+Expenses) / Earned Premium</div>
+      <div><b>Frequency</b> = Claims / Exposure</div>
+      <div><b>Severity</b> = Losses / Claims</div>
+      <div><b>Pure Premium</b> = Frequency × Severity</div>
+    </div>
+    <div class="cheat-card"><h4>PIF Flow</h4>
+      <div>PIF(t) = PIF(t-1) + New + Reinstated − Cancelled − Lapsed</div>
+      <div><b>Hit Ratio</b> ≈ Quote Rate × Bind Rate</div>
+      <div><b>Retention</b> = Renewed / Eligible</div>
+    </div>
+    <div class="cheat-card"><h4>Staffing</h4>
+      <div>Required Agents = (Calls × AHT) / (Interval × Occupancy)</div>
+      <div>Scheduled = Required / (1 − Shrinkage)</div>
+      <div><b>SLA 80/20</b>: 80% answered ≤20s</div>
+    </div>
+    <div class="cheat-card"><h4>Actuarial</h4>
+      <div><b>Ultimate Loss</b> ≈ Reported × LDF</div>
+      <div><b>IBNR</b> = Ultimate − Reported</div>
+      <div>Reserve = Case Reserves + IBNR</div>
+    </div>
+    <div class="cheat-card"><h4>Forecasting Targets</h4>
+      <div>Calls, PIF, Premium, Claims, TAT, AHT, Shrinkage, Backlog</div>
+      <div>Granularity: intraday → yearly</div>
+    </div>
+    <div class="cheat-card"><h4>Model Fit</h4>
+      <div>SARIMAX → few series, need interpretability</div>
+      <div>LightGBM → many series, rich features</div>
+      <div>TFT → many series + attention/interpretability at scale</div>
+    </div>
+  </div>
+
+  <h3>Scenario-based framing (constraint → decision → trade-off → failure → resolution)</h3>
+  <details class="qa"><summary>Scenario bank — 8 senior-level scenario &amp; leadership questions</summary>
+    <div class="qa-body">
+      <div class="qitem"><div class="q">Leadership pushes for a same-day forecast turnaround; your validated pipeline needs 2 days for weather data to finalize. What do you do?</div><div class="a">State the constraint plainly (finalized weather data has a 2-day lag), propose a decision: ship a same-day forecast using provisional weather data with documented wider uncertainty, and asynchronously refresh with finalized data — a trade-off of speed vs. precision made explicit rather than silently degrading accuracy.</div></div>
+      <div class="qitem"><div class="q">Your fraud model flags a spike in a region right after a hailstorm. How do you avoid crying wolf?</div><div class="a">Recognize the failure mode first — legitimate claim volume genuinely spikes after a CAT event, so a naive volume-anomaly detector will false-positive en masse; the resolution is conditioning the fraud model on CAT-event context (expected volume given the storm) rather than an unconditional baseline.</div></div>
+      <div class="qitem"><div class="q">You inherit a PIF forecasting model with no documentation and a slowly rising error trend. Walk me through your first two weeks.</div><div class="a">Constraint: no documentation, so first reconstruct the flow decomposition and feature list from code; decision: run a walk-forward backtest to locate exactly when error started rising; likely resolution: a regime change (product launch, pricing change) that shifted flow drivers the old feature set doesn't capture — propose a scoped retrain, not a rebuild.</div></div>
+      <div class="qitem"><div class="q">A VP wants one dashboard number for "how healthy is the book." What do you push back on, and what do you propose instead?</div><div class="a">Push back on the reduction itself — Combined Ratio alone hides whether a problem is losses, expenses, or premium adequacy; propose a small decomposed set (Loss Ratio, Expense Ratio, PIF growth, Retention) with Combined Ratio as the headline but the components one click away.</div></div>
+      <div class="qitem"><div class="q">Tell me about a time a model you built was accurate but the business didn't trust it enough to act on it.</div><div class="a">Frame with the constraint/decision structure: the accuracy wasn't the failure, adoption was — the resolution usually involves an interpretable baseline comparison (Prophet decomposition, feature importance walkthrough) and a low-stakes pilot before asking stakeholders to bet staffing/capital decisions on it.</div></div>
+      <div class="qitem"><div class="q">How do you decide when a forecasting model needs to be retired/rebuilt vs. incrementally retrained?</div><div class="a">Incrementally retrain when error drift is gradual and features/target definition are stable; rebuild when there's a structural break (new product, M&amp;A book merge, definition change in the target) that makes historical patterns no longer representative of the current process generating the data.</div></div>
+      <div class="qitem"><div class="q">Two teams (actuarial and DS) produce conflicting loss trend estimates for pricing. How do you resolve it?</div><div class="a">Don't default to either being "right" — reconcile methodology differences first (different exposure bases, different time windows, different treatment of large losses), since disagreements are usually a definitional/data mismatch, not a model-quality dispute, and the resolution is a joint definition of terms before re-comparing numbers.</div></div>
+      <div class="qitem"><div class="q">How would you pitch a new ML initiative (e.g., graph-based fraud detection) to an actuarial-dominated leadership team skeptical of "black box" models?</div><div class="a">Lead with what actuarial methods structurally can't do (detect coordinated multi-claim fraud rings via relationship patterns) rather than claiming general superiority, propose it as a complement that flags cases for the existing SIU process, and commit to an interpretable output (a network visualization/reason codes) rather than a bare probability score.</div></div>
+    </div>
+  </details>
+
+  <div class="callout"><span class="label">How to use the per-section Q&amp;A banks</span>Sections 1–14 each carry a focused, high-yield question set (domain, forecasting, business, and scenario blends) rather than one giant undifferentiated list — that's deliberate: interviewers rarely ask 300 questions, they probe 6-10 per topic area deeply. Tell me which section(s) you want expanded further (e.g., "give me 15 more actuarial questions" or "quiz me on Section 8") and I'll extend that section specifically.</div>
+</section>
+
+</div>
+
+<footer>
+  <p>P&amp;C INSURANCE MASTERCLASS · BUILT FOR INTERVIEW PREP · SCROLL TO REVIEW, CLICK + TO EXPAND Q&amp;A</p>
+</footer>
+
+<script>
+// active nav highlighting
+const links = Array.from(document.querySelectorAll('.navbar a'));
+links.forEach(a => { a.style.setProperty('--sec-color', a.dataset.c); });
+const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+function onScroll(){
+  let idx = 0;
+  const y = window.scrollY + 80;
+  sections.forEach((s,i) => { if(s && s.offsetTop <= y) idx = i; });
+  links.forEach((a,i) => a.classList.toggle('active', i===idx));
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+links.forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+}));
+</script>
+
+</body>
+</html>
