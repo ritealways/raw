@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OON Forecast — Code & File Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e14; --card:#121722; --card-hi:#161d2b; --border:#232b3d;
+    --ink:#e7ecf5; --muted:#8794a8; --muted2:#5b6579;
+    --teal:#4fd1c5; --teal-dim:rgba(79,209,197,.12);
+    --amber:#f2a94e; --amber-dim:rgba(242,169,78,.12);
+    --blue:#6ea8fe; --blue-dim:rgba(110,168,254,.12);
+    --red:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+  }
+  code, .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  header{
+    padding:38px 24px 22px; max-width:980px; margin:0 auto; text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--teal); margin:0 0 10px;
+  }
+  h1{
+    font-family:'IBM Plex Mono',monospace; font-size:clamp(22px,3.6vw,32px);
+    font-weight:700; margin:0 0 10px; color:#fff; letter-spacing:-.01em;
+  }
+  header p{ color:var(--muted); font-size:14.5px; max-width:640px; margin:0; }
+
+  .tabs{
+    max-width:980px; margin:0 auto; padding:18px 24px 0; display:flex; gap:8px;
+    flex-wrap:wrap; position:sticky; top:0; background:var(--bg); z-index:20;
+    padding-top:16px; padding-bottom:14px; border-bottom:1px solid var(--border);
+  }
+  .tab{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted);
+    background:var(--card); border:1px solid var(--border); border-radius:7px;
+    padding:8px 14px; cursor:pointer; transition:.15s; user-select:none;
+  }
+  .tab:hover{ color:var(--ink); border-color:var(--muted2); }
+  .tab.active{ color:#0b0e14; background:var(--teal); border-color:var(--teal); font-weight:600; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:34px 24px 70px; }
+  .view{ display:none; animation:fade .35s ease; }
+  .view.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+
+  .section-title{
+    font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted);
+    margin:0 0 22px; display:flex; align-items:center; gap:10px;
+  }
+  .section-title::after{ content:''; flex:1; height:1px; background:var(--border); }
+
+  /* ---- vertical flow ---- */
+  .flow{ position:relative; }
+  .flow::before{
+    content:''; position:absolute; left:31px; top:22px; bottom:22px; width:2px;
+    background:repeating-linear-gradient(to bottom, var(--flow-color,var(--teal)) 0 6px, transparent 6px 12px);
+    opacity:.55;
+  }
+  .flow .pulse{
+    position:absolute; left:26px; width:12px; height:12px; border-radius:50%;
+    background:var(--flow-color,var(--teal)); box-shadow:0 0 14px 3px var(--flow-color,var(--teal));
+    top:22px; animation:travel 3.2s cubic-bezier(.5,0,.5,1) infinite;
+  }
+  @keyframes travel{
+    0%{ top:22px; opacity:0; }
+    8%{ opacity:1;}
+    92%{ opacity:1;}
+    100%{ top:calc(100% - 34px); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flow .pulse{ animation:none; opacity:0; }
+  }
+
+  .node{
+    position:relative; display:grid; grid-template-columns:64px 1fr; gap:18px;
+    margin-bottom:16px;
+  }
+  .marker{
+    position:relative; z-index:2; width:44px; height:44px; border-radius:50%;
+    background:var(--card-hi); border:2px solid var(--flow-color,var(--teal));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:15px;
+    color:var(--flow-color,var(--teal));
+  }
+  .marker.gate{ border-style:dashed; color:var(--amber); border-color:var(--amber); }
+
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:16px 18px 17px; cursor:pointer; transition:.15s;
+  }
+  .card:hover{ border-color:var(--muted2); background:var(--card-hi); }
+  .card-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .filename{
+    font-family:'IBM Plex Mono',monospace; font-size:14.5px; font-weight:600; color:#fff;
+  }
+  .filename .path{ color:var(--muted2); font-weight:400; }
+  .verb{ font-size:13px; color:var(--muted); margin:6px 0 0; }
+  .chev{ color:var(--muted2); font-size:12px; transition:transform .2s; flex-shrink:0; }
+  .card.open .chev{ transform:rotate(90deg); }
+
+  .detail{
+    display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border);
+    font-size:13.5px; color:var(--muted);
+  }
+  .card.open .detail{ display:block; }
+  .detail b{ color:var(--ink); font-weight:600; }
+  .why{
+    background:var(--teal-dim); border-left:3px solid var(--teal); border-radius:6px;
+    padding:9px 12px; margin-top:10px; font-size:13px; color:#cfeeeb;
+  }
+  .flow[data-flow="prod"] .why{ background:var(--amber-dim); border-color:var(--amber); color:#f6dcb8; }
+
+  .io{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .pill{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:3px 9px;
+    border-radius:20px; border:1px solid var(--border); color:var(--muted);
+  }
+  .pill.out{ color:var(--blue); border-color:rgba(110,168,254,.35); background:var(--blue-dim); }
+  .pill.in{ color:var(--muted); }
+
+  .wrapbox{
+    border:1px dashed var(--muted2); border-radius:14px; padding:26px 22px 10px; margin-top:6px;
+    position:relative;
+  }
+  .wrapbox .tag{
+    position:absolute; top:-11px; left:20px; background:var(--bg); padding:0 8px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:.04em;
+  }
+
+  /* ---- file tree ---- */
+  .tree{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:20px 22px; font-family:'IBM Plex Mono',monospace; font-size:13px;
+    overflow-x:auto;
+  }
+  .tree .line{ white-space:pre; color:var(--muted2); }
+  .tree .line .f{ color:var(--ink); }
+  .tree .line .c-pipe{ color:var(--teal); }
+  .tree .line .c-mlops{ color:var(--amber); }
+  .tree .line .c-art{ color:var(--blue); }
+  .tree .line .cm{ color:var(--muted2); }
+
+  .legend{ display:flex; gap:18px; flex-wrap:wrap; margin:16px 0 26px; font-size:12.5px; color:var(--muted); }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+
+  footer{
+    max-width:980px; margin:0 auto; padding:0 24px 50px; color:var(--muted2); font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">OON Cost Forecasting · Code Map</p>
+  <h1>How the files talk to each other</h1>
+  <p>Every stage below is a real file in <span class="mono">src/</span> — click a card to see what it reads, what it writes, and why it's built that way. Switch tabs to see the same code running locally vs. orchestrated in production.</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="local">$ local pipeline</div>
+  <div class="tab" data-tab="prod">$ production / airflow</div>
+  <div class="tab" data-tab="tree">$ file tree</div>
+</div>
+
+<div class="wrap">
+
+  <!-- LOCAL -->
+  <div class="view active" id="view-local">
+    <p class="section-title">run order — python pipeline.py</p>
+    <div class="flow" data-flow="local" style="--flow-color:#4fd1c5">
+      <div class="pulse"></div>
+      <div id="local-nodes"></div>
+    </div>
+  </div>
+
+  <!-- PROD -->
+  <div class="view" id="view-prod">
+    <p class="section-title">airflow DAG — oon_forecast_monthly (3rd of each month, 6am)</p>
+    <div class="wrapbox">
+      <span class="tag">🐳 docker image: oon-forecast:latest — one image, per-task CMD</span>
+      <div class="flow" data-flow="prod" style="--flow-color:#f2a94e">
+        <div class="pulse"></div>
+        <div id="prod-nodes"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TREE -->
+  <div class="view" id="view-tree">
+    <p class="section-title">repository layout</p>
+    <div class="legend">
+      <span><i class="dot" style="background:#4fd1c5"></i> core pipeline</span>
+      <span><i class="dot" style="background:#f2a94e"></i> MLOps / production</span>
+      <span><i class="dot" style="background:#6ea8fe"></i> generated artifact (not committed)</span>
+    </div>
+    <div class="tree" id="tree-output"></div>
+  </div>
+
+</div>
+
+<footer>Click any card to expand · numbers indicate real execution order, not arbitrary grouping.</footer>
+
+<script>
+const localNodes = [
+  { n:1, file:"generate_data.py", accent:"teal", verb:"Synthesize source data",
+    desc:"Stands in for a warehouse query. Builds Claims + Network tables with a real network-density shock baked in, so downstream stages have genuine signal to find.",
+    why:"Swap this one file for a real warehouse query and nothing downstream changes — that's the point of keeping I/O isolated to one module.",
+    inputs:[], outputs:["data/claims.csv","data/network.csv"] },
+  { n:2, file:"data_prep.py", accent:"teal", verb:"Clean & aggregate to monthly grain",
+    desc:"Drops duplicate claims, floors reversals at 0, winsorizes catastrophic claims at p99, reindexes every Region×Specialty to a continuous monthly calendar, drops series with < 24 months of history.",
+    why:"Trees compute lag/rolling features via positional shifts — a single missing month silently pulls in the wrong value for every feature after it. Reindexing first prevents that class of bug entirely.",
+    inputs:["data/claims.csv","data/network.csv"], outputs:["data/modeling_table.csv"] },
+  { n:3, file:"features.py", accent:"teal", verb:"Engineer lag / rolling / domain features",
+    desc:"Lags (1,2,3,6,12) from ACF/PACF reasoning, rolling mean/std shifted before windowing, momentum features, cyclical calendar encoding, and network-density deltas. Also builds direct multi-horizon targets target_h1..target_h6.",
+    why:"`.shift(1)` before every rolling window is the single most important line in the file — without it, a rolling mean at month t would leak month t's own answer into its own feature.",
+    inputs:["data/modeling_table.csv"], outputs:["data/feature_table.csv"] },
+  { n:4, file:"train.py", accent:"teal", verb:"Baseline, tune, and train per horizon",
+    desc:"Seasonal-naive baseline for each horizon, walk-forward TimeSeriesSplit + Optuna tuning, then a final XGBoost per horizon plus q=0.1/0.9 quantile models for intervals.",
+    why:"Walk-forward CV (never random K-fold) is what stops the model from training on 'future' months relative to what it validates on — the most common time-series leakage bug.",
+    inputs:["data/feature_table.csv"], outputs:["artifacts/xgb_h*.json","artifacts/metrics.json"] },
+  { n:5, file:"forecast.py", accent:"teal", verb:"Generate forecasts + alerts",
+    desc:"Loads the latest row per segment, predicts 1–6 months ahead, builds an 80% interval from the quantile models, and applies alert logic: HIGH only fires if both the point forecast and the lower bound are rising.",
+    why:"Requiring the lower bound to also rise is what keeps alert precision high — a point forecast alone can look like it's rising from noise.",
+    inputs:["data/feature_table.csv","artifacts/xgb_h*.json"], outputs:["artifacts/forecast_table.csv"] },
+];
+
+const prodNodes = [
+  { n:1, file:"data_prep.py + features.py", accent:"amber", verb:"build_modeling_and_feature_tables", gate:false,
+    desc:"Same two files from the local pipeline, invoked via BashOperator — no rewrite for production.",
+    why:"If this task ever diverges from the local version, that's exactly the train/serve skew MLOps exists to prevent.",
+    inputs:["claims / network source"], outputs:["feature_table.csv"] },
+  { n:2, file:"train_with_mlflow.py", accent:"amber", verb:"train_challenger", gate:false,
+    desc:"Wraps train.py's exact functions (get_xy, tune_horizon, seasonal_naive_baseline) and logs params/metrics/model artifact to MLflow, registering each horizon's model as a new unstaged version.",
+    why:"A separate wrapper keeps the core modeling code importable/testable without requiring an MLflow server for local runs or unit tests.",
+    inputs:["feature_table.csv"], outputs:["MLflow run + registered model version"] },
+  { n:3, file:"oon_forecast_dag.py", accent:"amber", verb:"promote_if_better", gate:true,
+    desc:"Pulls the current Production model's logged MAPE from MLflow, compares it to the new challenger's, and only promotes if the challenger isn't worse than a small tolerance.",
+    why:"This gate is the single control that stops a bad retrain — from a data glitch or upstream schema change — from silently reaching the business dashboard.",
+    inputs:["challenger metrics","champion metrics"], outputs:["Production-staged model (or no-op)"] },
+  { n:4, file:"forecast.py", accent:"amber", verb:"generate_batch_forecasts", gate:false,
+    desc:"Same file as local step 5, now reading whichever model is currently staged Production.",
+    why:"Batch, not real-time — the network team consumes a warehouse table + dashboard, not an API.",
+    inputs:["Production model"], outputs:["forecast_table.csv → warehouse"] },
+  { n:5, file:"monitor.py", accent:"amber", verb:"check_feature_drift", gate:false,
+    desc:"Computes PSI (Population Stability Index) per feature comparing the last 3 months to the prior 24-month reference window; anything above 0.2 gets flagged.",
+    why:"Feature drift can appear before error metrics do — catching it here means action happens before the dashboard's numbers go stale.",
+    inputs:["feature_table.csv"], outputs:["drift report → Slack/PagerDuty"] },
+];
+
+function renderFlow(containerId, nodes){
+  const el = document.getElementById(containerId);
+  el.innerHTML = nodes.map(n => `
+    <div class="node">
+      <div class="marker ${n.gate ? 'gate' : ''}">${n.gate ? '◆' : n.n}</div>
+      <div class="card" onclick="this.classList.toggle('open')">
+        <div class="card-top">
+          <div>
+            <div class="filename">${n.file}</div>
+            <p class="verb">${n.verb}</p>
+          </div>
+          <div class="chev">▶</div>
+        </div>
+        <div class="detail">
+          <p>${n.desc}</p>
+          <div class="why"><b>Why:</b> ${n.why}</div>
+          <div class="io">
+            ${n.inputs.map(i => `<span class="pill in">in · ${i}</span>`).join("")}
+            ${n.outputs.map(o => `<span class="pill out">out · ${o}</span>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+renderFlow("local-nodes", localNodes);
+renderFlow("prod-nodes", prodNodes);
+
+const treeLines = [
+`<span class="cm">oon_forecast/</span>`,
+`<span class="cm">├── </span><span class="f">README.md</span><span class="cm">              full write-up: design rationale + MLOps guide</span>`,
+`<span class="cm">├── </span><span class="c-mlops">Dockerfile</span><span class="cm">              one image, per-stage CMD (train / forecast / monitor)</span>`,
+`<span class="cm">├── </span><span class="f">requirements.txt</span>`,
+`<span class="cm">├── </span><span class="f">flow.html</span><span class="cm">              ← you are here</span>`,
+`<span class="cm">├── dags/</span>`,
+`<span class="cm">│   └── </span><span class="c-mlops">oon_forecast_dag.py</span><span class="cm">   Airflow DAG: build → train → gate → forecast → drift</span>`,
+`<span class="cm">├── src/</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">config.py</span><span class="cm">             paths & constants — single source of truth</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">generate_data.py</span><span class="cm">      synthetic claims + network tables (swap for warehouse)</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">data_prep.py</span><span class="cm">          cleaning + monthly aggregation + calendar reindex</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">features.py</span><span class="cm">           lags / rolling / momentum / calendar / domain features</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">train.py</span><span class="cm">              baselines + walk-forward CV + Optuna + XGBoost</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">forecast.py</span><span class="cm">           1–6mo forecasts + intervals + alert logic</span>`,
+`<span class="cm">│   ├── </span><span class="c-pipe">pipeline.py</span><span class="cm">           orchestrates data_prep → features → train → forecast</span>`,
+`<span class="cm">│   ├── </span><span class="c-mlops">train_with_mlflow.py</span><span class="cm">  same training logic + MLflow tracking/registry</span>`,
+`<span class="cm">│   └── </span><span class="c-mlops">monitor.py</span><span class="cm">            realized-error + PSI feature-drift checks</span>`,
+`<span class="cm">├── data/                    </span><span class="c-art">(generated — not committed)</span>`,
+`<span class="cm">│   ├── </span><span class="c-art">claims.csv, network.csv</span>`,
+`<span class="cm">│   └── </span><span class="c-art">modeling_table.csv, feature_table.csv</span>`,
+`<span class="cm">└── artifacts/                </span><span class="c-art">(generated — not committed)</span>`,
+`<span class="cm">    ├── </span><span class="c-art">xgb_h1.json ... xgb_h6.json, xgb_h*_q*.json</span>`,
+`<span class="cm">    ├── </span><span class="c-art">metrics.json</span>`,
+`<span class="cm">    └── </span><span class="c-art">forecast_table.csv</span>`,
+];
+document.getElementById("tree-output").innerHTML = treeLines.map(l => `<div class="line">${l}</div>`).join("");
+
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("view-" + tab.dataset.tab).classList.add("active");
+  });
+});
+</script>
+</body>
+</html>
