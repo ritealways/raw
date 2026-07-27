@@ -1,0 +1,27 @@
+cl
+**1. Processing Certificates of Insurance (COIs)**
+Use a **template-based generative AI + RPA (Robotic Process Automation)** combo — basically software that reads the request (who needs the certificate, for what policy), pulls data from the policy system, and auto-fills the standard COI form, then emails it out. Why: COIs are 90% repetitive data-entry with almost no judgment calls, so it's a "safe" place to fully automate — low risk, high volume.
+
+**2. Handling reinstatement requests**
+An **AI agent with rule-based decisioning** can check payment status, lapse duration, and policy eligibility rules, then auto-approve straightforward reinstatements (e.g., payment received within grace period) and only flag exceptions to a human. Why: most reinstatements follow clear "if-this-then-that" logic — AI just needs to apply the rules faster and more consistently than a person checking manually.
+
+**3. Adding building endorsements**
+Use **NLP (Natural Language Processing — AI that reads and understands text)** to extract details from the endorsement request email/form (address, coverage change, effective date) and auto-update the policy system, with a confidence score. Why: the bottleneck today is manually re-typing info from an email into a system; NLP removes that copy-paste step and flags anything it's unsure about.
+
+**4. Following up on claims info for underwriting**
+An **AI-powered workflow/chat agent** can auto-send reminder emails to claimants/adjusters, track responses, and nudge again if no reply — like a persistent digital assistant chasing paperwork. Why: this is pure follow-up and reminder work — no real decision-making — so it's ideal for automation, freeing the AM from being a human alarm clock.
+
+**5. Responding to basic policy/service inquiries**
+Deploy a **conversational AI chatbot (built on an LLM — large language model, the tech behind tools like Claude/ChatGPT)** trained on policy FAQs and connected to the customer's account, so it can answer "what's my deductible" or "when's my renewal" instantly. Why: these are repetitive, low-complexity questions — a chatbot handles the "80% simple, 20% complex" split, escalating only the hard ones.
+
+**6. Updating customer and policy records**
+Use **AI-assisted data extraction + auto-sync** (again NLP) to read incoming update requests (address change, name change) from emails/forms and push them directly into the policy system, no manual retyping. Why: this task is essentially "read text, put it in the right field" — exactly what NLP is designed to do reliably.
+
+**7. Tracking status of service requests**
+Build a **dashboard powered by AI-driven workflow automation** that auto-updates ticket status as each step completes and proactively alerts the AM or customer when something's stuck or overdue. Why: instead of an AM manually checking "where's this request," the system watches and reports itself — like a shipment tracker for insurance paperwork.
+
+---
+
+**The common thread:** all 7 tasks are high-volume, low-judgment, repetitive — the textbook definition of what's "automatable." The real productivity win isn't replacing the Account Manager; it's freeing them from clerical work so they can focus on relationship-building and complex judgment calls, while a mix of **NLP** (reading/understanding text), **RPA** (repetitive system actions), and **chatbots/AI agents** (routine communication) handle the rest.
+
+Want me to put this into a slide deck or a one-pager document you could share with stakeholders?
