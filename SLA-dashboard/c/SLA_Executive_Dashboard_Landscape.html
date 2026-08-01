@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Operations SLA — Executive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:            #F5F6F8;
+    --panel:         #FFFFFF;
+    --panel-alt:     #FAFBFC;
+    --border:        #E3E7EC;
+    --border-soft:   #EBEEF2;
+    --text:          #1B2733;
+    --text-dim:      #5B6B7B;
+    --text-faint:    #8B98A5;
+
+    --primary:       #1F4E79;
+    --primary-light: #EAF1F8;
+
+    --green:         #2E8B57;
+    --green-bg:      #E8F5EE;
+    --yellow:        #FFC000;
+    --amber:         #F28E2B;
+    --amber-bg:      #FDECDA;
+    --red:           #D62728;
+    --red-bg:        #FBE7E7;
+
+    --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06);
+    --shadow-md: 0 2px 6px rgba(16,24,40,0.06), 0 4px 12px rgba(16,24,40,0.05);
+
+    --disp: 'Segoe UI Semibold', 'Segoe UI', -apple-system, 'Inter', sans-serif;
+    --body: 'Segoe UI', -apple-system, 'Inter', sans-serif;
+    --mono: 'Consolas', 'IBM Plex Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    background:#DDE1E6;
+    height:100%;
+    overflow:hidden;
+  }
+  body{
+    font-family:var(--body);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ===== Fixed 16:9 landscape canvas, scaled to fit viewport ===== */
+  #stage{
+    width:1920px; height:1080px;
+    transform-origin: center center;
+    background:var(--bg);
+    box-shadow:0 8px 40px rgba(0,0,0,0.28);
+    flex-shrink:0;
+  }
+
+  .shell{display:grid; grid-template-columns:250px 1fr; width:100%; height:100%;}
+
+  /* ===== Sidebar ===== */
+  .sidebar{
+    background:var(--panel);
+    border-right:1px solid var(--border);
+    padding:22px 18px 20px;
+    display:flex; flex-direction:column; gap:26px;
+  }
+  .brand{display:flex; align-items:center; gap:11px; padding:0 4px 18px; border-bottom:1px solid var(--border-soft);}
+  .brand-mark{
+    width:34px;height:34px;border-radius:8px;
+    background:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp); font-weight:700; font-size:14px; color:#fff;
+    flex-shrink:0;
+  }
+  .brand-text{line-height:1.2;}
+  .brand-text .l1{font-family:var(--disp); font-size:14px; font-weight:600; color:var(--text);}
+  .brand-text .l2{font-size:10.5px; color:var(--text-faint); letter-spacing:0.05em; text-transform:uppercase;}
+
+  .filter-group{display:flex; flex-direction:column; gap:7px;}
+  .filter-label{
+    font-size:10.5px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase;
+    color:var(--text-faint); padding:0 6px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .filter-label .count{font-family:var(--mono); font-size:9.5px; color:var(--text-faint);}
+
+  .po-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:8px; border:1px solid transparent;
+    background:transparent; color:var(--text-dim); cursor:pointer;
+    font-family:var(--body); font-size:13.5px; font-weight:500;
+    transition:background .15s ease; text-align:left; width:100%;
+  }
+  .po-btn:hover{background:var(--panel-alt); color:var(--text);}
+  .po-btn.active{
+    background:var(--primary-light); border-color:#D6E4F0;
+    color:var(--primary); font-weight:600;
+    box-shadow:inset 3px 0 0 var(--primary);
+  }
+  .po-btn .tag{
+    font-family:var(--mono); font-size:10.5px; color:var(--text-faint);
+    background:var(--panel-alt); border:1px solid var(--border-soft);
+    padding:2px 7px; border-radius:5px;
+  }
+  .po-btn.active .tag{color:var(--primary); border-color:#D6E4F0; background:#fff;}
+  .po-btn.risk-high .tag{color:var(--red); font-weight:600;}
+
+  .status-chip-row{display:flex; flex-wrap:wrap; gap:6px; padding:0 2px;}
+  .status-chip{
+    display:flex; align-items:center; gap:6px;
+    padding:7px 10px; border-radius:7px; border:1px solid var(--border);
+    background:var(--panel); font-size:11.5px; font-weight:500; color:var(--text-dim);
+    cursor:pointer;
+  }
+  .status-chip.active{background:var(--primary-light); color:var(--primary); border-color:#D6E4F0; font-weight:600;}
+  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .dot.g{background:var(--green);} .dot.y{background:var(--yellow);}
+  .dot.a{background:var(--amber);} .dot.r{background:var(--red);}
+
+  .sidebar-foot{
+    margin-top:auto; padding-top:16px; border-top:1px solid var(--border-soft);
+    font-size:11px; color:var(--text-faint); line-height:1.6;
+  }
+  .sidebar-foot b{color:var(--text-dim); font-weight:600;}
+
+  /* ===== Main ===== */
+  .main{
+    padding:22px 26px 20px;
+    display:grid;
+    grid-template-rows:auto auto 1fr 1fr;
+    gap:14px;
+    min-height:0;
+    height:100%;
+  }
+
+  .topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:20px;}
+  .topbar h1{font-family:var(--disp); font-size:21px; font-weight:600; color:var(--text); letter-spacing:-0.01em;}
+  .topbar .sub{margin-top:5px; font-size:12px; color:var(--text-faint); display:flex; align-items:center; gap:8px;}
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green); box-shadow:0 0 0 3px var(--green-bg);}
+
+  .period-toggle{display:flex; background:var(--panel); border:1px solid var(--border); border-radius:9px; padding:3px; gap:2px; box-shadow:var(--shadow); height:38px;}
+  .period-toggle button{font-family:var(--body); font-size:12px; font-weight:600; color:var(--text-faint); background:transparent; border:none; padding:0 15px; border-radius:7px; cursor:pointer;}
+  .period-toggle button.active{background:var(--primary); color:#fff;}
+
+  /* ===== KPI row ===== */
+  .kpi-row{display:grid; grid-template-columns:repeat(6,1fr); gap:12px;}
+  .kpi{background:var(--panel); border:1px solid var(--border); border-radius:11px; padding:13px 15px 12px; box-shadow:var(--shadow); display:flex; flex-direction:column; justify-content:center;}
+  .kpi .klabel{font-size:10.5px; font-weight:600; color:var(--text-faint); letter-spacing:0.03em; text-transform:uppercase;}
+  .kpi .kval{font-family:var(--disp); font-size:25px; font-weight:700; margin-top:6px; letter-spacing:-0.01em; color:var(--text);}
+  .kpi .ktrend{font-family:var(--mono); font-size:10px; margin-top:4px; color:var(--text-faint);}
+  .ktrend.up{color:var(--red);} .ktrend.down{color:var(--green);}
+  .kpi.breach{background:var(--red-bg); border-color:#F3C6C6;}
+  .kpi.breach .kval{font-size:32px; color:var(--red);}
+  .kpi.breach .klabel{color:#B33131;}
+
+  /* ===== Row: hero + trend + donut ===== */
+  .row-mid{display:grid; grid-template-columns:1.05fr 1.15fr 0.85fr; gap:14px; min-height:0;}
+
+  .hero{
+    background:var(--panel); border:1px solid var(--border); border-radius:13px;
+    padding:16px 20px; display:flex; align-items:center; gap:18px;
+    box-shadow:var(--shadow-md); border-left:4px solid var(--red); min-height:0;
+  }
+  .hero-radar{position:relative; width:84px; height:84px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .hero-radar .ring{position:absolute; border-radius:50%; border:1.5px solid rgba(214,39,40,0.35);}
+  .hero-radar .ring.r1{width:84px;height:84px; animation:pulse 3s ease-out infinite;}
+  .hero-radar .ring.r2{width:84px;height:84px; animation:pulse 3s ease-out infinite 1s;}
+  .hero-radar .ring.r3{width:84px;height:84px; animation:pulse 3s ease-out infinite 2s;}
+  @keyframes pulse{0%{transform:scale(0.55); opacity:0.9; border-color:rgba(214,39,40,0.5);}100%{transform:scale(1); opacity:0; border-color:rgba(214,39,40,0);}}
+  .hero-radar .core{width:64px;height:64px;border-radius:50%; background:var(--red-bg); border:1px solid #F3C6C6; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:2;}
+  .hero-radar .core .n{font-family:var(--disp); font-size:22px; font-weight:700; color:var(--red); line-height:1;}
+  .hero-radar .core .l{font-size:7px; color:#B33131; letter-spacing:0.04em; margin-top:2px; font-weight:600;}
+  .hero-body .eyebrow{font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--red);}
+  .hero-body h2{font-family:var(--disp); font-size:16.5px; font-weight:700; margin-top:5px; color:var(--text); line-height:1.25;}
+  .hero-body p{font-size:11.5px; color:var(--text-dim); margin-top:6px; line-height:1.45;}
+  .hero-body .meta{display:flex; gap:16px; margin-top:10px; flex-wrap:wrap;}
+  .hero-body .meta div{font-size:10px; color:var(--text-faint);}
+  .hero-body .meta b{display:block; font-family:var(--mono); font-size:12.5px; color:var(--text); margin-top:1px; font-weight:600;}
+
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 17px 12px; box-shadow:var(--shadow); display:flex; flex-direction:column; min-height:0;}
+  .card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-shrink:0;}
+  .card-head h3{font-family:var(--disp); font-size:13px; font-weight:600; color:var(--text);}
+  .card-head .hint{font-size:10px; color:var(--text-faint); font-family:var(--mono);}
+  .chart-wrap{position:relative; flex:1; min-height:0;}
+
+  .donut-wrap{position:relative;}
+  .donut-center{position:absolute; top:44%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none;}
+  .donut-center .big{font-family:var(--disp); font-size:20px; font-weight:700; color:var(--text);}
+  .donut-center .small{font-size:8.5px; color:var(--text-faint); letter-spacing:0.03em; text-transform:uppercase;}
+  .legend-row{display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; flex-shrink:0;}
+  .legend-row span{font-size:10px; color:var(--text-dim); display:flex; align-items:center; gap:5px;}
+  .legend-row .sw{width:7px;height:7px;border-radius:2px;}
+
+  /* ===== Row: bottom charts + table ===== */
+  .row-bottom{display:grid; grid-template-columns:0.85fr 0.85fr 1.3fr; gap:14px; min-height:0;}
+
+  .table-card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 17px 8px; box-shadow:var(--shadow); display:flex; flex-direction:column; min-height:0;}
+  table{width:100%; border-collapse:collapse;}
+  thead th{text-align:left; font-size:9.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-faint); padding:0 8px 7px; border-bottom:1px solid var(--border);}
+  thead th.num{text-align:right;}
+  tbody td{padding:7px 8px; font-size:12px; border-bottom:1px solid var(--border-soft); font-family:var(--mono); color:var(--text-dim);}
+  tbody td.name{font-family:var(--body); color:var(--text); font-weight:600;}
+  tbody td.num{text-align:right;}
+  tbody tr:last-child td{border-bottom:none;}
+  .pill{display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:6px; font-family:var(--mono); font-size:10.5px; font-weight:600;}
+  .pill.red{background:var(--red-bg); color:var(--red);}
+  .pill.amber{background:var(--amber-bg); color:#C56A16;}
+  .pill.green{background:var(--green-bg); color:var(--green);}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">OC</div>
+        <div class="brand-text">
+          <div class="l1">Product Ops</div>
+          <div class="l2">SLA Control</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Organization <span class="count">4</span></div>
+        <button class="po-btn active">All Organizations <span class="tag">187</span></button>
+        <button class="po-btn risk-high">Harris <span class="tag">20</span></button>
+        <button class="po-btn">Colleen <span class="tag">14</span></button>
+        <button class="po-btn">Ryan <span class="tag">9</span></button>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">SLA Status</div>
+        <div class="status-chip-row">
+          <div class="status-chip active"><span class="dot g"></span>Green</div>
+          <div class="status-chip"><span class="dot y"></span>Yellow</div>
+          <div class="status-chip"><span class="dot a"></span>Amber</div>
+          <div class="status-chip"><span class="dot r"></span>Red</div>
+        </div>
+      </div>
+
+      <div class="sidebar-foot">
+        Thresholds set by <b>Vinayak K.</b><br>
+        Red: past due · Amber: ≤3d · Yellow: ≤7d
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+
+      <div class="topbar">
+        <div>
+          <h1>Product Operations SLA — Executive Dashboard</h1>
+          <div class="sub"><span class="live-dot"></span> Last refresh: Today, 11:06 PM IST · Auto-refresh every 15 min</div>
+        </div>
+        <div class="period-toggle">
+          <button>Last 30 Days</button>
+          <button class="active">Last 60 Days</button>
+          <button>Last 90 Days</button>
+        </div>
+      </div>
+
+      <!-- KPI ROW -->
+      <div class="kpi-row">
+        <div class="kpi"><div class="klabel">Total Tickets</div><div class="kval">187</div><div class="ktrend">4 organizations</div></div>
+        <div class="kpi"><div class="klabel">Open Tickets</div><div class="kval">42</div><div class="ktrend up">↑ 6 vs prior</div></div>
+        <div class="kpi"><div class="klabel">Closed Tickets</div><div class="kval">145</div><div class="ktrend down">↑ 22 resolved</div></div>
+        <div class="kpi breach"><div class="klabel">Total SLA Breaches</div><div class="kval">43</div><div class="ktrend up">↑ 5 vs prior</div></div>
+        <div class="kpi"><div class="klabel">SLA Compliance</div><div class="kval">77.0%</div><div class="ktrend down">↓ 2.1 pts</div></div>
+        <div class="kpi"><div class="klabel">Open Backlog</div><div class="kval">18</div><div class="ktrend">in progress</div></div>
+      </div>
+
+      <!-- MIDDLE ROW: hero + trend + donut -->
+      <div class="row-mid">
+        <div class="hero">
+          <div class="hero-radar">
+            <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+            <div class="core"><div class="n">20</div><div class="l">BREACHES</div></div>
+          </div>
+          <div class="hero-body">
+            <div class="eyebrow">● Requires Attention</div>
+            <h2>Harris is the highest-risk organization</h2>
+            <p>20 breaches in 90 days — nearly double the next org. Volume rising for 2 consecutive periods.</p>
+            <div class="meta">
+              <div>Selected<b>Harris</b></div>
+              <div>Window<b>90 Days</b></div>
+              <div>Compliance<b style="color:var(--red)">61.4%</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Breach Trend</h3><span class="hint">daily · 90d</span></div>
+          <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>SLA Health</h3><span class="hint">open tickets</span></div>
+          <div class="chart-wrap donut-wrap">
+            <canvas id="donutChart"></canvas>
+            <div class="donut-center"><div class="big">142</div><div class="small">Open</div></div>
+          </div>
+          <div class="legend-row">
+            <span><span class="sw" style="background:var(--green)"></span>Green 58%</span>
+            <span><span class="sw" style="background:var(--yellow)"></span>Yellow 19%</span>
+            <span><span class="sw" style="background:var(--amber)"></span>Amber 14%</span>
+            <span><span class="sw" style="background:var(--red)"></span>Red 9%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW: PO bar + Assignment group + Top risk table -->
+      <div class="row-bottom">
+        <div class="card">
+          <div class="card-head"><h3>Breaches by Org</h3><span class="hint">high → low</span></div>
+          <div class="chart-wrap"><canvas id="poChart"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Assignment Groups</h3><span class="hint">breached · top 4</span></div>
+          <div class="chart-wrap"><canvas id="groupChart"></canvas></div>
+        </div>
+
+        <div class="table-card">
+          <div class="card-head"><h3>Top Risk Areas</h3><span class="hint">by breach count</span></div>
+          <table>
+            <thead><tr><th>Org</th><th>Assignment Group</th><th class="num">Open</th><th class="num">Breached</th><th class="num">Compliance</th></tr></thead>
+            <tbody>
+              <tr><td class="name">Harris</td><td>DT‑CMP‑OneCloud</td><td class="num">14</td><td class="num">12</td><td class="num"><span class="pill red">58.3%</span></td></tr>
+              <tr><td class="name">Harris</td><td>DT‑CMP‑Product Excellence</td><td class="num">9</td><td class="num">8</td><td class="num"><span class="pill red">64.1%</span></td></tr>
+              <tr><td class="name">Colleen</td><td>DT‑CMP‑NOVA</td><td class="num">11</td><td class="num">9</td><td class="num"><span class="pill amber">71.7%</span></td></tr>
+              <tr><td class="name">Colleen</td><td>DT‑CMP‑Inventory Solutions</td><td class="num">7</td><td class="num">5</td><td class="num"><span class="pill amber">79.4%</span></td></tr>
+              <tr><td class="name">Ryan</td><td>DT‑CMP‑Product Excellence</td><td class="num">10</td><td class="num">6</td><td class="num"><span class="pill green">85.2%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // Scale the fixed 1920x1080 stage to fit the browser viewport (letterboxed)
+  function fitStage(){
+    const stage = document.getElementById('stage');
+    const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.transform = `scale(${scale})`;
+  }
+  window.addEventListener('resize', fitStage);
+  fitStage();
+
+  Chart.defaults.font.family = "'Segoe UI', -apple-system, sans-serif";
+  Chart.defaults.color = '#5B6B7B';
+  Chart.defaults.font.size = 10.5;
+  const gridColor = '#EEF1F4';
+
+  new Chart(document.getElementById('trendChart'), {
+    type:'line',
+    data:{ labels:['D-90','D-70','D-50','D-30','D-10','Today'],
+      datasets:[{ data:[3,4,6,8,9,13], borderColor:'#D62728', backgroundColor:'rgba(214,39,40,0.08)',
+        pointBackgroundColor:'#D62728', pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:3,
+        borderWidth:2.25, tension:0.35, fill:true }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{grid:{display:false}, ticks:{maxRotation:0}, border:{color:'#E3E7EC'}},
+               y:{grid:{color:gridColor}, beginAtZero:true, border:{display:false}} } }
+  });
+
+  new Chart(document.getElementById('donutChart'), {
+    type:'doughnut',
+    data:{ labels:['Green','Yellow','Amber','Red'],
+      datasets:[{ data:[58,19,14,9], backgroundColor:['#2E8B57','#FFC000','#F28E2B','#D62728'], borderColor:'#FFFFFF', borderWidth:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'70%', plugins:{legend:{display:false}} }
+  });
+
+  new Chart(document.getElementById('poChart'), {
+    type:'bar',
+    data:{ labels:['Harris','Colleen','Ryan','Ops Shared'],
+      datasets:[{ data:[20,14,9,4], backgroundColor:['#D62728','#F28E2B','#2E8B57','#2E8B57'], borderRadius:5, barThickness:18 }] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{grid:{color:gridColor}, beginAtZero:true, border:{display:false}}, y:{grid:{display:false}, border:{color:'#E3E7EC'}} } }
+  });
+
+  new Chart(document.getElementById('groupChart'), {
+    type:'bar',
+    data:{ labels:['OneCloud','Product Excellence','NOVA','Inventory Sol.'],
+      datasets:[{ data:[15,14,9,5], backgroundColor:'#1F4E79', borderRadius:5, barThickness:14 }] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{grid:{color:gridColor}, beginAtZero:true, border:{display:false}}, y:{grid:{display:false}, border:{color:'#E3E7EC'}} } }
+  });
+</script>
+
+</body>
+</html>
