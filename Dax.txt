@@ -22,3 +22,9 @@ RIGHT(
     Repo,
     LEN(Repo) - SEARCH("/", Repo, 1)
 )
+
+Repo Name Trimmed =
+VAR Repo = 'YourTable'[Repo Full Name]
+VAR RepoPath = SUBSTITUTE(Repo, "/", "|")
+RETURN
+PATHITEM(RepoPath, PATHLENGTH(RepoPath))
