@@ -13,3 +13,12 @@ MAXX(
     ),
     github_secrets_notification[current_level]
 )
+
+
+Repo Name Trimmed =
+VAR Repo = 'YourTable'[Repo Name]
+RETURN
+RIGHT(
+    Repo,
+    LEN(Repo) - SEARCH("/", Repo, 1)
+)
