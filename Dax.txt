@@ -1,0 +1,15 @@
+Current_Level_New =
+VAR _url = github_secret_alerts[html_url]
+RETURN
+MAXX(
+    TOPN(
+        1,
+        FILTER(
+            github_secrets_notification,
+            github_secrets_notification[secret_url] = _url
+                && NOT ISBLANK(github_secrets_notification[current_level])
+        ),
+        github_secrets_notification[updated_at], DESC
+    ),
+    github_secrets_notification[current_level]
+)
