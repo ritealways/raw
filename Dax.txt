@@ -1,30 +1,34 @@
-Current_Level_New =
-VAR _url = github_secret_alerts[html_url]
-RETURN
-MAXX(
-    TOPN(
-        1,
-        FILTER(
-            github_secrets_notification,
-            github_secrets_notification[secret_url] = _url
-                && NOT ISBLANK(github_secrets_notification[current_level])
-        ),
-        github_secrets_notification[updated_at], DESC
-    ),
-    github_secrets_notification[current_level]
-)
+Job Description for – MYSQL DATABASE DEVELOPER 
+Experience - 5 to 7 years
+Remote | Fulltime
 
-
-Repo Name Trimmed =
-VAR Repo = 'YourTable'[Repo Name]
-RETURN
-RIGHT(
-    Repo,
-    LEN(Repo) - SEARCH("/", Repo, 1)
-)
-
-Repo Name Trimmed =
-VAR Repo = 'YourTable'[Repo Full Name]
-VAR RepoPath = SUBSTITUTE(Repo, "/", "|")
-RETURN
+Reports To: Director (Product Development)
+Role Overview: 
+Our entire platform is hosted on AWS, and the heart and core of our platform is based on MySQL databases. As of today, we have database servers handling several TBs of transactional data, and this could grow 100X in the next few years. We are looking for an expert in MySQL administration and Development to join our DevOps team and help us scale our database platform and ensure reliability, performance and security.
+  
+Key Requirements: 
+• 5-7 years MYSQL Developer experience required 
+• 5-7 years of experience in deployment, monitoring, tuning and administration of high concurrency MySQL production databases. 
+• Good understanding MySQL parameters 
+• Must have experience in data migration 
+• Strong communication skills 
+• Ability to take full ownership of availability and security of production data 
+• Nice to have – experience in AWS Aurora MySQL / Architecture and Features. Using Performance insights etc. to fine tune database performance. 
+• Write fast and performant database queries, procedures using a flavour of SQL Server, such as MySQL, MSSQL, or PostgreSQL 
+• Maintain and back up databases regularly 
+• Perform SQL database sharding and indexing procedures as required to handle heavy traffic loads 
+• Well versed in writing PL/SQL Development, optimize, and implement stored procedures using Jobs/ Events etc. 
+• Use database analytical tools to analyze performance and generate reports.
+• Flexible, team player, “get-it-done” personality 
+• Ability to organize and plan work independently 
+• Ability to work in a rapidly changing environment 
+• Ability to multi-task and context-switch effectively between different activities and teams
+  
+Job Qualifications and Skill Sets: 
+• Bachelor’s degree in software development, computer science, business intelligence, information technology, data management, or other related fields 
+• Advanced knowledge of database procedures and MySQL Server concepts.
+•   Knowledge of one or more SQL variant, such as MySQL, MSSQL, and PostgreSQL 
+• The ability to create fast and efficient database queries, including joining and cross-referencing cells from several tables 
+•  Familiarity with standard database management tools and software, such as Microsoft Access, Oracle Database, and phpMyAdmin 
+•  Excellent communication skillsRETURN
 PATHITEM(RepoPath, PATHLENGTH(RepoPath))
