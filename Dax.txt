@@ -1,18 +1,17 @@
-print("Actual inf:", np.isinf(np.expm1(valid[target_col])).sum())
-print("Prediction inf:", np.isinf(np.expm1(valid["naive_pred"])).sum())
+actual = np.expm1(valid[target_col].values)
+pred = np.expm1(valid["naive_pred"].values)
 
-print("Actual zero:", (np.expm1(valid[target_col]) == 0).sum())
-print("Prediction zero:", (np.expm1(valid["naive_pred"]) == 0).sum())
+mask = (
+    np.isfinite(actual) &
+    np.isfinite(pred) &
+    (actual > 1e-6)
+)
 
-
-actual = np.expm1(valid[target_col])
-pred = np.expm1(valid["naive_pred"])
-
-print("Actual max:", np.nanmax(actual))
-print("Prediction max:", np.nanmax(pred))
-
-print("Actual inf:", np.isinf(actual).sum())
-print("Prediction inf:", np.isinf(pred).sum())
-
-print("Actual zero:", (actual == 0).sum())
-print("Prediction zero:", (pred == 0).sum())
+print(
+    f"Horizon {h}: "
+    f"Total={len(actual)}, "
+    f"Valid for MAPE={mask.sum()}, "
+    f"Actual zero={(actual == 0).sum()}, "
+    f"Actual finite={np.isfinite(actual).sum()}, "
+    f"Prediction finite={np.isfinite(pred).sum()}"
+)
