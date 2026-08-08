@@ -1,1 +1,64 @@
+import numpy as np
+import pandas as pd
 
+# -----------------------------
+# MAPE function
+# -----------------------------
+def mape(y_true, y_pred, eps=1e-6):
+    y_true = np.asarray(y_true)
+    y_pred = np.asarray(y_pred)
+
+    return float(
+        np.mean(
+            np.abs(y_true - y_pred) /
+            (np.abs(y_true) + eps)
+        ) * 100
+    )
+
+
+# -----------------------------
+# Multi-horizon Naive
+# -----------------------------
+HORIZONS = [1, 2, 3, 4, 5, 6]
+
+# IMPORTANT: Keep this OUTSIDE the loop
+mape_results = []
+
+for h in HORIZONS:
+
+    target_col = f"target_h{h}"
+
+    # Remove missing target
+    df_h = df.dropna(
+        subset=[target_col]
+    ).copy()
+
+    # Seasonal Naive prediction
+    df_h["naive_pred"] = (
+        df_h
+        .groupby(["region", "specialty"])["y_log"]
+        .shift(12 - h)
+    )
+
+    # Remove rows where prediction is unavailable
+    valid = df_h.dropna(
+        subset=["naive_pred", target_col]
+    )
+
+    # Calculate MAPE
+    score = mape(
+        valid[target_col],
+        valid["naive_pred"]
+    )
+
+    # Store each horizon result
+    mape_results.append({
+        "Horizon": h,
+        "MAPE": score
+    })
+
+
+# Create dataframe AFTER the loop
+mape_df = pd.DataFrame(mape_results)
+
+mape_df
