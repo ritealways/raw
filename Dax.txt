@@ -1,64 +1,18 @@
-import numpy as np
-import pandas as pd
+print("Actual inf:", np.isinf(np.expm1(valid[target_col])).sum())
+print("Prediction inf:", np.isinf(np.expm1(valid["naive_pred"])).sum())
 
-# -----------------------------
-# MAPE function
-# -----------------------------
-def mape(y_true, y_pred, eps=1e-6):
-    y_true = np.asarray(y_true)
-    y_pred = np.asarray(y_pred)
-
-    return float(
-        np.mean(
-            np.abs(y_true - y_pred) /
-            (np.abs(y_true) + eps)
-        ) * 100
-    )
+print("Actual zero:", (np.expm1(valid[target_col]) == 0).sum())
+print("Prediction zero:", (np.expm1(valid["naive_pred"]) == 0).sum())
 
 
-# -----------------------------
-# Multi-horizon Naive
-# -----------------------------
-HORIZONS = [1, 2, 3, 4, 5, 6]
+actual = np.expm1(valid[target_col])
+pred = np.expm1(valid["naive_pred"])
 
-# IMPORTANT: Keep this OUTSIDE the loop
-mape_results = []
+print("Actual max:", np.nanmax(actual))
+print("Prediction max:", np.nanmax(pred))
 
-for h in HORIZONS:
+print("Actual inf:", np.isinf(actual).sum())
+print("Prediction inf:", np.isinf(pred).sum())
 
-    target_col = f"target_h{h}"
-
-    # Remove missing target
-    df_h = df.dropna(
-        subset=[target_col]
-    ).copy()
-
-    # Seasonal Naive prediction
-    df_h["naive_pred"] = (
-        df_h
-        .groupby(["region", "specialty"])["y_log"]
-        .shift(12 - h)
-    )
-
-    # Remove rows where prediction is unavailable
-    valid = df_h.dropna(
-        subset=["naive_pred", target_col]
-    )
-
-    # Calculate MAPE
-    score = mape(
-        valid[target_col],
-        valid["naive_pred"]
-    )
-
-    # Store each horizon result
-    mape_results.append({
-        "Horizon": h,
-        "MAPE": score
-    })
-
-
-# Create dataframe AFTER the loop
-mape_df = pd.DataFrame(mape_results)
-
-mape_df
+print("Actual zero:", (actual == 0).sum())
+print("Prediction zero:", (pred == 0).sum())
