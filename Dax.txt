@@ -1,17 +1,81 @@
-actual = np.expm1(valid[target_col].values)
-pred = np.expm1(valid["naive_pred"].values)
+def mape(y_true, y_pred, eps=1e-6):
 
-mask = (
-    np.isfinite(actual) &
-    np.isfinite(pred) &
-    (actual > 1e-6)
-)
+    y_true = np.asarray(y_true, dtype=float)
+    y_pred = np.asarray(y_pred, dtype=float)
 
-print(
-    f"Horizon {h}: "
-    f"Total={len(actual)}, "
-    f"Valid for MAPE={mask.sum()}, "
-    f"Actual zero={(actual == 0).sum()}, "
-    f"Actual finite={np.isfinite(actual).sum()}, "
-    f"Prediction finite={np.isfinite(pred).sum()}"
-)
+    mask = (
+        np.isfinite(y_true) &
+        np.isfinite(y_pred) &
+        (y_true > eps)
+    )
+
+    if mask.sum() == 0:
+        return np.nan
+
+    return np.mean(
+        np.abs(y_true[mask] - y_pred[mask]) /
+        y_true[mask]
+    ) * 100
+
+
+
+
+
+
+
+mape_results = []
+
+for h in HORIZONS:
+
+    target_col = f"target_h{h}"
+
+    # Create horizon-specific dataframe
+    df_h = df.dropna(subset=[target_col]).copy()
+
+    # Naive prediction
+    df_h["naive_pred"] = (
+        df_h.groupby(["region", "specialty"])["y_log"]
+        .shift(12 - h)
+    )
+
+    # Fill unavailable prediction
+    df_h["naive_pred"] = df_h["naive_pred"].fillna(df_h["y_log"])
+
+    # Horizon-specific valid data
+    valid = df_h.dropna(
+        subset=[target_col, "naive_pred"]
+    ).copy()
+
+    # Convert log values back to original scale
+    actual = np.expm1(valid[target_col].values)
+    pred = np.expm1(valid["naive_pred"].values)
+
+    # Valid MAPE observations
+    mask = (
+        np.isfinite(actual) &
+        np.isfinite(pred) &
+        (actual > 1e-6)
+    )
+
+    print(
+        f"Horizon {h}: "
+        f"Total={len(actual)}, "
+        f"Valid for MAPE={mask.sum()}, "
+        f"Actual zero={(actual == 0).sum()}"
+    )
+
+    # Calculate MAPE
+    score = mape(actual, pred)
+
+    print(f"MAPE = {score:.2f}%")
+    print("-" * 50)
+
+    mape_results.append({
+        "Horizon": h,
+        "MAPE": score
+    })
+
+# Final result
+mape_df = pd.DataFrame(mape_results)
+
+mape_df
