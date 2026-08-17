@@ -1,12 +1,1 @@
-Candidate: Prashanth Noolvi
-Date: 17 August 2026
 
-Positive:
-
-- Has a good understanding of Time Series concepts, including ARIMA, SARIMA, ADF, statistical features, ACF, and PACF.
-- Successfully solved both Python numerical/coding questions, demonstrating good Python knowledge.
-- Communication was considerably good throughout the interview.
-- Overall, demonstrated a good understanding of the discussed concepts.
-
-Overall Feedback:
-The candidate can be considered positive for this round.
