@@ -1,19 +1,1 @@
-Candidate: Devanshu Mishra
 
-Interview Date: 17 August 2026
-
-Positive:
-
-- Has a basic understanding of ARIMA, SARIMA, ADF test, and data drift.
-- Demonstrated some awareness of time-series concepts.
-
-Areas of Concern:
-
-- Unable to explain the purpose and interpretation of ACF/PACF plots.
-- Appeared underconfident during the discussion.
-- Communication skills were not up to the expected level.
-- Limited exposure to real-world/production data science projects.
-- Was confused on core Data Science concepts such as class imbalance and Recall.
-
-Overall Feedback:
-The candidate has a basic theoretical understanding of some Data Science and time-series concepts but needs significant improvement in core DS fundamentals, practical project experience, communication, and confidence.
