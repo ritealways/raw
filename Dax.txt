@@ -1,81 +1,458 @@
-def mape(y_true, y_pred, eps=1e-6):
 
-    y_true = np.asarray(y_true, dtype=float)
-    y_pred = np.asarray(y_pred, dtype=float)
 
-    mask = (
-        np.isfinite(y_true) &
-        np.isfinite(y_pred) &
-        (y_true > eps)
-    )
+1. 🚩 3 red-flag / authenticity-check questions
 
-    if mask.sum() == 0:
-        return np.nan
+Q1. Shopfloor Copilot — 82.93% accuracy
 
-    return np.mean(
-        np.abs(y_true[mask] - y_pred[mask]) /
-        y_true[mask]
-    ) * 100
+> "You mentioned that the Shopfloor Copilot achieved 82.93% accuracy. What exactly does accuracy mean here? What was your test dataset, what was the ground truth, how many test cases did you have, and what constituted a correct prediction?"
 
 
 
+Follow-ups if they answer vaguely:
+
+Was this intent accuracy, agent-routing accuracy, SQL accuracy, alert-detection accuracy, or final-answer accuracy?
+
+How did you evaluate hallucinations?
+
+What were Precision, Recall and F1?
+
+Give me one example of a failed test case.
+
+
+🚩 Red flag: They cannot define what the 82.93% actually measures.
+
+
+---
+
+Q2. CEO Dashboard — Multi-agent + LangGraph + MCP
+
+> "You have mentioned LangGraph, Azure GPT and MCP in the CEO Dashboard project. Can you draw the architecture starting from the user's question and explain the exact responsibility of every agent, the LangGraph state, the MCP tools, and where SQL validation happens?"
+
+
+
+Then ask:
+
+> "Give me one real example: user question → agent routing → tool call → SQL → database → response."
+
+
+
+Follow up:
+
+What was the state object in LangGraph?
+
+How were agents routed?
+
+What tools were exposed through MCP?
+
+How did you prevent invalid/hallucinated SQL?
+
+What happened when SQL execution failed?
+
+Why did you need MCP instead of ordinary function/tool calling?
+
+
+🚩 Red flag: Candidate gives definitions of LangGraph/MCP rather than explaining their actual implementation.
+
+Important: MCP itself isn't an impossible chronology claim here—the role starts February 2025, while MCP was publicly introduced in November 2024. So I would test depth, not chronology.
+
+
+---
+
+Q3. "60% reduction in average handle time"
+
+Resume says:
+
+> LLM-based Summarizer → 60% reduction in average handle time
+
+
+
+Ask:
+
+> "How did you calculate the 60% reduction in AHT? Give me the before/after numbers, sample size, measurement period and experimental methodology."
+
+
+
+Then:
+
+Was it A/B tested?
+
+Same type of customer cases?
+
+How did you control for case complexity?
+
+What was the baseline?
+
+Did accuracy/customer satisfaction change?
+
+Was the 60% reduction statistically significant?
+
+
+🚩 Very strong red flag: They give you only:
+
+> "Before implementation it was high, after implementation it reduced by 60%."
+
+
+
+A real DS/ML practitioner should know how the metric was measured.
+
+
+---
+
+One claim I would NOT challenge
+
+PyMuPDF is not a chronology red flag.
+
+It existed well before 2021, so its presence in the July 2021–February 2022 role is completely plausible.
+
+
+---
+
+2. ⏱️ Time-Series identification question
+
+Don't tell the candidate that it's a time-series problem.
+
+Give them this:
+
+> "You work for an e-commerce company. You have 3 years of transaction data containing customer_id, product_id, region, order_date, quantity, price, discount, and revenue. The business wants to know the expected revenue for each region for the next 3 months so that inventory and staffing can be planned. How would you approach this problem?"
+
+
+
+What you are looking for
+
+The candidate should recognize:
+
+This is a time-series forecasting problem.
+
+Expected thinking:
+
+1. Aggregate revenue by region + time period.
+
+
+2. Define forecasting frequency — daily/weekly/monthly.
+
+
+3. Sort chronologically.
+
+
+4. Analyze trend and seasonality.
+
+
+5. Check missing dates/outliers.
+
+
+6. Create lag features.
+
+
+7. Create rolling statistics.
+
+
+8. Use time-based train/validation split, not random train-test split.
+
+
+9. Establish a baseline:
+
+Naive
+
+Seasonal naive
+
+
+
+10. Try models such as:
+
+
+
+XGBoost/LightGBM with lag features
+
+ARIMA/SARIMA where appropriate
+
+Prophet/other forecasting models depending on characteristics.
+
+
+11. Evaluate using an appropriate forecasting metric such as MAE/RMSE/MAPE, depending on the data.
+
+
+
+🔥 Follow-up trap
+
+Ask:
+
+> "Can I randomly split the data into 80% train and 20% test?"
+
+
+
+Expected answer:
+
+No.
+
+Random splitting can cause future information to leak into training. The validation must respect chronological order.
+
+
+---
+
+3. 🧠 Three intermediate DS questions that are deceptively confusing
+
+Q1. Accuracy vs F1
+
+> "Your fraud model has 98% accuracy. Is that a good model?"
+
+
+
+Expected answer:
+
+Not necessarily.
+
+If fraud is only 1% of transactions, predicting every transaction as non-fraud gives approximately 99% accuracy while detecting zero fraud.
+
+Candidate should discuss:
+
+Precision
+
+Recall
+
+F1
+
+PR-AUC
+
+Business cost of false positives vs false negatives
+
+Threshold selection
+
+
+🔥 Follow-up:
+
+> "If the business says missing one fraud is 10 times more expensive than investigating a false alarm, what would you optimize?"
+
+
+
+Good candidate should move toward recall/cost-sensitive optimization, rather than blindly optimizing accuracy.
+
+
+---
+
+Q2. Data leakage
+
+> "You train a model and get 97% validation accuracy. After deployment, accuracy drops to 72%. What would you investigate first?"
+
+
+
+Look for:
+
+Data leakage
+
+Train/validation split problems
+
+Distribution shift
+
+Feature availability at prediction time
+
+Preprocessing performed before splitting
+
+Target leakage
+
+Temporal leakage
+
+Training-serving skew
+
+Concept drift
+
+
+🔥 Follow-up:
+
+> "Give me an example of target leakage that can look completely legitimate as a feature."
+
+
+
+Good example:
+
+For a loan-default model, using "number of collections actions taken after the loan went into default" would be leakage because that information wasn't available when making the original prediction.
+
+
+---
+
+Q3. Regularization / Bias-Variance
+
+> "Your training accuracy is 99% but validation accuracy is 78%. You increase model complexity and training accuracy becomes 99.9%. What do you expect to happen to validation performance?"
+
+
+
+Expected:
+
+Likely overfitting gets worse.
+
+Then ask:
+
+> "Would increasing regularization always improve validation performance?"
+
+
+
+Correct answer:
+
+No.
+
+Too much regularization can cause underfitting.
+
+Look for understanding of:
+
+High variance → overfitting → regularization / simpler model / more data
+
+and
+
+High bias → underfitting → more expressive model / better features / less regularization
+
+
+---
+
+4. 🐍 Two Python coding problems
+
+I would deliberately avoid extremely difficult LeetCode problems. For this candidate, I would test practical DS coding ability.
+
+Coding Problem 1 — Time-series feature engineering
+
+Give:
+
+import pandas as pd
+
+df = pd.DataFrame({
+    "date": pd.to_datetime([
+        "2025-01-01", "2025-01-02", "2025-01-03",
+        "2025-01-04", "2025-01-05", "2025-01-06"
+    ]),
+    "sales": [100, 120, 110, 130, 150, 140]
+})
+
+Ask:
+
+> "Create two new columns:
+
+1. lag_1 = previous day's sales
+
+
+2. rolling_3 = average sales of the previous 3 days
+Make sure today's sales are not included in the rolling feature."
 
 
 
 
-mape_results = []
 
-for h in HORIZONS:
+Expected approach:
 
-    target_col = f"target_h{h}"
+df = df.sort_values("date")
 
-    # Create horizon-specific dataframe
-    df_h = df.dropna(subset=[target_col]).copy()
+df["lag_1"] = df["sales"].shift(1)
 
-    # Naive prediction
-    df_h["naive_pred"] = (
-        df_h.groupby(["region", "specialty"])["y_log"]
-        .shift(12 - h)
-    )
+df["rolling_3"] = (
+    df["sales"]
+      .shift(1)
+      .rolling(3)
+      .mean()
+)
 
-    # Fill unavailable prediction
-    df_h["naive_pred"] = df_h["naive_pred"].fillna(df_h["y_log"])
+🔥 Follow-up
 
-    # Horizon-specific valid data
-    valid = df_h.dropna(
-        subset=[target_col, "naive_pred"]
-    ).copy()
+Ask:
 
-    # Convert log values back to original scale
-    actual = np.expm1(valid[target_col].values)
-    pred = np.expm1(valid["naive_pred"].values)
+> "Why did you use shift(1) before rolling?"
 
-    # Valid MAPE observations
-    mask = (
-        np.isfinite(actual) &
-        np.isfinite(pred) &
-        (actual > 1e-6)
-    )
 
-    print(
-        f"Horizon {h}: "
-        f"Total={len(actual)}, "
-        f"Valid for MAPE={mask.sum()}, "
-        f"Actual zero={(actual == 0).sum()}"
-    )
 
-    # Calculate MAPE
-    score = mape(actual, pred)
+Expected:
 
-    print(f"MAPE = {score:.2f}%")
-    print("-" * 50)
+To ensure the feature uses only historical information and doesn't include the current target value, preventing data leakage.
 
-    mape_results.append({
-        "Horizon": h,
-        "MAPE": score
-    })
+This is an excellent test because it connects Python + ML + time series + leakage.
 
-# Final result
-mape_df = pd.DataFrame(mape_results)
 
-mape_df
+---
+
+Coding Problem 2 — Find duplicate customers with conflicting values
+
+Give:
+
+data = [
+    ("C001", "Delhi", 100),
+    ("C002", "Mumbai", 200),
+    ("C001", "Delhi", 100),
+    ("C003", "Pune", 300),
+    ("C002", "Mumbai", 250),
+    ("C004", "Delhi", 400)
+]
+
+Ask:
+
+> "Find customers whose revenue values are inconsistent across records. Return the customer ID and all unique revenue values associated with that customer."
+
+
+
+Expected output:
+
+C002 -> [200, 250]
+
+A Pandas solution could be:
+
+df = pd.DataFrame(data, columns=["customer_id", "city", "revenue"])
+
+result = (
+    df.groupby("customer_id")["revenue"]
+      .unique()
+)
+
+result = result[result.apply(len) > 1]
+
+print(result)
+
+🔥 Follow-up
+
+Ask:
+
+> "Now modify it so that you return only the customer IDs."
+
+
+
+Then:
+
+> "How would you solve the same problem without Pandas?"
+
+
+
+That tests whether they actually understand Python fundamentals rather than just memorizing Pandas syntax.
+
+
+---
+
+🎯 My recommended 30–40 minute interview sequence
+
+Order	Question	What it tests
+
+1	82.93% accuracy — define it	Resume authenticity
+2	CEO Dashboard architecture	Real GenAI implementation
+3	60% AHT reduction	Metrics/business understanding
+4	Revenue forecasting scenario	Time-series recognition
+5	Random split for time series?	Leakage
+6	98% fraud accuracy	Classification fundamentals
+7	97% validation → 72% production	Leakage/drift
+8	99% train vs 78% validation	Bias/variance
+9	Python lag + rolling	DS coding
+10	Python conflicting records	Python/Pandas fundamentals
+
+
+⭐ The strongest authenticity test
+
+If you only have 15 minutes, I would ask these five:
+
+1. "Explain exactly what the 82.93% accuracy measures."
+
+
+2. "Draw your CEO Dashboard architecture and explain LangGraph state + MCP tools."
+
+
+3. "Give me one actual KPI formula and show how it became SQL."
+
+
+4. "Here is this revenue problem — is it time series? Why? Design the validation strategy."
+
+
+5. "Write lag-1 and leakage-free rolling features in Python."
+
+
+
+Those five questions should give you a much stronger signal of actual hands-on experience than asking whether they know LangChain, LangGraph, RAG, MCP, GPT or PyTorch.
