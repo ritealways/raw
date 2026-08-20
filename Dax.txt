@@ -1,16 +1,12 @@
-Candidate: Sachin Kumar
+Candidate: Kapil Bhanwarilal
 Date: 20 August 2026
 
 Feedback:
 
-- Communication: Proper and clear.
-- Able to explain the project idea, but responses were mostly generalized and not specific to the project.
-- Limited practical/real-world project knowledge.
-- Demonstrated very basic ML knowledge.
-- Could not explain practical techniques for handling class imbalance.
-- Limited exposure to ML workflows and deployment.
-- Time Series responses did not appear practical or realistic.
-- Observed frequent eye movements during the interview.
+- Communication: Proper and up to the mark.
+- Confidently explained the project and its approach.
+- Demonstrated a good understanding of ML concepts.
+- Confidently explained Time Series fundamentals and the overall approach.
 
 Overall Feedback:
-Negative. The candidate needs to gain more practical, hands-on exposure to Machine Learning projects, ML workflows, deployment, and Time Series.
+Positive. The candidate has demonstrated a good understanding of the discussed concepts. We can consider him for further evaluation in the next round.
