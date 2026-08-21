@@ -1,12 +1,27 @@
-Candidate: Kapil Bhanwarilal
-Date: 20 August 2026
+Candidate: Srinivas
+Date: 21 August 2026
 
 Feedback:
 
-- Communication: Proper and up to the mark.
-- Confidently explained the project and its approach.
-- Demonstrated a good understanding of ML concepts.
-- Confidently explained Time Series fundamentals and the overall approach.
+- Communication: Not up to the mark.
+- Unable to explain core Machine Learning concepts clearly.
+- Not confident with Time Series fundamentals and approach.
+- Has no understanding of key Time Series concepts such as stationarity, ADF, and ACF plots.
 
 Overall Feedback:
-Positive. The candidate has demonstrated a good understanding of the discussed concepts. We can consider him for further evaluation in the next round.
+Negative. The candidate does not demonstrate sufficient understanding of core ML and Time Series concepts. Not recommended for further rounds.
+
+
+
+
+Candidate: Shivansh
+Date: 21 August 2026
+
+Feedback:
+
+- Communication: Very weak and not up to the mark.
+- Demonstrated very weak understanding of core Data Science concepts.
+- Several answers appeared to be read from an external source rather than explained based on his own understanding.
+
+Overall Feedback:
+Negative. The candidate does not demonstrate the required level of Data Science fundamentals and communication skills. Strongly not recommended for further rounds.
