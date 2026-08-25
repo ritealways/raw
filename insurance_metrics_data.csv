@@ -1,0 +1,39 @@
+TS,Month,1/1/2022,2/1/2022
+GRAIN,Region,North East,North East
+GRAIN,Channel,Agency,Agency
+GRAIN,Industry_Class,Agriculture,Agriculture
+GRAIN,Account_Size,Small,Small
+EXPOSURE &ACTUARIAL DR,Payroll,54915332.36,56315326.01
+EXPOSURE &ACTUARIAL DR,Employee_Count,1434,1357
+EXPOSURE &ACTUARIAL DR,Avg_Wage,47941.17,49368.42
+EXPOSURE &ACTUARIAL DR,Payroll_Growth_Rate_YoY,0%,9%
+EXPOSURE &ACTUARIAL DR,Payroll_Growth_Rate_QoQ,0%,3%
+EXPOSURE &ACTUARIAL DR,Hazard_Group,4,4
+EXPOSURE &ACTUARIAL DR,Historical_Loss_Ratio,79.8%,84.1%
+EXPOSURE &ACTUARIAL DR,Claim_Frequency,0.0%,0.0%
+EXPOSURE &ACTUARIAL DR,Claim_Severity,31605,26910
+EXPOSURE &ACTUARIAL DR,Loss_Development_Factor,1.096,1.0704
+EXPOSURE &ACTUARIAL DR,Medical_Inflation_Index,1.055,1.0611
+EXPOSURE &ACTUARIAL DR,Wage_Inflation_Index,1.03,1.0355
+EXPOSURE &ACTUARIAL DR,Employer_Tenure,5.016,5.1238
+EXPOSURE &ACTUARIAL DR,Exposure_Volatility_Score,0.9302,2.1805
+EXPOSURE &ACTUARIAL DR,Filed_Rate_Change,4.2%,4.1%
+EXPOSURE &ACTUARIAL DR,Net_Rate_Achievement,3.6%,3.8%
+EXPOSURE &ACTUARIAL DR,Schedule_Rating_Factor,0.9747,1.1174
+EXPOSURE &ACTUARIAL DR,Deductible_Level,-,-
+EXPOSURE &ACTUARIAL DR,Renewal_Uplift,6.3%,7.0%
+PRICING & UW DRIVERS,Loss_Sensitive_Indicator,0,0
+PRICING & UW DRIVERS,Policy_Limit_Change,1,0
+PRICING & UW DRIVERS,Class_Code_Reclassification_Freque,0,0
+PRICING & UW DRIVERS,Multi_Policy_Bundle_Indicator,39%,2%
+PRICING & UW DRIVERS,Retention_Rate,77.1%,78.6%
+PRICING & UW DRIVERS,Churn_Probability,22.9%,21.5%
+PRICING & UW DRIVERS,New_Business_Hit_Ratio,27.6%,19.5%
+PRICING & UW DRIVERS,Submission_to_Bind_Ratio,17.5%,22.5%
+PRICING & UW DRIVERS,Policy_Term_Length,12,12
+PRICING & UW DRIVERS,Endorsement_Frequency,1,3
+PORTFOLIO & FINANCE DRIV,Broker_Concentration,4.6%,1.1%
+PORTFOLIO & FINANCE DRIV,Seasonality_Index,-0.5,-0.3464
+PORTFOLIO & FINANCE DRIV,Economic_Indicator,0.65,0.6298
+PORTFOLIO & FINANCE DRIV,Employment_Growth_Rate,1.2%,0.8%
+PREDICTED,GWP,856055.57,971752.92
