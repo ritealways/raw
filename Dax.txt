@@ -1,12 +1,12 @@
-Candidate: Venkatesh
-Date: 24 August 2026
+Candidate: Lavanya R
+Date: 25 August 2026
 
 Feedback:
 
-- Communication: Up to the mark.
-- Demonstrated a good understanding of core Data Science concepts and projects.
-- Has good practical experience in Time Series forecasting.
+- Communication: Okay, but she appeared a bit anxious during the interview and should work on building confidence.
+- Demonstrated a basic understanding of core Data Science concepts and projects.
+- Has basic knowledge and experience in Time Series forecasting, including stationarity and ADF.
 - Able to solve the coding problem efficiently.
 
 Overall Feedback:
-Positive. The candidate demonstrated good knowledge and relevant practical experience. Recommended for the 2nd round.
+Positive. The candidate has a basic understanding of the required concepts and demonstrated good coding ability. Recommended for further evaluation.
