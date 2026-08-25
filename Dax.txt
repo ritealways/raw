@@ -1,12 +1,14 @@
-Candidate: Lavanya R
+Candidate: Abhilash G
 Date: 25 August 2026
 
 Feedback:
 
-- Communication: Okay, but she appeared a bit anxious during the interview and should work on building confidence.
-- Demonstrated a basic understanding of core Data Science concepts and projects.
-- Has basic knowledge and experience in Time Series forecasting, including stationarity and ADF.
-- Able to solve the coding problem efficiently.
+- Communication: Good and up to the mark.
+- Demonstrated a poor understanding of core Data Science concepts and projects.
+- Lacks basic ML concepts, including handling missing data and class imbalance.
+- Has very limited knowledge and experience in Time Series forecasting.
+- Appears to have limited practical exposure to real-world Data Science projects.
+- Coding approach was not up to the mark.
 
 Overall Feedback:
-Positive. The candidate has a basic understanding of the required concepts and demonstrated good coding ability. Recommended for further evaluation.
+Negative. The candidate needs to strengthen his core ML concepts and practical Data Science experience. Not recommended for the next rounds.
