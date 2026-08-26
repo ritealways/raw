@@ -1,0 +1,161 @@
+{
+"info": {
+"_postman_id": "a91823cd-41b2-4d2c-88e2-mock-anaplan-001",
+"name": "Mock Anaplan LightGBM Pipeline Integration",
+"description": "Postman Collection to test end-to-end integration between Mock Anaplan REST API server and local LightGBM model script.",
+"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+},
+"item": [
+{
+"name": "1. Authenticate (Get Bearer Token)",
+"request": {
+"method": "POST",
+"header": [],
+"url": {
+"raw": "http://127.0.0.1:8000/api/2/0/auth/authenticate",
+"protocol": "http",
+"host": [
+"127",
+"0",
+"0",
+"1"
+],
+"port": "8000",
+"path": [
+"api",
+"2",
+"0",
+"auth",
+"authenticate"
+]
+},
+"description": "Obtains mock Bearer authentication token from the Mock Anaplan server."
+},
+"response": []
+},
+{
+"name": "2. Push input_excel to Anaplan Server",
+"request": {
+"method": "POST",
+"header": [
+{
+"key": "Authorization",
+"value": "Bearer mock-anaplan-auth-token-9999",
+"type": "text"
+}
+],
+"body": {
+"mode": "formdata",
+"formdata": [
+{
+"key": "file",
+"type": "file",
+"src": []
+}
+]
+},
+"url": {
+"raw": "http://127.0.0.1:8000/api/2/0/workspaces/ws101/models/mod202/files/file_input/upload",
+"protocol": "http",
+"host": [
+"127",
+"0",
+"0",
+"1"
+],
+"port": "8000",
+"path": [
+"api",
+"2",
+"0",
+"workspaces",
+"ws101",
+"models",
+"mod202",
+"files",
+"file_input",
+"upload"
+]
+},
+"description": "Uploads input_excel.xlsx file to Mock Anaplan server."
+},
+"response": []
+},
+{
+"name": "3. Trigger Model Forecast Process (wc_lgbm.py)",
+"request": {
+"method": "POST",
+"header": [
+{
+"key": "Authorization",
+"value": "Bearer mock-anaplan-auth-token-9999",
+"type": "text"
+}
+],
+"url": {
+"raw": "http://127.0.0.1:8000/api/2/0/workspaces/ws101/models/mod202/processes/proc_run_lgbm/tasks",
+"protocol": "http",
+"host": [
+"127",
+"0",
+"0",
+"1"
+],
+"port": "8000",
+"path": [
+"api",
+"2",
+"0",
+"workspaces",
+"ws101",
+"models",
+"mod202",
+"processes",
+"proc_run_lgbm",
+"tasks"
+]
+},
+"description": "Triggers pipeline.py which executes wc_lgbm.py using uploaded input_excel.xlsx."
+},
+"response": []
+},
+{
+"name": "4. Export Output_excel from Anaplan",
+"request": {
+"method": "GET",
+"header": [
+{
+"key": "Authorization",
+"value": "Bearer mock-anaplan-auth-token-9999",
+"type": "text"
+}
+],
+"url": {
+"raw": "http://127.0.0.1:8000/api/2/0/workspaces/ws101/models/mod202/files/file_output/download",
+"protocol": "http",
+"host": [
+"127",
+"0",
+"0",
+"1"
+],
+"port": "8000",
+"path": [
+"api",
+"2",
+"0",
+"workspaces",
+"ws101",
+"models",
+"mod202",
+"files",
+"file_output",
+"download"
+]
+},
+"description": "Downloads the generated Output_excel.xlsx forecast file."
+},
+"response": []
+}
+]
+}
