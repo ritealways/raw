@@ -1,14 +1,1 @@
-Candidate: Abhilash G
-Date: 25 August 2026
-
-Feedback:
-
-- Communication: Good and up to the mark.
-- Demonstrated a poor understanding of core Data Science concepts and projects.
-- Lacks basic ML concepts, including handling missing data and class imbalance.
-- Has very limited knowledge and experience in Time Series forecasting.
-- Appears to have limited practical exposure to real-world Data Science projects.
-- Coding approach was not up to the mark.
-
-Overall Feedback:
-Negative. The candidate needs to strengthen his core ML concepts and practical Data Science experience. Not recommended for the next rounds.
+venv\Scripts\python.exe -m uvicorn mock_server:app --reload --port 8000
