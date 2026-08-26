@@ -1,0 +1,136 @@
+{
+  "info": {
+    "_postman_id": "mock-anaplan-wc-forecast",
+    "name": "Mock Anaplan WC Forecast",
+    "description": "Mock Anaplan Server API Collection for Workers Compensation Forecasting",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Upload Input Data",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": [\n    {\n      \"Month\": \"2022-01-01\",\n      \"Region\": \"North East\",\n      \"Channel\": \"Agency\",\n      \"Industry_Class\": \"Agriculture\",\n      \"Account_Size\": \"Small\",\n      \"Payroll\": 54915332.36,\n      \"Employee_Count\": 1434,\n      \"Avg_Wage\": 47941.17,\n      \"Payroll_Growth_Rate_YoY\": 0.0,\n      \"Payroll_Growth_Rate_QoQ\": 0.0,\n      \"Hazard_Group\": 4,\n      \"Historical_Loss_Ratio\": 0.798,\n      \"Claim_Frequency\": 0.0,\n      \"Claim_Severity\": 31605,\n      \"Loss_Development_Factor\": 1.096,\n      \"Medical_Inflation_Index\": 1.055,\n      \"Wage_Inflation_Index\": 1.03,\n      \"Employer_Tenure\": 5.016,\n      \"Exposure_Volatility_Score\": 0.9302,\n      \"Filed_Rate_Change\": 0.042,\n      \"Net_Rate_Achievement\": 0.036,\n      \"Schedule_Rating_Factor\": 0.9747,\n      \"Deductible_Level\": 0,\n      \"Renewal_Uplift\": 0.063,\n      \"Loss_Sensitive_Indicator\": 0,\n      \"Policy_Limit_Change\": 1,\n      \"Code_Reclassification_Frequ\": 0,\n      \"Multi_Policy_Bundle_Indicator\": 0.39,\n      \"Retention_Rate\": 0.771,\n      \"Churn_Probability\": 0.229,\n      \"New_Business_Hit_Ratio\": 0.276,\n      \"Submission_to_Bind_Ratio\": 0.175,\n      \"Policy_Term_Length\": 12,\n      \"Endorsement_Frequency\": 1,\n      \"Broker_Concentration\": 0.046,\n      \"Seasonality_Index\": -0.5,\n      \"Economic_Indicator\": 0.65,\n      \"Employment_Growth_Rate\": 0.12,\n      \"GWP\": 856055.57\n    },\n    {\n      \"Month\": \"2022-02-01\",\n      \"Region\": \"North East\",\n      \"Channel\": \"Agency\",\n      \"Industry_Class\": \"Agriculture\",\n      \"Account_Size\": \"Small\",\n      \"Payroll\": 56315326.01,\n      \"Employee_Count\": 1357,\n      \"Avg_Wage\": 48368.42,\n      \"Payroll_Growth_Rate_YoY\": 0.03,\n      \"Payroll_Growth_Rate_QoQ\": 0.03,\n      \"Hazard_Group\": 4,\n      \"Historical_Loss_Ratio\": 0.841,\n      \"Claim_Frequency\": 0.0,\n      \"Claim_Severity\": 26910,\n      \"Loss_Development_Factor\": 1.0704,\n      \"Medical_Inflation_Index\": 1.0611,\n      \"Wage_Inflation_Index\": 1.0355,\n      \"Employer_Tenure\": 5.1238,\n      \"Exposure_Volatility_Score\": 2.1805,\n      \"Filed_Rate_Change\": 0.041,\n      \"Net_Rate_Achievement\": 0.038,\n      \"Schedule_Rating_Factor\": 1.1174,\n      \"Deductible_Level\": 0,\n      \"Renewal_Uplift\": 0.07,\n      \"Loss_Sensitive_Indicator\": 0,\n      \"Policy_Limit_Change\": 0,\n      \"Code_Reclassification_Frequ\": 0,\n      \"Multi_Policy_Bundle_Indicator\": 0.27,\n      \"Retention_Rate\": 0.786,\n      \"Churn_Probability\": 0.215,\n      \"New_Business_Hit_Ratio\": 0.185,\n      \"Submission_to_Bind_Ratio\": 0.225,\n      \"Policy_Term_Length\": 12,\n      \"Endorsement_Frequency\": 3,\n      \"Broker_Concentration\": 0.011,\n      \"Seasonality_Index\": -0.3464,\n      \"Economic_Indicator\": 0.6298,\n      \"Employment_Growth_Rate\": 0.008,\n      \"GWP\": 971752.92\n    },\n    {\n      \"Month\": \"2022-03-01\",\n      \"Region\": \"North East\",\n      \"Channel\": \"Agency\",\n      \"Industry_Class\": \"Agriculture\",\n      \"Account_Size\": \"Small\",\n      \"Payroll\": 53848555.91,\n      \"Employee_Count\": 1418,\n      \"Avg_Wage\": 43440.05,\n      \"Payroll_Growth_Rate_YoY\": 0.08,\n      \"Payroll_Growth_Rate_QoQ\": 0.02,\n      \"Hazard_Group\": 4,\n      \"Historical_Loss_Ratio\": 0.758,\n      \"Claim_Frequency\": 0.0,\n      \"Claim_Severity\": 27747,\n      \"Loss_Development_Factor\": 1.0593,\n      \"Medical_Inflation_Index\": 1.066,\n      \"Wage_Inflation_Index\": 1.0413,\n      \"Employer_Tenure\": 5.1777,\n      \"Exposure_Volatility_Score\": 1.5353,\n      \"Filed_Rate_Change\": 0.041,\n      \"Net_Rate_Achievement\": 0.04,\n      \"Schedule_Rating_Factor\": 1.0064,\n      \"Deductible_Level\": 0,\n      \"Renewal_Uplift\": 0.079,\n      \"Loss_Sensitive_Indicator\": 0,\n      \"Policy_Limit_Change\": -1,\n      \"Code_Reclassification_Frequ\": 0,\n      \"Multi_Policy_Bundle_Indicator\": 0.22,\n      \"Retention_Rate\": 0.823,\n      \"Churn_Probability\": 0.177,\n      \"New_Business_Hit_Ratio\": 0.05,\n      \"Submission_to_Bind_Ratio\": 0.585,\n      \"Policy_Term_Length\": 12,\n      \"Endorsement_Frequency\": 0,\n      \"Broker_Concentration\": 0.05,\n      \"Seasonality_Index\": -0.1634,\n      \"Economic_Indicator\": 0.6144,\n      \"Employment_Growth_Rate\": 0.015,\n      \"GWP\": 1120470.33\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/anaplan/upload-input",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "anaplan",
+            "upload-input"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Run Forecast",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/anaplan/run-forecast",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "anaplan",
+            "run-forecast"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Get Forecast Output",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/anaplan/forecast-output",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "anaplan",
+            "forecast-output"
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Push Output to Anaplan",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"target_module\": \"WC_Forecast_Module\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/anaplan/push-output",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "anaplan",
+            "push-output"
+          ]
+        }
+      }
+    }
+  ]
+}
