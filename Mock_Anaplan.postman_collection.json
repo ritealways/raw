@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Mock Anaplan Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/"
+      }
+    },
+    {
+      "name": "2. Upload input.csv to Anaplan",
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/anaplan/input",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Download input.csv from Anaplan",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/anaplan/input"
+      }
+    },
+    {
+      "name": "4. Download output.csv from Anaplan (verify push)",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/anaplan/output"
+      }
+    },
+    {
+      "name": "5. Check Anaplan status",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/anaplan/status"
+      }
+    }
+  ]
+}
