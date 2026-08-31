@@ -1,0 +1,227 @@
+{
+  "info": {
+    "_postman_id": "anaplan-mock-server-2024",
+    "name": "Mock Anaplan Server API",
+    "description": "Complete API collection for the Mock Anaplan Server. Upload input data, run ML models via Streamlit, and push forecast outputs back to Anaplan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "\ud83c\udfe0 Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            ""
+          ]
+        },
+        "description": "Check if the Mock Anaplan Server is running"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udce4 Upload Input CSV (Step 1)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/input.csv",
+              "description": "Select your input CSV file here"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/upload",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "upload"
+          ]
+        },
+        "description": "Upload input data to Anaplan. Returns a job_id. Copy this job_id for next steps!"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udccb List All Jobs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/jobs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "jobs"
+          ]
+        },
+        "description": "View all jobs on the Anaplan server"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udd0d Get Job Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/jobs/{{job_id}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "{{job_id}}"
+          ]
+        },
+        "description": "Check status of a specific job. Replace {{job_id}} with actual job ID"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udce5 Download Input File (Step 2 - for Streamlit)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/download/{{job_id}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "download",
+            "{{job_id}}"
+          ]
+        },
+        "description": "Download the input CSV that was uploaded. This is what your Streamlit app will load."
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udce4 Push Forecast Output (Step 3 - from Streamlit)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/forecast_output.csv",
+              "description": "Select the forecast output CSV from your Streamlit download"
+            },
+            {
+              "key": "metadata",
+              "value": "{\"model\": \"your_ml_model\", \"version\": \"1.0\"}",
+              "type": "text",
+              "description": "Optional JSON metadata about the forecast"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/output/{{job_id}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "output",
+            "{{job_id}}"
+          ]
+        },
+        "description": "Upload the forecast output from your Streamlit app back to Anaplan"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\udce5 Download Stored Output",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/output/{{job_id}}/download",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "output",
+            "{{job_id}}",
+            "download"
+          ]
+        },
+        "description": "Download the forecast output that was pushed back to Anaplan"
+      },
+      "response": []
+    },
+    {
+      "name": "\ud83d\uddd1\ufe0f Delete Job",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/jobs/{{job_id}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "{{job_id}}"
+          ]
+        },
+        "description": "Delete a job and clean up its files"
+      },
+      "response": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "job_id",
+      "value": "JOB-20240831-000000-0000",
+      "type": "string",
+      "description": "Paste your actual job ID here after uploading"
+    }
+  ]
+}
