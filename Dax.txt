@@ -1,4 +1,4 @@
-import os
-env = os.environ.copy()
-env["PYTHONIOENCODING"] = "utf-8"
-result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", env=env)
+I am requesting a replacement for my work laptop due to persistent performance and hardware issues impacting my work:
+​Frequent BSOD Crashes: Randomly restarts throughout the day with the error "Your device ran into a problem."
+​Severe Freezing & Lag: Consistently hangs and lags, especially while coding and running development tools.
+​Critically Low Battery Life: Battery drains completely within 20–25 minutes on a single charge.
