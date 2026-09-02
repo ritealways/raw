@@ -1,4 +1,1134 @@
-I am requesting a replacement for my work laptop due to persistent performance and hardware issues impacting my work:
-​Frequent BSOD Crashes: Randomly restarts throughout the day with the error "Your device ran into a problem."
-​Severe Freezing & Lag: Consistently hangs and lags, especially while coding and running development tools.
-​Critically Low Battery Life: Battery drains completely within 20–25 minutes on a single charge.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MuscleMap Pro – Gym Trainer App</title>
+
+    <!-- Google Font & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0b0d12;
+            --bg-secondary: #141820;
+            --bg-card: #1c222e;
+            --bg-card-hover: #252e3f;
+            --text-primary: #f0f2f6;
+            --text-secondary: #a0aab8;
+            --text-muted: #6b788a;
+            --accent: #f97316;
+            --accent-glow: rgba(249, 115, 22, 0.25);
+            --accent-dim: rgba(249, 115, 22, 0.10);
+            --border-color: #2a3442;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0 16px 60px;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(249, 115, 22, 0.04) 0%, transparent 70%),
+                radial-gradient(ellipse at 80% 20%, rgba(249, 115, 22, 0.03) 0%, transparent 60%);
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 8px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .app-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent), #ea580c);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+        .logo span {
+            background: linear-gradient(135deg, #fff 60%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .trainer-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .trainer-tag i {
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        /* ===== BODY PART NAV ===== */
+        .body-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 16px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            flex-wrap: nowrap;
+        }
+        .body-nav::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .body-nav-btn {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .body-nav-btn i {
+            font-size: 1.1rem;
+        }
+        .body-nav-btn:hover {
+            background: var(--bg-card-hover);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .body-nav-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 24px var(--accent-glow);
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 8px 0 18px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .section-head h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-head h2 i {
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+        .section-head .count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* ===== EXERCISE GRID ===== */
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 4px;
+        }
+
+        /* ===== EXERCISE CARD ===== */
+        .exercise-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .exercise-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-glow);
+            background: var(--bg-card-hover);
+        }
+
+        .exercise-img-wrap {
+            position: relative;
+            width: 100%;
+            padding-top: 62%;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+        .exercise-img-wrap img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        .exercise-card:hover .exercise-img-wrap img {
+            transform: scale(1.02);
+        }
+
+        .exercise-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .exercise-badge i {
+            margin-right: 4px;
+            color: var(--accent);
+        }
+
+        .exercise-info {
+            padding: 16px 18px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .exercise-info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .exercise-info .focus {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .exercise-info .focus i {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+
+        .exercise-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .exercise-meta .tag {
+            background: var(--bg-primary);
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .exercise-meta .tag i {
+            color: var(--accent);
+            font-size: 0.65rem;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+        .empty-state p {
+            font-size: 1rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transform: scale(0.96) translateY(12px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .modal-overlay.open .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-img {
+            width: 100%;
+            padding-top: 50%;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        .modal-img img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 24px 28px 28px;
+        }
+        .modal-body h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .modal-body .modal-focus {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-body .modal-focus i {
+            color: var(--accent);
+        }
+
+        .modal-body .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .modal-body .modal-tags .tag {
+            background: var(--bg-card);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-body .modal-tags .tag i {
+            color: var(--accent);
+        }
+
+        .modal-body h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin: 16px 0 8px;
+        }
+        .modal-body .steps {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .modal-body .steps li {
+            display: flex;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        .modal-body .steps li .step-num {
+            color: var(--accent);
+            font-weight: 700;
+            min-width: 22px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+        }
+        .modal-close:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+        .modal-img .modal-close {
+            position: absolute;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: 0 12px 40px;
+            }
+            .app-header {
+                padding: 16px 0 10px;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+            .trainer-tag {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .body-nav-btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+                gap: 6px;
+            }
+            .section-head h2 {
+                font-size: 1.2rem;
+            }
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-body {
+                padding: 18px 18px 24px;
+            }
+            .modal-body h2 {
+                font-size: 1.3rem;
+            }
+            .modal-img {
+                padding-top: 56%;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 900px) {
+            .exercise-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .exercise-card {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .exercise-card:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+        .exercise-card:nth-child(3) {
+            animation-delay: 0.10s;
+        }
+        .exercise-card:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+        .exercise-card:nth-child(5) {
+            animation-delay: 0.20s;
+        }
+        .exercise-card:nth-child(6) {
+            animation-delay: 0.25s;
+        }
+
+        /* ===== COACH TIP BANNER ===== */
+        .coach-tip {
+            margin-top: 32px;
+            padding: 16px 22px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .coach-tip i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+        .coach-tip p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            flex: 1;
+        }
+        .coach-tip strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ===== HEADER ===== -->
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">🏋️</div>
+                <span>MuscleMap Pro</span>
+            </div>
+            <div class="trainer-tag">
+                <i class="fas fa-dumbbell"></i>
+                Coach Alex
+            </div>
+        </header>
+
+        <!-- ===== BODY PART NAV ===== -->
+        <nav class="body-nav" id="bodyNav">
+            <!-- populated by JS -->
+        </nav>
+
+        <!-- ===== SECTION HEADER ===== -->
+        <div class="section-head">
+            <h2 id="sectionTitle"><i class="fas fa-fire"></i> <span id="bodyName">Chest</span></h2>
+            <span class="count" id="exerciseCount">0 exercises</span>
+        </div>
+
+        <!-- ===== EXERCISE GRID ===== -->
+        <div class="exercise-grid" id="exerciseGrid">
+            <!-- populated by JS -->
+        </div>
+
+        <!-- ===== COACH TIP ===== -->
+        <div class="coach-tip">
+            <i class="fas fa-bullhorn"></i>
+            <p>
+                <strong>Coach's Tip:</strong> A picture shows the path, but the text keeps you safe.
+                Always prioritise <strong>form over weight</strong> — progressive overload comes with patience.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-img" id="modalImg">
+                <img src="" alt="Exercise" id="modalImgSrc" />
+                <button class="modal-close" id="modalCloseBtn" aria-label="Close">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <h2 id="modalTitle">Exercise Name</h2>
+                <div class="modal-focus"><i class="fas fa-bullseye"></i> <span id="modalFocus">Primary focus</span></div>
+                <div class="modal-tags" id="modalTags"></div>
+                <h4><i class="fas fa-list-check" style="margin-right:6px;color:var(--accent);"></i> Step-by-Step</h4>
+                <ul class="steps" id="modalSteps"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  DATA
+        // ============================================================
+        const EXERCISES_DATA = {
+            chest: {
+                label: 'Chest',
+                icon: 'fa-solid fa-chest',
+                emoji: '💪',
+                exercises: [{
+                    name: 'Barbell Bench Press',
+                    focus: 'Overall chest mass & strength',
+                    equipment: 'Barbell, Bench',
+                    image: 'https://picsum.photos/seed/benchpress/600/400',
+                    steps: [
+                        'Lie flat on the bench with your eyes directly under the barbell.',
+                        'Grip the bar slightly wider than shoulder-width.',
+                        'Unrack the bar and lower it slowly to your mid-chest.',
+                        'Drive through your feet and press the bar back up explosively.',
+                        'Lock out at the top, squeeze your chest, and repeat.'
+                    ]
+                }, {
+                    name: 'Incline Dumbbell Press',
+                    focus: 'Upper chest development',
+                    equipment: 'Dumbbells, Incline Bench',
+                    image: 'https://picsum.photos/seed/inclinepress/600/400',
+                    steps: [
+                        'Set the bench to a 30–45° incline.',
+                        'Press dumbbells up to shoulder height with palms forward.',
+                        'Lower the weights slowly to the sides of your chest.',
+                        'Press up in a slight arc, squeezing your upper chest.',
+                        'Keep your shoulders pinned back throughout.'
+                    ]
+                }, {
+                    name: 'Cable Flyes',
+                    focus: 'Inner & outer chest definition',
+                    equipment: 'Cable Machine',
+                    image: 'https://picsum.photos/seed/cableflyes/600/400',
+                    steps: [
+                        'Set the pulleys to chest height.',
+                        'Grab the handles with a slight bend in your elbows.',
+                        'Step forward into a staggered stance.',
+                        'Bring your hands together in a wide arc, squeezing your chest.',
+                        'Control the eccentric as you return to the start.'
+                    ]
+                }, {
+                    name: 'Weighted Push-ups',
+                    focus: 'Functional strength & chest endurance',
+                    equipment: 'Weight Vest or Plate',
+                    image: 'https://picsum.photos/seed/pushups/600/400',
+                    steps: [
+                        'Start in a high plank with hands slightly wider than shoulders.',
+                        'Place a plate on your upper back or wear a weighted vest.',
+                        'Lower your chest to within an inch of the floor.',
+                        'Press up powerfully, keeping your core tight.',
+                        'Avoid sagging your hips or arching your lower back.'
+                    ]
+                }]
+            },
+            back: {
+                label: 'Back',
+                icon: 'fa-solid fa-spine',
+                emoji: '🔙',
+                exercises: [{
+                    name: 'Pull-ups',
+                    focus: 'Lats width & upper back',
+                    equipment: 'Pull-up Bar',
+                    image: 'https://picsum.photos/seed/pullups/600/400',
+                    steps: [
+                        'Grip the bar slightly wider than shoulder-width, palms forward.',
+                        'Hang with your arms fully extended and shoulders relaxed.',
+                        'Pull your chest toward the bar, driving your elbows down.',
+                        'Squeeze your lats at the top, then lower with control.',
+                        'Avoid swinging — use a strict, controlled tempo.'
+                    ]
+                }, {
+                    name: 'Barbell Rows',
+                    focus: 'Mid-back thickness & traps',
+                    equipment: 'Barbell, Weight Plates',
+                    image: 'https://picsum.photos/seed/barbellrows/600/400',
+                    steps: [
+                        'Bend at your hips with a flat back, knees slightly bent.',
+                        'Grip the bar just outside shoulder-width, palms down.',
+                        'Pull the bar toward your lower chest, driving your elbows back.',
+                        'Squeeze your shoulder blades together at the top.',
+                        'Lower the bar under control to the start position.'
+                    ]
+                }, {
+                    name: 'Seated Cable Rows',
+                    focus: 'Rhomboids & rear delts',
+                    equipment: 'Cable Machine, V-grip',
+                    image: 'https://picsum.photos/seed/cablerows/600/400',
+                    steps: [
+                        'Sit with your feet braced against the platform, knees slightly bent.',
+                        'Grab the V-grip handle with arms extended forward.',
+                        'Pull the handle to your abdomen, driving your elbows straight back.',
+                        'Squeeze your mid-back for a full second.',
+                        'Slowly return to the start, feeling the stretch.'
+                    ]
+                }, {
+                    name: 'Deadlifts (Conventional)',
+                    focus: 'Full posterior chain & grip',
+                    equipment: 'Barbell, Weight Plates',
+                    image: 'https://picsum.photos/seed/deadlift/600/400',
+                    steps: [
+                        'Stand with feet hip-width apart, shins against the bar.',
+                        'Bend at the hips and grip the bar just outside your legs.',
+                        'Keep your spine neutral, brace your core, and drive through your heels.',
+                        'Pull the bar up, keeping it close to your body.',
+                        'Lock out at the top with glutes engaged, then lower with control.'
+                    ]
+                }]
+            },
+            legs: {
+                label: 'Legs',
+                icon: 'fa-solid fa-leg',
+                emoji: '🦵',
+                exercises: [{
+                    name: 'Barbell Squats',
+                    focus: 'Quads, glutes & core',
+                    equipment: 'Barbell, Squat Rack',
+                    image: 'https://picsum.photos/seed/squats/600/400',
+                    steps: [
+                        'Position the bar across your upper back, not your neck.',
+                        'Stand with feet shoulder-width apart, toes slightly turned out.',
+                        'Brace your core and descend as if sitting back into a chair.',
+                        'Go to at least parallel, then drive up through your heels.',
+                        'Keep your chest up and knees tracking over your toes.'
+                    ]
+                }, {
+                    name: 'Romanian Deadlifts',
+                    focus: 'Hamstrings & glutes',
+                    equipment: 'Barbell or Dumbbells',
+                    image: 'https://picsum.photos/seed/rdl/600/400',
+                    steps: [
+                        'Stand with feet hip-width apart, bar in front of your thighs.',
+                        'Push your hips back and hinge forward, keeping a flat back.',
+                        'Lower the bar down your shins until you feel a deep hamstring stretch.',
+                        'Drive your hips forward to return to the top, squeezing your glutes.',
+                        'Keep the bar close to your body throughout.'
+                    ]
+                }, {
+                    name: 'Leg Press',
+                    focus: 'Heavy compound leg mass',
+                    equipment: 'Leg Press Machine',
+                    image: 'https://picsum.photos/seed/legpress/600/400',
+                    steps: [
+                        'Sit on the machine with your back flat against the pad.',
+                        'Place your feet shoulder-width apart on the platform.',
+                        'Unlock the safeties and lower the weight toward your chest.',
+                        'Press through your entire foot to extend your legs.',
+                        'Stop just short of locking out, then lower with control.'
+                    ]
+                }, {
+                    name: 'Walking Lunges',
+                    focus: 'Unilateral stability & glutes',
+                    equipment: 'Dumbbells (optional)',
+                    image: 'https://picsum.photos/seed/lunges/600/400',
+                    steps: [
+                        'Stand tall with feet together, holding dumbbells at your sides.',
+                        'Step forward with one leg and lower your hips until both knees bend to 90°.',
+                        'Push off your front foot to bring your back leg forward into the next lunge.',
+                        'Keep your torso upright and core engaged.',
+                        'Alternate legs and maintain a steady rhythm.'
+                    ]
+                }]
+            },
+            shoulders: {
+                label: 'Shoulders',
+                icon: 'fa-solid fa-shoulders',
+                emoji: '🏋️',
+                exercises: [{
+                    name: 'Overhead Press (Barbell)',
+                    focus: 'Front & lateral delts',
+                    equipment: 'Barbell, Squat Rack',
+                    image: 'https://picsum.photos/seed/ohp/600/400',
+                    steps: [
+                        'Rack the bar at shoulder height, grip slightly wider than shoulders.',
+                        'Unrack and stand with feet shoulder-width apart.',
+                        'Press the bar overhead, driving your head slightly forward.',
+                        'Lock out at the top with arms straight, then lower under control.',
+                        'Keep your core braced and avoid arching your lower back.'
+                    ]
+                }, {
+                    name: 'Dumbbell Lateral Raises',
+                    focus: 'Side delts (width)',
+                    equipment: 'Dumbbells',
+                    image: 'https://picsum.photos/seed/lateralraises/600/400',
+                    steps: [
+                        'Stand with a slight forward lean, dumbbells at your sides.',
+                        'Raise the weights out to your sides with a slight bend in your elbows.',
+                        'Pause at the top (just below shoulder height) and squeeze your side delts.',
+                        'Lower slowly under control to the start.',
+                        'Avoid using momentum — keep the movement strict.'
+                    ]
+                }, {
+                    name: 'Face Pulls',
+                    focus: 'Rear delts & rotator cuff health',
+                    equipment: 'Cable Machine, Rope Attachment',
+                    image: 'https://picsum.photos/seed/facepulls/600/400',
+                    steps: [
+                        'Set the cable at face height and attach a rope.',
+                        'Grab the rope with both hands, palms facing down.',
+                        'Step back to create tension, then pull the rope toward your face.',
+                        'Externally rotate your shoulders as you pull, squeezing your rear delts.',
+                        'Pause, then slowly return to the start.'
+                    ]
+                }, {
+                    name: 'Arnold Press',
+                    focus: 'Full shoulder rotation & mass',
+                    equipment: 'Dumbbells',
+                    image: 'https://picsum.photos/seed/arnoldpress/600/400',
+                    steps: [
+                        'Start with dumbbells at shoulder height, palms facing you.',
+                        'Press the weights overhead while rotating your palms to face forward.',
+                        'At the top, your palms should face away from you.',
+                        'Reverse the motion on the way down, rotating back to the start.',
+                        'Keep a controlled tempo and avoid arching your back.'
+                    ]
+                }]
+            },
+            arms: {
+                label: 'Arms',
+                icon: 'fa-solid fa-arm-flex',
+                emoji: '💪',
+                exercises: [{
+                    name: 'Barbell Curls',
+                    focus: 'Bicep peak & arm size',
+                    equipment: 'Barbell',
+                    image: 'https://picsum.photos/seed/bbcurls/600/400',
+                    steps: [
+                        'Stand with feet shoulder-width apart, grip the bar underhand.',
+                        'Keep your elbows pinned to your sides as you curl the bar up.',
+                        'Squeeze your biceps at the top of the movement.',
+                        'Lower the bar slowly under control to full extension.',
+                        'Avoid swinging your body — use strict form.'
+                    ]
+                }, {
+                    name: 'Triceps Pushdowns',
+                    focus: 'Triceps long head & overall mass',
+                    equipment: 'Cable Machine, Bar Attachment',
+                    image: 'https://picsum.photos/seed/pushdowns/600/400',
+                    steps: [
+                        'Attach a straight or rope bar to the high pulley.',
+                        'Grip the bar with palms down, elbows at 90°.',
+                        'Push the bar down until your arms are fully extended.',
+                        'Squeeze your triceps at the bottom, then slowly return.',
+                        'Keep your elbows pinned to your sides throughout.'
+                    ]
+                }, {
+                    name: 'Hammer Curls',
+                    focus: 'Brachialis & forearm strength',
+                    equipment: 'Dumbbells',
+                    image: 'https://picsum.photos/seed/hammercurls/600/400',
+                    steps: [
+                        'Stand with dumbbells at your sides, palms facing each other.',
+                        'Curl the weights up while keeping your palms neutral.',
+                        'Squeeze your brachialis at the top of the curl.',
+                        'Lower the weights slowly with control.',
+                        'Keep your upper arms stationary — only your forearms move.'
+                    ]
+                }, {
+                    name: 'Close-Grip Bench Press',
+                    focus: 'Triceps mass & lockout strength',
+                    equipment: 'Barbell, Bench',
+                    image: 'https://picsum.photos/seed/cgbp/600/400',
+                    steps: [
+                        'Lie on the bench with your hands shoulder-width apart (narrower than normal).',
+                        'Lower the bar to your lower chest while keeping elbows tight to your body.',
+                        'Press the bar back up, focusing on triceps drive.',
+                        'Lock out at the top and squeeze your triceps.',
+                        'Keep a controlled tempo and avoid flaring your elbows.'
+                    ]
+                }]
+            },
+            core: {
+                label: 'Core',
+                icon: 'fa-solid fa-core',
+                emoji: '🔄',
+                exercises: [{
+                    name: 'Planks',
+                    focus: 'Anti-extension stability & core endurance',
+                    equipment: 'Bodyweight',
+                    image: 'https://picsum.photos/seed/planks/600/400',
+                    steps: [
+                        'Start in a push-up position with your forearms on the floor.',
+                        'Keep your body in a straight line from head to heels.',
+                        'Engage your core and glutes to prevent sagging.',
+                        'Hold the position for the prescribed time, breathing steadily.',
+                        'Avoid letting your hips rise or drop.'
+                    ]
+                }, {
+                    name: 'Hanging Leg Raises',
+                    focus: 'Lower abs & hip flexors',
+                    equipment: 'Pull-up Bar',
+                    image: 'https://picsum.photos/seed/legraises/600/400',
+                    steps: [
+                        'Hang from a pull-up bar with your arms straight.',
+                        'Keep your legs straight and raise them to parallel (or higher).',
+                        'Squeeze your lower abs at the top, then lower slowly.',
+                        'Avoid swinging — use controlled momentum only from your core.',
+                        'For a challenge, raise your toes to the bar.'
+                    ]
+                }, {
+                    name: 'Cable Woodchoppers',
+                    focus: 'Obliques & rotational power',
+                    equipment: 'Cable Machine',
+                    image: 'https://picsum.photos/seed/woodchoppers/600/400',
+                    steps: [
+                        'Set the pulley at shoulder height, grab the handle with both hands.',
+                        'Stand with feet shoulder-width apart, rotated away from the cable.',
+                        'Pull the handle diagonally across your body from high to low.',
+                        'Pivot your back foot and rotate your torso, squeezing your obliques.',
+                        'Return under control to the start, then repeat on the other side.'
+                    ]
+                }, {
+                    name: 'Ab Wheel Rollouts',
+                    focus: 'Deep core & anti-extension',
+                    equipment: 'Ab Wheel',
+                    image: 'https://picsum.photos/seed/abwheel/600/400',
+                    steps: [
+                        'Kneel on the floor and grip the ab wheel with both hands.',
+                        'Slowly roll the wheel forward, extending your arms and hips.',
+                        'Keep your core braced and your back flat — avoid arching.',
+                        'Roll out as far as you can while maintaining a straight line.',
+                        'Pull yourself back to the start using your abs, not your arms.'
+                    ]
+                }]
+            }
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let currentBody = 'chest';
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const bodyNav = document.getElementById('bodyNav');
+        const exerciseGrid = document.getElementById('exerciseGrid');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const bodyNameSpan = document.getElementById('bodyName');
+        const exerciseCountSpan = document.getElementById('exerciseCount');
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+        const modalImgSrc = document.getElementById('modalImgSrc');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalFocus = document.getElementById('modalFocus');
+        const modalTags = document.getElementById('modalTags');
+        const modalSteps = document.getElementById('modalSteps');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+        // ============================================================
+        //  RENDER NAV
+        // ============================================================
+        function renderNav() {
+            const keys = Object.keys(EXERCISES_DATA);
+            bodyNav.innerHTML = keys.map(key => {
+                const data = EXERCISES_DATA[key];
+                const active = key === currentBody ? 'active' : '';
+                return `
+                    <button class="body-nav-btn ${active}" data-body="${key}">
+                        <i class="fas ${data.icon}"></i>
+                        ${data.label}
+                    </button>
+                `;
+            }).join('');
+
+            // event listeners
+            bodyNav.querySelectorAll('.body-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const body = btn.dataset.body;
+                    if (body && body !== currentBody) {
+                        currentBody = body;
+                        renderNav();
+                        renderExercises();
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        //  RENDER EXERCISES
+        // ============================================================
+        function renderExercises() {
+            const data = EXERCISES_DATA[currentBody];
+            if (!data) return;
+
+            bodyNameSpan.textContent = data.label;
+            const exercises = data.exercises;
+            exerciseCountSpan.textContent = `${exercises.length} exercises`;
+
+            if (exercises.length === 0) {
+                exerciseGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-dumbbell"></i>
+                        <p>No exercises for this body part yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            exerciseGrid.innerHTML = exercises.map((ex, index) => `
+                <div class="exercise-card" data-index="${index}" data-body="${currentBody}">
+                    <div class="exercise-img-wrap">
+                        <img src="${ex.image}" alt="${ex.name}" loading="lazy" />
+                        <span class="exercise-badge"><i class="fas fa-play"></i> demo</span>
+                    </div>
+                    <div class="exercise-info">
+                        <h3>${ex.name}</h3>
+                        <div class="focus"><i class="fas fa-bullseye"></i> ${ex.focus}</div>
+                        <div class="exercise-meta">
+                            <span class="tag"><i class="fas fa-tag"></i> ${ex.equipment}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // attach click listeners for modal
+            exerciseGrid.querySelectorAll('.exercise-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const idx = parseInt(card.dataset.index);
+                    const bodyKey = card.dataset.body;
+                    const exData = EXERCISES_DATA[bodyKey]?.exercises[idx];
+                    if (exData) openModal(exData);
+                });
+            });
+        }
+
+        // ============================================================
+        //  MODAL
+        // ============================================================
+        function openModal(ex) {
+            modalImgSrc.src = ex.image;
+            modalImgSrc.alt = ex.name;
+            modalTitle.textContent = ex.name;
+            modalFocus.textContent = ex.focus;
+
+            // tags
+            modalTags.innerHTML = `
+                <span class="tag"><i class="fas fa-tag"></i> ${ex.equipment}</span>
+                <span class="tag"><i class="fas fa-bullseye"></i> ${ex.focus}</span>
+            `;
+
+            // steps
+            modalSteps.innerHTML = ex.steps.map((step, i) => `
+                <li><span class="step-num">${i + 1}.</span> ${step}</li>
+            `).join('');
+
+            modalOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // close events
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        renderNav();
+        renderExercises();
+
+        // small console greeting
+        console.log('🏋️ MuscleMap Pro loaded — built for Coach Alex.');
+    </script>
+
+</body>
+</html>
