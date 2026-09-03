@@ -1,0 +1,221 @@
+{
+  "info": {
+    "_postman_id": "anaplan-mock-server-collection",
+    "name": "Mock Anaplan Server API",
+    "description": "Complete API collection for Mock Anaplan Server integration. This collection simulates importing data FROM Anaplan and exporting data TO Anaplan via REST API endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "health"
+          ]
+        },
+        "description": "Check if the Mock Anaplan Server is running. This should be your first call to verify the server is up."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Import from Anaplan (Upload File)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/sales_data.xlsx",
+              "description": "Select your Excel file here. This simulates importing data FROM Anaplan into the system."
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/import",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "import"
+          ]
+        },
+        "description": "Upload an Excel file to simulate importing FROM Anaplan. The file will be saved to the 'input_from_anaplan' folder. Use 'form-data' body type with key 'file'."
+      },
+      "response": []
+    },
+    {
+      "name": "3. List Imported Files (Input)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/files/input",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "files",
+            "input"
+          ]
+        },
+        "description": "List all files that have been imported from Anaplan. Shows file names, sizes, and timestamps."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Process File (Transform Data)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"options\": {\n    \"add_metadata\": true,\n    \"validate_data\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/process/20260101_120000_sales_data.xlsx",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "process",
+            "20260101_120000_sales_data.xlsx"
+          ]
+        },
+        "description": "Process an imported file. Replace the filename in the URL with your actual imported file name. This adds metadata and performs data validation."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Upload Output to Anaplan (Export)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/processed_output.xlsx",
+              "description": "Select your processed Excel file to export TO Anaplan. This simulates pushing data back to Anaplan."
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/export/upload",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "export",
+            "upload"
+          ]
+        },
+        "description": "Upload a processed file to simulate exporting TO Anaplan. The file will be saved to the 'output_to_anaplan' folder. Use 'form-data' body type with key 'file'."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Download File from Anaplan (Export)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/export/20260101_120000_processed_sales_data.xlsx",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "export",
+            "20260101_120000_processed_sales_data.xlsx"
+          ]
+        },
+        "description": "Download a file from the output folder. Replace the filename with your actual exported file name. This simulates retrieving exported data from Anaplan."
+      },
+      "response": []
+    },
+    {
+      "name": "7. List Exported Files (Output)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/files/output",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "files",
+            "output"
+          ]
+        },
+        "description": "List all files that are ready to be exported to Anaplan. Shows file names, sizes, and timestamps."
+      },
+      "response": []
+    },
+    {
+      "name": "8. View Server Logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/logs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "logs"
+          ]
+        },
+        "description": "View all server activity logs including imports, exports, and errors."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ]
+}

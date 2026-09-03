@@ -1,0 +1,120 @@
+{
+  "info": {
+    "name": "Mock Anaplan Integration",
+    "_postman_id": "mock-anaplan-api-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Download Excel from Anaplan",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/2/0/workspaces/:workspace_id/models/:model_id/files/:file_id/download",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "2",
+            "0",
+            "workspaces",
+            ":workspace_id",
+            "models",
+            ":model_id",
+            "files",
+            ":file_id",
+            "download"
+          ],
+          "variable": [
+            {
+              "key": "workspace_id",
+              "value": "ws_mock_001"
+            },
+            {
+              "key": "model_id",
+              "value": "model_mock_101"
+            },
+            {
+              "key": "file_id",
+              "value": "sample_anaplan_input"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Upload Excel to Anaplan",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/2/0/workspaces/:workspace_id/models/:model_id/files/:file_id/upload",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "2",
+            "0",
+            "workspaces",
+            ":workspace_id",
+            "models",
+            ":model_id",
+            "files",
+            ":file_id",
+            "upload"
+          ],
+          "variable": [
+            {
+              "key": "workspace_id",
+              "value": "ws_mock_001"
+            },
+            {
+              "key": "model_id",
+              "value": "model_mock_101"
+            },
+            {
+              "key": "file_id",
+              "value": "processed_output"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5000",
+      "type": "string"
+    }
+  ]
+}

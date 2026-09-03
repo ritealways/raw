@@ -1,0 +1,66 @@
+{
+  "info": {
+    "name": "Mock Anaplan Integration",
+    "description": "Test collection for the mock Anaplan server: import data from Anaplan, and export data back to Anaplan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/health",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1. Import from Anaplan",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/import-from-anaplan",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["api", "import-from-anaplan"]
+        },
+        "description": "Pretends to pull the latest Excel export from Anaplan. No file needs to be attached - just hit Send."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Export to Anaplan",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/export-to-anaplan",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["api", "export-to-anaplan"]
+        },
+        "description": "Pretends to push an Excel file to Anaplan. In the Body tab (form-data), click the 'Select Files' button next to the 'file' key and choose data/to_export/output_data.xlsx from the project folder."
+      },
+      "response": []
+    }
+  ]
+}
