@@ -1,1 +1,18 @@
+Please build a new Streamlit application that replicates the exact design, layout, and visual styling of `app3.py`. 
+
+Refer to `app3.py` for all UI components, sidebar layout, styling, and color schemes. The new app must include the following features:
+
+1. Data Ingestion:
+   - Allow the user to upload a CSV file (or load a default dataset if none is uploaded).
+   - Display a preview of the raw data, shape, and column types.
+
+2. Automated EDA:
+   - Summary statistics (mean, median, standard deviation, missing value counts).
+   - Data distribution visualizations (histograms, box plots, correlation heatmaps) matching the UI style of `app3.py`.
+
+3. Conversational BI / Q&A:
+   - A chat interface integrated into the app where users can ask natural language questions about the loaded dataset.
+   - Implement an agent/LLM-based answering pipeline (e.g., using LangChain/pandasai or direct LLM code execution via prompt-to-code) that inspects the dataframe, computes answers or generates charts, and returns clear responses.
+
+Please inspect `app3.py` first, then generate the new script and list any dependencies that need to be installed.
 
