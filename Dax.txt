@@ -1,18 +1,46 @@
-Please build a new Streamlit application that replicates the exact design, layout, and visual styling of `app3.py`. 
+Act as a Senior AI Solutions Architect and Full-Stack Streamlit Engineer.
 
-Refer to `app3.py` for all UI components, sidebar layout, styling, and color schemes. The new app must include the following features:
+Build a standalone, domain-agnostic Conversational BI Streamlit application from scratch. The interface, visual styling, and dashboard feel should draw architectural inspiration from enterprise dashboard themes (like `appbi.py`), but the entire project must remain completely independent, decoupled, and generic enough to analyze any structured CSV dataset.
 
-1. Data Ingestion:
-   - Allow the user to upload a CSV file (or load a default dataset if none is uploaded).
-   - Display a preview of the raw data, shape, and column types.
+---
 
-2. Automated EDA:
-   - Summary statistics (mean, median, standard deviation, missing value counts).
-   - Data distribution visualizations (histograms, box plots, correlation heatmaps) matching the UI style of `app3.py`.
+### Key Requirements
 
-3. Conversational BI / Q&A:
-   - A chat interface integrated into the app where users can ask natural language questions about the loaded dataset.
-   - Implement an agent/LLM-based answering pipeline (e.g., using LangChain/pandasai or direct LLM code execution via prompt-to-code) that inspects the dataframe, computes answers or generates charts, and returns clear responses.
+1. **Agnostic Data Ingestion & Validation**
+   - Accept any tabular `.csv` upload via Streamlit (`st.file_uploader`).
+   - Automatically infer column types (numerical, categorical, datetime, text) and cache the dataset cleanly in `st.session_state`.
 
-Please inspect `app3.py` first, then generate the new script and list any dependencies that need to be installed.
+2. **Automated EDA & BI Dashboard**
+   - Render a modern, dashboard-style UI (kpis, metric cards, dynamic tabs).
+   - Generate summary statistics, null/cardinality audits, distribution plots, and correlation heatmaps using Plotly.
+   - Maintain a polished visual theme (consistent typography, card containers, and clean layouts).
 
+3. **Conversational BI with Few-Shot Prompting**
+   - Connect to a self-hosted or remote LLaMA model using an OpenAI-compatible client (`base_url`, `api_key`, `model_name`).
+   - Use an isolated configuration file (`few_shots.json` or `few_shots.yaml`) containing exemplar question-answer pairs demonstrating how to query, reason over, and synthesize answers from tabular metadata.
+   - Supply the model with schema descriptions, column data types, and concise summary stats—avoid dumping full raw datasets into the context window.
+   - Provide a chat interface using `st.chat_message` and `st.chat_input` with persistent conversation history across Streamlit reruns.
+
+4. **Strict Isolation & Domain Independence**
+   - No hardcoded domain logic, industry-specific KPIs, or business rules (e.g., healthcare, retail, workforce planning).
+   - Modular structure separating data handling, visualizations, prompt construction, and UI layers.
+
+---
+
+### Deliverables Required
+
+1. **GitHub Repository Structure**
+   - A complete directory tree showing files, configs, and modular packages.
+
+2. **Module Breakdown & Architecture Flow**
+   - A table or list explaining the specific responsibility of every file.
+   - An ASCII diagram detailing the runtime data flow from CSV upload to few-shot prompt construction and chat response.
+
+3. **Configuration & Few-Shot Setup**
+   - The exact schema for the few-shot template file (`few_shots.json` or `few_shots.py`).
+   - The injection mechanism used to combine system instructions, few-shot examples, dataset metadata, and user queries.
+
+4. **Production-Ready Starter Code**
+   - `core/llm_engine.py`: Client initialization, few-shot prompt assembler, and inference caller with error handling.
+   - `core/eda.py`: Automated column classification and summary statistics extractor.
+   - `app.py`: Main Streamlit entrypoint showing layout tabs (Data Overview, Visual EDA, Conversational Q&A) and clean state management.
