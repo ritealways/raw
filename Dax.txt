@@ -1,46 +1,34 @@
-Act as a Senior AI Solutions Architect and Full-Stack Streamlit Engineer.
+Refactor and enhance the Conversational BI Streamlit application based on the current project directory (`conversational_bi/`). Implement the following updates across the codebase:
 
-Build a standalone, domain-agnostic Conversational BI Streamlit application from scratch. The interface, visual styling, and dashboard feel should draw architectural inspiration from enterprise dashboard themes (like `appbi.py`), but the entire project must remain completely independent, decoupled, and generic enough to analyze any structured CSV dataset.
+### 1. Logo & Branding
+- Display the logo from the root directory (`EXL_Logo.png`) prominently in the Streamlit UI (e.g., at the top of the sidebar or main header) with appropriate sizing.
 
----
+### 2. Code Consolidation (`ui.py` into `app.py`)
+- Merge all rendering components, layout helpers, and UI logic from `core/ui.py` directly into `app.py`.
+- Remove references/imports to `core/ui.py` in other modules, ensuring `app.py` directly handles the rendering layer.
 
-### Key Requirements
+### 3. User Guidance Section
+- Add an expandable or prominent section titled **"How to Use"** detailing clear, step-by-step user instructions:
+  1. Uploading data (CSV/Excel).
+  2. Reviewing automated EDA and dynamic KPIs.
+  3. Inspecting initial trends and charts.
+  4. Interacting via natural language questions using the conversational chat interface.
 
-1. **Agnostic Data Ingestion & Validation**
-   - Accept any tabular `.csv` upload via Streamlit (`st.file_uploader`).
-   - Automatically infer column types (numerical, categorical, datetime, text) and cache the dataset cleanly in `st.session_state`.
+### 4. Automated Visual Trends & Charting
+- Once a dataset is uploaded, automatically detect key temporal or numerical columns.
+- Render initial trend visualizations (e.g., time-series lines, top categorical distributions, or numerical correlation heatmaps using Plotly/Altair) before the user even begins chatting.
 
-2. **Automated EDA & BI Dashboard**
-   - Render a modern, dashboard-style UI (kpis, metric cards, dynamic tabs).
-   - Generate summary statistics, null/cardinality audits, distribution plots, and correlation heatmaps using Plotly.
-   - Maintain a polished visual theme (consistent typography, card containers, and clean layouts).
+### 5. Enhanced Statistical EDA (`core/eda.py`)
+- Expand the current exploratory analysis function to compute:
+  - Descriptive statistics (mean, median, standard deviation, IQR, skewness).
+  - Data quality checks (exact null percentages, duplicate row counts, zero-variance columns).
+  - Correlation pairs and potential outlier flags.
+- Package these findings cleanly into structured metadata for display and LLM context.
 
-3. **Conversational BI with Few-Shot Prompting**
-   - Connect to a self-hosted or remote LLaMA model using an OpenAI-compatible client (`base_url`, `api_key`, `model_name`).
-   - Use an isolated configuration file (`few_shots.json` or `few_shots.yaml`) containing exemplar question-answer pairs demonstrating how to query, reason over, and synthesize answers from tabular metadata.
-   - Supply the model with schema descriptions, column data types, and concise summary stats—avoid dumping full raw datasets into the context window.
-   - Provide a chat interface using `st.chat_message` and `st.chat_input` with persistent conversation history across Streamlit reruns.
+### 6. Dynamic, LLM-Driven KPIs on the Dashboard
+- In addition to standard high-level metrics (total records, column count, null percentage), integrate an LLM routine in `core/llm_engine.py`:
+  - Pass the dataset schema and summary statistics to the LLM.
+  - Instruct the LLM to dynamically determine and return 3–5 domain-relevant KPIs with business interpretations based on the detected data structure.
+- Render these dynamic metrics using `st.metric()` or custom metric cards in the dashboard view.
 
-4. **Strict Isolation & Domain Independence**
-   - No hardcoded domain logic, industry-specific KPIs, or business rules (e.g., healthcare, retail, workforce planning).
-   - Modular structure separating data handling, visualizations, prompt construction, and UI layers.
-
----
-
-### Deliverables Required
-
-1. **GitHub Repository Structure**
-   - A complete directory tree showing files, configs, and modular packages.
-
-2. **Module Breakdown & Architecture Flow**
-   - A table or list explaining the specific responsibility of every file.
-   - An ASCII diagram detailing the runtime data flow from CSV upload to few-shot prompt construction and chat response.
-
-3. **Configuration & Few-Shot Setup**
-   - The exact schema for the few-shot template file (`few_shots.json` or `few_shots.py`).
-   - The injection mechanism used to combine system instructions, few-shot examples, dataset metadata, and user queries.
-
-4. **Production-Ready Starter Code**
-   - `core/llm_engine.py`: Client initialization, few-shot prompt assembler, and inference caller with error handling.
-   - `core/eda.py`: Automated column classification and summary statistics extractor.
-   - `app.py`: Main Streamlit entrypoint showing layout tabs (Data Overview, Visual EDA, Conversational Q&A) and clean state management.
+Please maintain clean modularity for `core/data_ops.py`, `core/eda.py`, and `core/llm_engine.py`, ensure graceful error handling for missing files or unexpected data types, and update `app.py` as the unified entry point.
