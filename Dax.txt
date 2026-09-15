@@ -1,34 +1,638 @@
-Refactor and enhance the Conversational BI Streamlit application based on the current project directory (`conversational_bi/`). Implement the following updates across the codebase:
+Role
 
-### 1. Logo & Branding
-- Display the logo from the root directory (`EXL_Logo.png`) prominently in the Streamlit UI (e.g., at the top of the sidebar or main header) with appropriate sizing.
+Act as a Senior Data Scientist + Python Developer + Streamlit Developer + LLM/Conversational BI Engineer.
 
-### 2. Code Consolidation (`ui.py` into `app.py`)
-- Merge all rendering components, layout helpers, and UI logic from `core/ui.py` directly into `app.py`.
-- Remove references/imports to `core/ui.py` in other modules, ensuring `app.py` directly handles the rendering layer.
+I want to build a Conversational BI Streamlit application from scratch.
 
-### 3. User Guidance Section
-- Add an expandable or prominent section titled **"How to Use"** detailing clear, step-by-step user instructions:
-  1. Uploading data (CSV/Excel).
-  2. Reviewing automated EDA and dynamic KPIs.
-  3. Inspecting initial trends and charts.
-  4. Interacting via natural language questions using the conversational chat interface.
+I am a beginner in Conversational BI/LLM application development, so keep the implementation simple, practical, and easy to understand.
 
-### 4. Automated Visual Trends & Charting
-- Once a dataset is uploaded, automatically detect key temporal or numerical columns.
-- Render initial trend visualizations (e.g., time-series lines, top categorical distributions, or numerical correlation heatmaps using Plotly/Altair) before the user even begins chatting.
+I will provide a reference "app.py". The new application should follow a similar UI/theme/layout style wherever practical, but the functionality should be redesigned as described below.
 
-### 5. Enhanced Statistical EDA (`core/eda.py`)
-- Expand the current exploratory analysis function to compute:
-  - Descriptive statistics (mean, median, standard deviation, IQR, skewness).
-  - Data quality checks (exact null percentages, duplicate row counts, zero-variance columns).
-  - Correlation pairs and potential outlier flags.
-- Package these findings cleanly into structured metadata for display and LLM context.
+---
 
-### 6. Dynamic, LLM-Driven KPIs on the Dashboard
-- In addition to standard high-level metrics (total records, column count, null percentage), integrate an LLM routine in `core/llm_engine.py`:
-  - Pass the dataset schema and summary statistics to the LLM.
-  - Instruct the LLM to dynamically determine and return 3–5 domain-relevant KPIs with business interpretations based on the detected data structure.
-- Render these dynamic metrics using `st.metric()` or custom metric cards in the dashboard view.
+Main Objective
 
-Please maintain clean modularity for `core/data_ops.py`, `core/eda.py`, and `core/llm_engine.py`, ensure graceful error handling for missing files or unexpected data types, and update `app.py` as the unified entry point.
+Build a generic Conversational BI application that can work with any CSV file uploaded manually by the user.
+
+The application should:
+
+1. Allow the user to upload any CSV file.
+2. Automatically inspect the dataset.
+3. Automatically detect column types.
+4. Run appropriate EDA based on the detected column types.
+5. Display useful tables, statistics, and visualizations.
+6. Provide a Conversational BI chat interface where the user can ask questions about the uploaded dataset in natural language.
+7. Use a Llama model through an API at the backend to understand user questions and generate answers.
+8. The solution should be generic, not hard-coded for only one dataset or insurance dataset.
+
+---
+
+Core Functionalities
+
+1. CSV Upload
+
+Create a simple Streamlit interface where the user can:
+
+- Upload a CSV file manually.
+- Read the CSV using Pandas.
+- Display:
+  - File name
+  - Number of rows
+  - Number of columns
+  - Preview of the data
+  - Column names
+  - Detected data types
+
+The application should continue working even if the uploaded CSV has completely different columns or belongs to a different business domain.
+
+---
+
+2. Automatic Column Type Detection
+
+Automatically identify columns as:
+
+Numerical
+
+Examples:
+
+- Age
+- Revenue
+- Claim Amount
+- Quantity
+- Salary
+
+Categorical
+
+Examples:
+
+- Gender
+- Region
+- Department
+- Product
+- Status
+
+Date/Time
+
+Examples:
+
+- Date
+- Transaction Date
+- Admission Date
+- Timestamp
+
+Also identify:
+
+- Unique ID columns
+- High-cardinality categorical columns
+- Constant columns
+- Potentially problematic columns
+
+Do not rely only on manually specified column names.
+
+---
+
+3. Automated EDA
+
+Create an EDA section that automatically adapts to the uploaded dataset.
+
+A. Basic EDA
+
+Show:
+
+- Number of rows
+- Number of columns
+- Memory usage if useful
+- Column names
+- Data types
+- Missing-value count
+- Missing-value percentage
+- Number of unique values
+- Duplicate row count
+
+Display a clean summary table.
+
+---
+
+B. Data Quality EDA
+
+Automatically identify:
+
+- Missing values
+- Duplicate rows
+- Duplicate columns if applicable
+- Constant columns
+- Columns with extremely high missing values
+- Columns with high cardinality
+- Potential outliers
+- Incorrect/unexpected data types where detectable
+
+Provide a simple data quality summary.
+
+For example:
+
+Column| Data Type| Missing %| Unique Values| Quality Issue
+Age| Numerical| 2%| 65| None
+Gender| Categorical| 0%| 3| None
+ID| Categorical| 0%| 100%| High Cardinality
+
+---
+
+4. Numerical EDA
+
+For every numerical column, automatically calculate useful statistics such as:
+
+- Count
+- Mean
+- Median
+- Standard deviation
+- Minimum
+- Maximum
+- Q1
+- Q3
+- IQR
+- Skewness
+- Number/percentage of outliers if possible
+
+Create appropriate visualizations such as:
+
+- Histogram
+- Box plot
+- Distribution plot
+
+Do not create unnecessary plots for every column if the dataset is extremely large.
+
+The application should intelligently select or limit visualizations to keep the UI usable.
+
+---
+
+5. Correlation Analysis
+
+For numerical columns:
+
+- Calculate the correlation matrix.
+- Display a correlation heatmap.
+- Identify strongly correlated numerical columns.
+- Provide a simple textual interpretation.
+
+Example:
+
+«Revenue and Sales Quantity have a strong positive correlation of 0.82.»
+
+Clearly mention that correlation does not imply causation.
+
+Handle datasets with:
+
+- Only one numerical column
+- No numerical columns
+- Missing values
+- Constant numerical columns
+
+without crashing.
+
+---
+
+6. Categorical EDA
+
+Automatically detect categorical columns.
+
+For each suitable categorical column, show:
+
+- Number of unique categories
+- Cardinality
+- Top categories
+- Frequency
+- Percentage distribution
+
+Create appropriate visualizations such as:
+
+- Bar chart
+- Pie chart where appropriate
+
+Avoid creating unreadable charts when a categorical column contains hundreds or thousands of categories.
+
+For high-cardinality columns, show only the Top N categories and clearly mention that the chart represents Top N only.
+
+---
+
+7. Date/Time EDA
+
+Automatically detect date/time columns where possible.
+
+For date/time columns:
+
+- Convert to datetime safely.
+- Identify minimum date.
+- Identify maximum date.
+- Calculate date range.
+- Show trends over time.
+
+Create appropriate visualizations such as:
+
+- Line charts
+- Daily/weekly/monthly aggregation where appropriate
+
+Automatically select a suitable time aggregation depending on the date range.
+
+For example:
+
+- Short date range → daily trend
+- Medium date range → weekly trend
+- Long date range → monthly trend
+
+The application should not fail if no date/time column exists.
+
+---
+
+8. Conversational BI
+
+This is the most important feature.
+
+Create a Chat / Ask Your Data section.
+
+The user should be able to ask natural-language questions such as:
+
+- "How many rows are there?"
+- "What is the average claim amount?"
+- "Which region has the highest revenue?"
+- "Show me the top 10 products by sales."
+- "What is the trend of revenue over time?"
+- "Which category has the highest count?"
+- "Are there any missing values?"
+- "Which numerical columns are strongly correlated?"
+- "Compare revenue between regions."
+- "What are the main insights from this dataset?"
+
+The application should answer based on the uploaded dataset, rather than giving generic LLM answers.
+
+---
+
+9. Llama API Integration
+
+Use a Llama model through an API as the LLM backend.
+
+Important:
+
+- Do not hard-code the API key.
+- Store credentials in ".env" or Streamlit secrets.
+- Create a simple configuration mechanism.
+- Clearly explain where the user needs to add the API key.
+- Keep the LLM integration simple.
+
+The LLM should be used for:
+
+1. Understanding the user's natural-language question.
+2. Determining what analysis is required.
+3. Generating an appropriate response based on the actual dataset/analysis results.
+
+Do not simply send the entire CSV blindly to the LLM.
+
+Instead, use Python/Pandas to perform calculations and provide the LLM with the relevant structured context/results.
+
+---
+
+10. Prevent Hallucinations
+
+The Conversational BI system should prioritize actual calculated results from Pandas/Python.
+
+For numerical questions:
+
+User:
+
+«What is the average revenue?»
+
+The application should calculate:
+
+df["Revenue"].mean()
+
+and then let the LLM explain the result naturally.
+
+The LLM should not invent numerical values.
+
+If the requested information cannot be determined from the dataset, the application should respond honestly:
+
+«"I cannot answer this question from the uploaded dataset."»
+
+---
+
+11. Generic Dataset Support
+
+Do NOT hard-code:
+
+- Insurance-specific columns
+- Healthcare-specific columns
+- Revenue-specific columns
+- Fixed column names
+- Fixed questions
+
+The application should work with datasets from different domains such as:
+
+- Insurance
+- Healthcare
+- Finance
+- Sales
+- Retail
+- HR
+- Marketing
+- Operations
+
+The only assumption should be that the input is a reasonably structured CSV dataset.
+
+---
+
+12. Project Structure
+
+Keep the Git/project structure very simple.
+
+Do NOT create dozens of files.
+
+Prefer something similar to:
+
+conversational-bi/
+│
+├── app.py
+├── requirements.txt
+├── .env
+├── .env.example
+├── README.md
+└── .gitignore
+
+If additional files are genuinely required, explain why before creating them.
+
+The primary implementation should remain easy to understand.
+
+---
+
+13. Coding Principles
+
+Follow these rules strictly:
+
+- Use simple Python.
+- Prefer readable code over complex architecture.
+- Avoid unnecessary classes/design patterns.
+- Avoid unnecessary abstraction.
+- Avoid over-engineering.
+- Use Pandas for data analysis.
+- Use Streamlit for UI.
+- Use Plotly/Matplotlib for visualizations where appropriate.
+- Keep functions small and understandable.
+- Add comments only where they improve understanding.
+- Handle errors gracefully.
+- Do not crash when a particular column type does not exist.
+
+I want a working beginner-friendly project, not an enterprise-level framework.
+
+---
+
+14. UI Requirements
+
+Use the provided reference "app.py" as the visual/UI inspiration.
+
+Keep the UI:
+
+- Clean
+- Modern
+- Simple
+- Minimal
+- Easy to navigate
+
+Suggested sections:
+
+Sidebar
+
+- CSV upload
+- Dataset information
+- LLM/API configuration if required
+
+Main Area
+
+1. Dataset Overview
+
+2. Data Quality
+
+3. Numerical Analysis
+
+4. Categorical Analysis
+
+5. Date/Time Analysis
+
+6. Correlation Analysis
+
+7. Ask Your Data / Conversational BI
+
+Use Streamlit tabs/expanders where they make the application cleaner.
+
+---
+
+15. Chat Architecture
+
+Use a simple architecture like:
+
+User uploads CSV
+       ↓
+Pandas DataFrame
+       ↓
+Automatic Column Detection
+       ↓
+EDA Engine
+       ↓
+Dataset Metadata + Analysis Results
+       ↓
+User asks question
+       ↓
+LLM understands intent
+       ↓
+Python/Pandas performs required calculation
+       ↓
+Result + relevant context
+       ↓
+Llama generates natural-language response
+       ↓
+Answer displayed in Streamlit
+
+Explain this architecture in simple terms.
+
+---
+
+16. Important Requirement — Do Not Build a Fixed Q&A System
+
+I do NOT want something like:
+
+if question == "average revenue":
+    ...
+elif question == "total sales":
+    ...
+
+The system should be generalized.
+
+Design the Conversational BI layer so it can understand different questions and different datasets.
+
+If the first implementation needs to support a limited but extensible set of analytical operations, create a clean mechanism that can later be expanded.
+
+Explain clearly how the approach can eventually support more advanced questions.
+
+---
+
+17. Error Handling
+
+The application must gracefully handle:
+
+- Empty CSV
+- Very small dataset
+- Missing values
+- Duplicate rows
+- No numerical columns
+- No categorical columns
+- No date columns
+- Only numerical columns
+- Only categorical columns
+- High-cardinality columns
+- Invalid date values
+- LLM/API failure
+- Missing API key
+- Unsupported questions
+
+The app should display a useful message instead of crashing.
+
+---
+
+18. Performance
+
+Keep performance in mind.
+
+For large datasets:
+
+- Avoid sending the entire dataset to the LLM.
+- Use Pandas aggregations.
+- Limit large visualizations.
+- Limit Top N categorical plots.
+- Cache expensive operations using Streamlit caching where appropriate.
+- Avoid repeatedly recalculating EDA unnecessarily.
+
+---
+
+19. What I Want From You
+
+Build this project step by step.
+
+Do NOT immediately dump a huge amount of code without explanation.
+
+Follow this sequence:
+
+Step 1
+
+Explain the overall architecture in simple language.
+
+Step 2
+
+Show the final simple project structure.
+
+Step 3
+
+Explain the purpose of each file.
+
+Step 4
+
+Create "requirements.txt".
+
+Step 5
+
+Create ".env.example".
+
+Step 6
+
+Create the complete "app.py".
+
+Step 7
+
+Explain the important sections of "app.py" in beginner-friendly language.
+
+Step 8
+
+Explain how the Llama API integration works.
+
+Step 9
+
+Explain how the Conversational BI question-answering flow works.
+
+Step 10
+
+Explain how to run the project in VS Code.
+
+Include exact commands such as:
+
+python -m venv .venv
+
+pip install -r requirements.txt
+
+streamlit run app.py
+
+Step 11
+
+Provide a "README.md" containing:
+
+- Project overview
+- Features
+- Architecture
+- Project structure
+- Installation
+- Environment variables
+- How to run
+- How Conversational BI works
+- Example questions
+- Limitations
+- Future enhancements
+
+---
+
+20. Development Rules
+
+Before writing the final code:
+
+1. Analyze the requirements.
+2. Check the reference "app.py" that I provide.
+3. Reuse its general UI/theme idea where appropriate.
+4. Keep the new implementation generic.
+5. Keep the number of files minimal.
+6. Do not introduce unnecessary frameworks.
+7. Do not over-engineer the LLM architecture.
+8. Ensure the code is actually runnable.
+9. Ensure imports match "requirements.txt".
+10. Ensure environment variables are handled safely.
+11. Explain any important design decision.
+12. If something is ambiguous, make the simplest reasonable assumption and clearly state it.
+
+---
+
+Final Goal
+
+The final result should be a simple but functional generic Conversational BI Streamlit application where:
+
+Any CSV
+   ↓
+Upload
+   ↓
+Automatic Dataset Understanding
+   ↓
+Automatic EDA
+   ├── Basic EDA
+   ├── Data Quality
+   ├── Numerical/Statistical EDA
+   ├── Correlation
+   ├── Categorical/Cardinality EDA
+   └── Date/Time Trends
+   ↓
+Ask Questions in Natural Language
+   ↓
+Llama API
+   ↓
+Python/Pandas calculations
+   ↓
+Accurate Data-Based Answer
+
+The priority is:
+
+Simple → Generic → Working → Explainable → Extensible
+
+rather than:
+
+Complex → Over-engineered → Too many files → Difficult to maintain.This version is deliberately structured so a coding agent can build it incrementally in VS Code, rather than generating a complicated enterprise architecture immediately.
