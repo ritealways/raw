@@ -36,6 +36,111 @@ It should work with datasets from domains such as:
 - HR
 - Marketing
 - Operations
+
+
+
+
+Development Prompt
+
+> I have two existing Streamlit applications:
+
+1. WFM / Workforce Staffing
+
+Root folder: WFM-main-GIT
+
+Main files include app.py, app_integrated.py, main.py, run_integrated.py, etc.
+
+
+2. Premium Forecasting
+
+Root folder: WC_Premium_POC
+
+Main entry point: app.py
+
+Model code: src/wc_2stage.py, src/wc_lightgbm.py
+
+Model artifact: model_artifacts/wc_lgbm_v3.pkl
+
+Other required files: data/, requirements.txt, Excel input file, etc.
+
+
+The attached screenshots show the current folder structures of both applications.
+
+Objective
+
+Integrate the Premium Forecasting Streamlit app into the existing WFM Streamlit app.
+
+In the WFM application, add a new selection/button named Asset 3. When the user selects Asset 3, the Premium Forecasting application/functionality should be displayed and usable within the WFM Streamlit application.
+
+Critical Requirement
+
+Make the minimum possible changes to the existing WFM code.
+
+Do not rewrite or refactor the existing WFM application unnecessarily.
+
+Implementation Requirements
+
+1. First inspect both project structures and identify their Streamlit entry points and dependencies.
+
+
+2. Identify how WFM currently handles existing assets/navigation.
+
+
+3. Add Asset 3 → Premium Forecasting using the least-invasive approach.
+
+
+4. Reuse the existing Premium Forecasting app.py and modules wherever possible.
+
+
+5. Preserve the existing Premium Forecasting UI and functionality as much as possible.
+
+
+6. Existing WFM assets/features must continue working exactly as before.
+
+
+7. Correctly handle imports, relative paths, model artifacts, data files, and session state.
+
+
+8. Avoid copying/duplicating the Premium Forecasting code unless technically necessary.
+
+
+9. Modify only the files that are genuinely required.
+
+
+10. Do not change the ML/model logic of Premium Forecasting.
+
+
+
+Expected Flow
+
+WFM Streamlit App
+
+Asset 1 | Asset 2 | Asset 3
+
+→ User clicks Asset 3
+
+→ Premium Forecasting UI opens inside WFM
+
+→ Existing Premium Forecasting functionality works normally.
+
+Deliverables
+
+Implement the integration.
+
+List all files changed.
+
+Show the exact code changes made.
+
+Explain briefly why each change was required.
+
+Provide the exact command to run the integrated WFM application.
+
+Confirm that existing WFM functionality remains unaffected.
+
+Confirm that Asset 3 → Premium Forecasting works end-to-end.
+
+
+Priority: Minimum WFM code changes + maximum reuse of the existing Premium Forecasting application.
 - Any other structured CSV dataset
 
 ---
