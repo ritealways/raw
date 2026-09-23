@@ -1,195 +1,52 @@
-# ============================================================
-# PREMIUM DATA - CHARTS AND STATISTICS
-# ============================================================
+        st.markdown("---")
+        st.markdown("### 📊 Status")
+        st.info("BI Tool Active")
 
-if (
-    "premium_selected_features" in st.session_state
-    and st.session_state.premium_selected_features
-):
+    else:
+        # Show basic status when no asset selected or still processing
+        st.markdown("### 📊 Status")
 
-    df = load_chatbot_data()
-
-    for feature in st.session_state.premium_selected_features:
-
-        st.markdown(
-            f"### 💰 {feature} Analysis"
-        )
-
-        # ----------------------------------------------------
-        # PREMIUM FEATURE -> DATA COLUMN
-        # ----------------------------------------------------
-
-        if feature == "GWP":
-
-            data_col = "GWP"
-
-        elif feature == "Uplift":
-
-            data_col = "Renewal_Uplift"
-
-        elif feature == "Retention":
-
-            data_col = "Retention_Rate"
-
+        if st.session_state.get("bi_date_processing", False):
+            st.info("Processing data...")
         else:
+            st.info("Select an asset to begin")
 
-            continue
+else:  # Voice and Non-Voice tabs
+    # Always show standard navigation for non-chatbot tabs
+    page = st.radio(
+        "Select page",
+        ["About", "Input", "Demand", "Supply", "Dashboard"],
+        index=0,
+        label_visibility="collapsed"
+    )
 
-        # ----------------------------------------------------
-        # CHECK COLUMN EXISTS
-        # ----------------------------------------------------
+    st.markdown("---")
+    st.markdown("### 📊 Status")
 
-        if data_col not in df.columns:
+    if st.session_state.get("input_file_voice_saved", False):
+        st.success(f"Input file ready:\\n{DEFAULT_INPUT_FILENAME_Voice}")
+    elif st.session_state.get("input_file_nonvoice_saved", False):
+        st.success(f"Input file ready:\\n{DEFAULT_INPUT_FILENAME_NonVoice}")
+    else:
+        st.info("No input file")
 
-            st.warning(
-                f"Column '{data_col}' not found in Premium data."
-            )
+    if st.session_state.get("demand_run_complete_voice", False):
+        st.success("Demand output generated")
+    elif st.session_state.get("demand_run_complete_nonvoice", False):
+        st.success("Demand output generated")
+    else:
+        st.info("Demand output pending")
 
-            continue
+    if st.session_state.get("supply_run_complete_voice", False):
+        st.success("Supply output generated")
+    elif st.session_state.get("supply_run_complete_nonvoice", False):
+        st.success("Supply output generated")
+    else:
+        st.info("Supply output pending")
 
-        # ----------------------------------------------------
-        # CONVERT TO NUMERIC
-        # ----------------------------------------------------
+    st.markdown("---")
+    st.caption("© 2025 Workforce Management Intelligence")
 
-        df[data_col] = pd.to_numeric(
-            df[data_col],
-            errors="coerce"
-        )
-
-        metric_data = df[data_col].dropna()
-
-        if metric_data.empty:
-
-            st.warning(
-                f"No valid data available for {feature}."
-            )
-
-            continue
-
-        # ====================================================
-        # STATISTICS ROW
-        # ====================================================
-
-        stat_cols = st.columns(6)
-
-        with stat_cols[0]:
-
-            st.metric(
-                "Mean",
-                f"{metric_data.mean():.1f}"
-            )
-
-        with stat_cols[1]:
-
-            st.metric(
-                "Median",
-                f"{metric_data.median():.1f}"
-            )
-
-        with stat_cols[2]:
-
-            st.metric(
-                "Min",
-                f"{metric_data.min():.1f}"
-            )
-
-        with stat_cols[3]:
-
-            st.metric(
-                "Max",
-                f"{metric_data.max():.1f}"
-            )
-
-        with stat_cols[4]:
-
-            st.metric(
-                "Std Dev",
-                f"{metric_data.std():.1f}"
-            )
-
-        with stat_cols[5]:
-
-            st.metric(
-                "Variance",
-                f"{metric_data.var():.1f}"
-            )
-
-        # ====================================================
-        # PREMIUM GRAPH
-        # ====================================================
-
-        st.markdown(
-            f"#### 📈 {feature} Trend"
-        )
-
-        # Try to find the date column
-        date_col = None
-
-        for col in [
-            "Date",
-            "date",
-            "Month",
-            "month",
-            "premium_date",
-            "premium_month"
-        ]:
-
-            if col in df.columns:
-
-                date_col = col
-                break
-
-        # ----------------------------------------------------
-        # LINE CHART
-        # ----------------------------------------------------
-
-        if date_col is not None:
-
-            chart_df = df[
-                [date_col, data_col]
-            ].copy()
-
-            chart_df[date_col] = pd.to_datetime(
-                chart_df[date_col],
-                errors="coerce"
-            )
-
-            chart_df[data_col] = pd.to_numeric(
-                chart_df[data_col],
-                errors="coerce"
-            )
-
-            chart_df = chart_df.dropna()
-
-            chart_df = chart_df.sort_values(
-                date_col
-            )
-
-            if not chart_df.empty:
-
-                st.line_chart(
-                    chart_df.set_index(date_col)[data_col],
-                    use_container_width=True
-                )
-
-        # ----------------------------------------------------
-        # BAR CHART IF DATE COLUMN IS NOT AVAILABLE
-        # ----------------------------------------------------
-
-        else:
-
-            chart_df = df[[data_col]].copy()
-
-            chart_df[data_col] = pd.to_numeric(
-                chart_df[data_col],
-                errors="coerce"
-            )
-
-            chart_df = chart_df.dropna()
-
-            if not chart_df.empty:
-
-                st.bar_chart(
-                    chart_df,
-                    use_container_width=True
-                )
+# Initialize page variable - ensure it's always defined
+if "page" not in locals():
+    page = "About"
