@@ -1,52 +1,54 @@
-        st.markdown("---")
-        st.markdown("### 📊 Status")
-        st.info("BI Tool Active")
+# ===============================================
+# PREMIUM DATA - CHARTS AND STATISTICS
+# ===============================================
 
-    else:
-        # Show basic status when no asset selected or still processing
-        st.markdown("### 📊 Status")
-
-        if st.session_state.get("bi_date_processing", False):
-            st.info("Processing data...")
+if "premium_selected_features" in st.session_state and st.session_state.premium_selected_features:
+    df = load_chatbot_data()
+    
+    for feature in st.session_state.premium_selected_features:
+        st.markdown(f"### 🟡 {feature} Analysis")
+        
+        # Premium Statistics row
+        stat_cols = st.columns(6)
+        
+        if feature == "GWP":
+            data_col = "GWP"
+        elif feature == "Uplift":
+            data_col = "Renewal_Uplift"
+        elif feature == "Retention":
+            data_col = "Retention_Rate"
         else:
-            st.info("Select an asset to begin")
-
-else:  # Voice and Non-Voice tabs
-    # Always show standard navigation for non-chatbot tabs
-    page = st.radio(
-        "Select page",
-        ["About", "Input", "Demand", "Supply", "Dashboard"],
-        index=0,
-        label_visibility="collapsed"
-    )
-
-    st.markdown("---")
-    st.markdown("### 📊 Status")
-
-    if st.session_state.get("input_file_voice_saved", False):
-        st.success(f"Input file ready:\\n{DEFAULT_INPUT_FILENAME_Voice}")
-    elif st.session_state.get("input_file_nonvoice_saved", False):
-        st.success(f"Input file ready:\\n{DEFAULT_INPUT_FILENAME_NonVoice}")
-    else:
-        st.info("No input file")
-
-    if st.session_state.get("demand_run_complete_voice", False):
-        st.success("Demand output generated")
-    elif st.session_state.get("demand_run_complete_nonvoice", False):
-        st.success("Demand output generated")
-    else:
-        st.info("Demand output pending")
-
-    if st.session_state.get("supply_run_complete_voice", False):
-        st.success("Supply output generated")
-    elif st.session_state.get("supply_run_complete_nonvoice", False):
-        st.success("Supply output generated")
-    else:
-        st.info("Supply output pending")
-
-    st.markdown("---")
-    st.caption("© 2025 Workforce Management Intelligence")
-
-# Initialize page variable - ensure it's always defined
-if "page" not in locals():
-    page = "About"
+            continue
+            
+        # CHECK COLUMN EXISTS
+        if data_col not in df.columns:
+            st.warning(f"Column '{data_col}' not found in Premium data.")
+            continue
+            
+        # CONVERT TO NUMERIC
+        df[data_col] = pd.to_numeric(df[data_col], errors="coerce")
+        metric_data = df[data_col].dropna()
+        if metric_data.empty:
+            st.warning(f"No valid data available for {feature}.")
+            continue
+            
+        # STATISTICS ROW METRICS
+        with stat_cols[0]:
+            st.metric("Mean", f"{df[data_col].mean():.1f}")
+        with stat_cols[1]:
+            st.metric("Median", f"{df[data_col].median():.1f}")
+        with stat_cols[2]:
+            st.metric("Min", f"{df[data_col].min():.1f}")
+        with stat_cols[3]:
+            st.metric("Max", f"{df[data_col].max():.1f}")
+        with stat_cols[4]:
+            st.metric("Std Dev", f"{df[data_col].std():.1f}")
+        with stat_cols[5]:
+            st.metric("Variance", f"{df[data_col].var():.1f}")
+            
+        st.markdown("Trend")
+        st.line_chart(df[data_col])
+        
+        chart = create_chatbot_chart(df, feature, st.session_state.bi_cadence, st.session_state.bi_period)
+        st.altair_chart(chart, use_container_width=True)
+        st.markdown("---")
