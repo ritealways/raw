@@ -1,15 +1,43 @@
 @st.cache_data
 def load_premium_data():
-    """Load the WC Premium Forecast dataset."""
+    """Load the WC Premium Forecast dataset with column mapping and dynamic dates."""
     try:
         df = pd.read_excel(project_root / 'WC_Premium_Forecast_Dataset_Noisy.xlsx')
-        if 'Month' in df.columns:
-            df['Month'] = pd.to_datetime(df['Month'], errors='coerce')
-        return df
-    except Exception as e:
-        st.warning(f"Could not load Premium file: {e}. Using sample data.")
         
-        # Dynamic date range: past 3 years up to the current month
+        # Map various possible Excel column headers to your strict internal names
+        column_mapping = {
+            'gwp': 'GWP',
+            'Gwp': 'GWP',
+            'Uplift': 'Renewal_Uplift',
+            'renewal_uplift': 'Renewal_Uplift',
+            'Renewal Uplift': 'Renewal_Uplift',
+            'Retention': 'Retention_Rate',
+            'retention_rate': 'Retention_Rate',
+            'Retention Rate': 'Retention_Rate',
+            'endorsement_frequency': 'Endorsement_Frequency',
+            'Policy_Term_Length': 'Policy_Term_Length',
+            'loss_ratio': 'Loss_Ratio'
+        }
+        df = df.rename(columns=column_mapping)
+        
+        # Handle dynamic month/date column detection if 'Month' isn't explicitly found
+        if 'Month' not in df.columns:
+            date_cols = [col for col in df.columns if 'month' in col.lower() or 'date' in col.lower()]
+            if date_cols:
+                df = df.rename(columns={date_cols[0]: 'Month'})
+            else:
+                # Dynamically generate monthly stamps if no date column exists in the file
+                end_date = pd.Timestamp.today().normalize().replace(day=1)
+                start_date = end_date - pd.DateOffset(months=len(df)-1)
+                df['Month'] = pd.date_range(start=start_date, periods=len(df), freq='MS')
+                
+        df['Month'] = pd.to_datetime(df['Month'], errors='coerce')
+        return df
+        
+    except Exception as e:
+        st.warning(f"Could not load Premium file: {e}. Using dynamic sample data.")
+        
+        # Fully dynamic fallback date range (e.g., past 3 years up to the current month)
         end_date = pd.Timestamp.today().normalize().replace(day=1)
         start_date = end_date - pd.DateOffset(years=3)
         dates = pd.date_range(start=start_date, end=end_date, freq='MS')
