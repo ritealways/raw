@@ -1,12 +1,29 @@
-# Only show interface if we have a welcome message
-if not st.session_state.bi_chat_history:
-    # --- CHANGE THIS SECTION ---
-    if st.session_state.get('bi_selected_asset') == 'Premium':
-        welcome_content = f"Welcome to {st.session_state.bi_selected_asset} analytics! I'm ready to help you analyze your GWP, Renewal Uplift, and Retention metrics. Use the quick questions below or type your own question."
-    else:
-        welcome_content = f"Welcome to {st.session_state.bi_selected_asset} analytics! I'm ready to help you analyze your contact center data. You can ask me questions about call volume, AHT, shrinkage, attrition, and more."
-    
-    st.session_state.bi_chat_history = [{
-        "type": "bot",
-        "content": welcome_content
-    }]
+# Follow-up questions for each main question (moved here to be accessible)
+# --- CHANGE THIS SECTION TO BE CONDITIONAL ---
+if st.session_state.get('bi_selected_asset') == 'Premium':
+    follow_up_questions = {
+        "What is the trend for Gross Written Premium (GWP)?": [
+            "Do you want to see GWP breakdown by product lines?",
+            "Would you like to analyze the seasonal spikes in GWP?"
+        ],
+        "How is Renewal Uplift performing across cohorts?": [
+            "Do you want to compare renewal rates with last year?",
+            "Which segments show the highest renewal uplift?"
+        ],
+        "What factors are driving customer retention rates?": [
+            "Would you like to see the correlation between retention and premium size?",
+            "Do you want to identify key churn risk factors?"
+        ]
+    }
+else:
+    follow_up_questions = {
+        "What is the YoY / WoW demand trend?": [
+            "Do you want a summary of last 6 months demand on weekly level?",
+            "Do you want to see which queues or hours are driving the demand spike?"
+        ],
+        "Which intervals had the highest spikes in contact volume?": [
+            "Do we have any overstaffed/understaffed interval?",
+            "Do you want a breakdown of shrinkage and attendance impact?"
+        ],
+        # (Keep your remaining existing contact center questions here...)
+    }
