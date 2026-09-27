@@ -1,18 +1,14 @@
-Insurance Premium Data Analysis: LLM Prompt Guide
-Based on the variables in your insurance dataset (such as GWP, retention rate, payroll, and loss ratios), here are 12 tailored questions across descriptive, predictive, and prescriptive analytics to query your LLM.
-Descriptive Questions
- * What was the total Gross Written Premium (GWP) generated across small, medium, and large account sizes in the North East region?
- * How do claim frequency and claim severity compare between the agriculture industry class and other active sectors?
- * What are the average employee counts and average wages associated with accounts categorized under small account sizes?
- * What is the current distribution of retention rates and churn probabilities across different policy term lengths?
-Predictive Questions
- * Which specific account segments are most likely to churn next quarter based on their current churn probability and historical loss ratios?
- * How will ongoing shifts in the economic indicator and wage inflation index impact future Gross Written Premium (GWP) forecasts?
- * Can we forecast the expected claim severity for accounts exhibiting high exposure volatility scores and hazard group 4?
- * What is the projected renewal uplift for accounts that feature high historical renewal rates and low schedule rating factors?
-Prescriptive Questions
- * What adjustments should underwriters make to net rate achievements and filed rate changes to maximize profitability while maintaining high retention?
- * Given the current broker concentration metrics, how should resource allocation be shifted to mitigate revenue dependency risks?
- * What specific deductible levels and schedule rating factors should be recommended for high-risk accounts to control exposure volatility?
- * How can we leverage multi-policy bundle indicators to optimize policy terms and lower overall churn probability?
-Would you like help writing the Python function to automatically send one of these prompt categories to your Azure model?
+line={'color': '#1f77b4', 'strokeWidth': 2},
+        color=alt.Gradient(
+            gradient='linear',
+            stops=[
+                alt.GradientStop(color='#1f77b4', offset=0),
+                alt.GradientStop(color='#ffffff', offset=1),
+            ],
+            x1=1,
+            x2=1,
+            y1=1,
+            y2=0,
+        ),
+        opacity=0.4,
+    )
