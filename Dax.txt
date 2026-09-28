@@ -1,25 +1,28 @@
-Refactor the UI of `app_integrated` to implement a modern "Black Glass" (Glassmorphism) dark theme using custom CSS injections in Streamlit. 
+**Task:** Redesign the UI of `app_integrated.py` (Streamlit, "EXL Smart Conversational BI Tool") to look modern, creative and polished. **Change styling only. Do not alter logic, data processing, navigation flow, widget keys, or functionality.**
 
-Please update the code with the following design specifications:
+**Theme: black glassmorphism**
+- App background: deep black/charcoal with a subtle gradient (e.g. `#0a0a0f → #14141c`) and faint EXL-orange (`#E8590C`-ish) radial glow accents.
+- Cards, sidebar, header banner, metric boxes, expanders, status boxes, and file-info blocks: translucent glass (`rgba(255,255,255,0.05–0.08)`, `backdrop-filter: blur(12–16px)`, 1px `rgba(255,255,255,0.12)` border, `border-radius: 14–18px`, soft shadow).
+- Accent color: EXL orange for highlights, active nav item, progress bar, and hover glows.
 
-1. Global Theme & Background:
-   - Set the main application background color to a deep matte black (`#0A0A0A`).
-   - Set the default text color to a crisp off-white (`#F3F4F6`) for high legibility.
+**Creative touches**
+- Hero header ("Smart Conversational BI Tool") with gradient text/underline and a soft glow.
+- Voice / Non-Voice / Premium buttons: glass pill style with hover lift, glow, and smooth transitions.
+- Metric cards (Mean, Median, Min, Max, Std Dev, Variance, file info) as glass tiles with hover animation.
+- Sidebar radio/checkbox items styled as glass chips; active one highlighted in orange.
+- Success/info/warning alerts as tinted glass with colored left border.
+- Charts: dark transparent background, light gridlines, orange/cyan line colors, rounded tooltips (update Plotly/Altair/Vega theme accordingly).
+- Custom slim scrollbars, smooth fade-in animations for sections.
 
-2. Glassmorphism Containers & Cards:
-   - Wrap major layout blocks, metric containers, and data summaries in a frosted glass style using custom HTML/CSS divs or updating Streamlit container styling:
-     - Background: rgba(18, 18, 18, 0.75)
-     - Backdrop Filter: blur(12px)
-     - Border: 1px solid rgba(255, 255, 255, 0.08)
-     - Border Radius: 12px
-     - Box Shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37)
+**Strict rules**
+1. **Contrast:** No text may blend into its background. Use light text (`#F5F5F7` primary, `#B8B8C4` secondary) on dark glass; never dark-on-dark or light-on-light. Check labels, metric values, dropdowns, selectbox options, tooltips, input fields, tables/dataframes, expander headers, and disabled buttons.
+2. **Font sizes unchanged:** Do not modify any `font-size`, heading levels, or `st.metric`/text sizing. Only change color, font weight/family (optional), spacing, and effects.
+3. **Don't truncate** text more than it currently is; keep layout/columns intact.
+4. Apply via one centralized `st.markdown("<style>...</style>", unsafe_allow_html=True)` block (plus chart theme config). Override Streamlit selectors like `[data-testid="stSidebar"]`, `.stButton>button`, `[data-testid="stMetric"]`, `[data-baseweb="select"]`, etc.
+5. Keep the EXL logo visible on dark (add a light glass backing if needed).
 
-3. Sidebar Styling:
-   - Style the sidebar background to a slightly lighter rich black (`#121212`) with a subtle right border (`1px solid #1F2937`).
+**Deliverable:** Updated `app_integrated.py` with the CSS injected and chart styling adjusted, plus a brief summary of what changed. Test that every page (About, Input, Demand, Supply, Dashboard, Voice/Non-Voice/Premium) is fully readable.
 
-4. Inputs, Selectboxes, and Buttons:
-   - Update text inputs, selectboxes, and dropdowns to have a dark background (`#18181B`) with thin borders (`#27272A`) and white text.
-   - Give primary action buttons a clean gradient or solid accent background with a soft shadow/glow effect on hover.
+---
 
-5. Chart Integration (Plotly / Matplotlib / Altair):
-   - Update any chart configurations to use transparent backgrounds or dark templates (e.g., Plotly dark theme) so the graphs blend seamlessly into the black glass containers.
+Want a shorter version (under 100 words) or one that includes ready-made CSS?
