@@ -1,78 +1,25 @@
-import streamlit as st
+Refactor the UI of `app_integrated` to implement a modern "Black Glass" (Glassmorphism) dark theme using custom CSS injections in Streamlit. 
 
-# 1. Page Configuration (Must be the first Streamlit command)
-st.set_page_config(
-    page_title="EXL Conversational BI Tool",
-    page_icon="✨",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+Please update the code with the following design specifications:
 
-# 2. Custom CSS Injection for Dark Theme & Glassmorphism
-st.markdown("""
-    <style>
-    /* Global Dark Theme Background */
-    .stApp {
-        background-color: #0A0A0A;
-        color: #F3F4F6;
-    }
-    
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background-color: #121212;
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-    }
+1. Global Theme & Background:
+   - Set the main application background color to a deep matte black (`#0A0A0A`).
+   - Set the default text color to a crisp off-white (`#F3F4F6`) for high legibility.
 
-    /* Glassmorphism Card Container */
-    .glass-card {
-        background: rgba(20, 20, 20, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
+2. Glassmorphism Containers & Cards:
+   - Wrap major layout blocks, metric containers, and data summaries in a frosted glass style using custom HTML/CSS divs or updating Streamlit container styling:
+     - Background: rgba(18, 18, 18, 0.75)
+     - Backdrop Filter: blur(12px)
+     - Border: 1px solid rgba(255, 255, 255, 0.08)
+     - Border Radius: 12px
+     - Box Shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37)
 
-    /* Metric Cards Styling */
-    div.stMetric {
-        background: rgba(22, 22, 22, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 15px;
-        border-radius: 12px;
-    }
-    div.stMetric label {
-        color: #9CA3AF !important;
-    }
+3. Sidebar Styling:
+   - Style the sidebar background to a slightly lighter rich black (`#121212`) with a subtle right border (`1px solid #1F2937`).
 
-    /* Primary Buttons with EXL Orange / Blue Accents */
-    .stButton>button {
-        background: linear-gradient(135deg, #FF6600 0%, #E65C00 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    .stButton>button:hover {
-        opacity: 0.9;
-        box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
-    }
-    </style>
-""", unsafe_allow_html=True)
+4. Inputs, Selectboxes, and Buttons:
+   - Update text inputs, selectboxes, and dropdowns to have a dark background (`#18181B`) with thin borders (`#27272A`) and white text.
+   - Give primary action buttons a clean gradient or solid accent background with a soft shadow/glow effect on hover.
 
-
-
-
---------------
-
-# Open the glass card container
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-
-# Put your regular Streamlit elements inside
-st.subheader("📊 GWP Analysis")
-st.write("Here are your insights displayed inside the premium card.")
-
-# Close the glass card container
-st.markdown('</div>', unsafe_allow_html=True)
+5. Chart Integration (Plotly / Matplotlib / Altair):
+   - Update any chart configurations to use transparent backgrounds or dark templates (e.g., Plotly dark theme) so the graphs blend seamlessly into the black glass containers.
